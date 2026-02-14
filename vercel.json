@@ -1,0 +1,17 @@
+{
+  "buildCommand": "cd website && bun run build",
+  "devCommand": "cd website && bun run dev",
+  "installCommand": "cd website && bun install",
+  "framework": "nextjs",
+  "outputDirectory": "website/.next",
+  "regions": ["iad1"],
+  "env": {
+    "NEXT_PUBLIC_FIREBASE_API_KEY": "@firebase_api_key",
+    "NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN": "@firebase_auth_domain",
+    "NEXT_PUBLIC_FIREBASE_PROJECT_ID": "@firebase_project_id",
+    "FIREBASE_ADMIN_PROJECT_ID": "@firebase_admin_project_id",
+    "FIREBASE_ADMIN_CLIENT_EMAIL": "@firebase_admin_client_email",
+    "FIREBASE_ADMIN_PRIVATE_KEY": "@firebase_admin_private_key",
+    "LIBRARY_API_KEY": "@library_api_key"
+  }
+}
