@@ -2,6 +2,7 @@ import { getFolders } from "@/lib/firebase/firestore";
 import { Sidebar } from "@/components/library/Sidebar";
 import { SearchBar } from "@/components/library/SearchBar";
 import { Menu } from "lucide-react";
+import type { Folder } from "@/types/library";
 
 export default async function LibraryLayout({
   children,
@@ -9,7 +10,7 @@ export default async function LibraryLayout({
   children: React.ReactNode;
 }) {
   // Fetch all folders for sidebar (will be empty initially)
-  let folders = [];
+  let folders: Folder[] = [];
   try {
     folders = await getFolders();
   } catch (error) {

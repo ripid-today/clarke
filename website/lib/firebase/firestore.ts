@@ -1,42 +1,57 @@
-import { collection, getDocs, query, where, orderBy, doc, getDoc } from "firebase/firestore";
-import { db } from "./config";
+import { adminDb } from "./admin";
 import type { Folder, Article, SearchResult } from "@/types/library";
 
-export async function getFolders(parentId?: string): Promise<Folder[]> {
-  const foldersRef = collection(db, "folders");
-  const q = parentId
-    ? query(foldersRef, where("parentId", "==", parentId), orderBy("order"))
-    : query(foldersRef, orderBy("order"));
+// Convert Firestore Admin Timestamp instances to plain serializable objects
+// so they can be passed from Server Components to Client Components
+function serializeDoc<T>(doc: FirebaseFirestore.DocumentSnapshot): T {
+  const data = doc.data() || {};
+  const serialized: Record<string, unknown> = { id: doc.id };
+  for (const [key, value] of Object.entries(data)) {
+    if (value && typeof value === "object" && "_seconds" in value && "_nanoseconds" in value) {
+      const ts = value as { _seconds: number; _nanoseconds: number };
+      serialized[key] = { seconds: ts._seconds, nanoseconds: ts._nanoseconds };
+    } else {
+      serialized[key] = value;
+    }
+  }
+  return serialized as T;
+}
 
-  const snapshot = await getDocs(q);
-  return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Folder));
+export async function getFolders(parentId?: string): Promise<Folder[]> {
+  const ref = adminDb.collection("folders");
+  const query = parentId
+    ? ref.where("parentId", "==", parentId).orderBy("order")
+    : ref.orderBy("order");
+
+  const snapshot = await query.get();
+  return snapshot.docs.map(doc => serializeDoc<Folder>(doc));
 }
 
 export async function getArticles(folderId: string): Promise<Article[]> {
-  const articlesRef = collection(db, "articles");
-  const q = query(articlesRef, where("folderId", "==", folderId), orderBy("order"));
+  const snapshot = await adminDb
+    .collection("articles")
+    .where("folderId", "==", folderId)
+    .orderBy("order")
+    .get();
 
-  const snapshot = await getDocs(q);
-  return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Article));
+  return snapshot.docs.map(doc => serializeDoc<Article>(doc));
 }
 
 export async function getArticleById(articleId: string): Promise<Article | null> {
-  const docRef = doc(db, "articles", articleId);
-  const snapshot = await getDoc(docRef);
+  const doc = await adminDb.collection("articles").doc(articleId).get();
 
-  if (!snapshot.exists()) return null;
-  return { id: snapshot.id, ...snapshot.data() } as Article;
+  if (!doc.exists) return null;
+  return serializeDoc<Article>(doc);
 }
 
-export async function searchArticles(query: string, folderId?: string): Promise<SearchResult[]> {
-  const searchRef = collection(db, "search_index");
-  const snapshot = await getDocs(searchRef);
-  const lowerQuery = query.toLowerCase();
+export async function searchArticles(searchQuery: string, folderId?: string): Promise<SearchResult[]> {
+  const snapshot = await adminDb.collection("search_index").get();
+  const lowerQuery = searchQuery.toLowerCase();
 
   return snapshot.docs
     .map(doc => doc.data() as SearchResult)
     .filter(result => {
-      const matchesQuery = 
+      const matchesQuery =
         result.title.toLowerCase().includes(lowerQuery) ||
         result.excerpt.toLowerCase().includes(lowerQuery);
       const matchesFolder = !folderId || result.folderPath.includes(folderId);
@@ -46,9 +61,11 @@ export async function searchArticles(query: string, folderId?: string): Promise<
 }
 
 export async function getFeaturedFolders(): Promise<Folder[]> {
-  const foldersRef = collection(db, "folders");
-  const q = query(foldersRef, where("featured", "==", true), orderBy("order"));
+  const snapshot = await adminDb
+    .collection("folders")
+    .where("featured", "==", true)
+    .orderBy("order")
+    .get();
 
-  const snapshot = await getDocs(q);
-  return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Folder));
+  return snapshot.docs.map(doc => serializeDoc<Folder>(doc));
 }

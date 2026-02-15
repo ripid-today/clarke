@@ -9,3 +9,9 @@ dist/
 *.swo
 coverage/
 .cache/
+
+.vercel
+.env*.local
+
+# Executables
+claude.exe

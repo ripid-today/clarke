@@ -1,0 +1,24 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(pip show:*)",
+      "Bash(python -c:*)",
+      "Bash(unzip:*)",
+      "Bash(curl:*)",
+      "Bash(bash /tmp/ba-sources/create-articles.sh)",
+      "Bash(node /tmp/ba-sources/verify.js:*)",
+      "Bash(__NEW_LINE_cc8a7318c239fa20__ echo \"\")",
+      "Bash(# Check dev server logs for index error messages tail -50 /tmp/nextjs-dev.log)",
+      "Bash(# Test folders with parentId filter \\(sidebar uses this\\) echo \"\"Folders with parentId filter:\"\" curl -s \"\"http://localhost:3000/api/library/folders?parentId=KzxINEBTTc9KcM2WzGWB\"\")",
+      "Bash(npm run build:*)",
+      "Bash(vercel:*)",
+      "Bash(bun --version:*)",
+      "Bash(# Check if project is linked to Vercel ls -la C:/Users/Nguyen/Clarke/.vercel/project.json && cat C:/Users/Nguyen/Clarke/.vercel/project.json || echo \"\"Not linked\"\" # Check Vercel env vars cd C:/Users/Nguyen/Clarke && vercel env ls 2>&1)",
+      "Bash(npx next build)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "Bash(python -m json.tool:*)"
+    ]
+  }
+}

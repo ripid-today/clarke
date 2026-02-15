@@ -3,6 +3,9 @@ import { getArticles } from "@/lib/firebase/firestore";
 import { adminDb } from "@/lib/firebase/admin";
 import { Timestamp } from "firebase-admin/firestore";
 
+// Mark as dynamic route (don't pre-render at build time)
+export const dynamic = 'force-dynamic';
+
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);

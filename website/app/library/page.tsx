@@ -1,8 +1,9 @@
 import { getFeaturedFolders } from "@/lib/firebase/firestore";
 import { FeaturedFolders } from "@/components/library/FeaturedFolders";
+import type { Folder } from "@/types/library";
 
 export default async function LibraryPage() {
-  let featuredFolders = [];
+  let featuredFolders: Folder[] = [];
   try {
     featuredFolders = await getFeaturedFolders();
   } catch (error) {
@@ -13,7 +14,7 @@ export default async function LibraryPage() {
   return (
     <div className="py-8">
       <div className="px-6 mb-8">
-        <h1 className="text-4xl font-bold mb-4">Welcome to Clarke's Library</h1>
+        <h1 className="text-4xl font-bold mb-4">Welcome to Clarke&apos;s Library</h1>
         <p className="text-lg text-gray-600">
           Explore curated knowledge organized by topic. Browse folders or use the search to find
           what you need.

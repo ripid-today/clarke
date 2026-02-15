@@ -1,4 +1,7 @@
-import { Timestamp } from "firebase/firestore";
+type FirestoreTimestamp = {
+  seconds: number;
+  nanoseconds: number;
+};
 
 export interface Folder {
   id: string;
@@ -10,8 +13,8 @@ export interface Folder {
   order: number;
   featured: boolean;
   articleCount: number;
-  createdAt: Timestamp;
-  updatedAt: Timestamp;
+  createdAt: FirestoreTimestamp;
+  updatedAt: FirestoreTimestamp;
   metadata?: {
     icon?: string;
     color?: string;
@@ -31,8 +34,8 @@ export interface Article {
   order: number;
   status: string;
   priority: string;
-  createdAt: Timestamp;
-  updatedAt: Timestamp;
+  createdAt: FirestoreTimestamp;
+  updatedAt: FirestoreTimestamp;
   metadata?: {
     wordCount?: number;
     readingTime?: number;

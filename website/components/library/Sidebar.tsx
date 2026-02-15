@@ -69,7 +69,7 @@ export function Sidebar({ folders, currentPath = [] }: SidebarProps) {
     <aside className="w-64 bg-white border-r border-gray-200 h-screen sticky top-0 overflow-y-auto p-4">
       <Link href="/library">
         <h2 className="text-lg font-semibold mb-4 cursor-pointer hover:text-blue-600">
-          Clarke's Library
+          Clarke&apos;s Library
         </h2>
       </Link>
       <nav>{rootFolders.map((folder) => renderFolder(folder))}</nav>

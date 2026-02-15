@@ -1,6 +1,7 @@
 import { searchArticles } from "@/lib/firebase/firestore";
 import Link from "next/link";
 import { SearchBar } from "@/components/library/SearchBar";
+import type { SearchResult } from "@/types/library";
 
 interface SearchPageProps {
   searchParams: Promise<{
@@ -11,8 +12,8 @@ interface SearchPageProps {
 export default async function SearchPage({ searchParams }: SearchPageProps) {
   const params = await searchParams;
   const query = params.q || "";
-  
-  let results = [];
+
+  let results: SearchResult[] = [];
   try {
     results = query ? await searchArticles(query) : [];
   } catch (error) {
@@ -30,7 +31,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
       {query && (
         <div className="max-w-2xl mx-auto">
           <p className="text-gray-600 mb-6">
-            Found {results.length} result{results.length !== 1 ? "s" : ""} for "{query}"
+            Found {results.length} result{results.length !== 1 ? "s" : ""} for &quot;{query}&quot;
           </p>
 
           {results.length === 0 ? (

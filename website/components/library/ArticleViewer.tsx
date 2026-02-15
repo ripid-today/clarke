@@ -52,7 +52,7 @@ export function ArticleViewer({ article }: ArticleViewerProps) {
       </div>
 
       <div className="mt-8 pt-6 border-t border-gray-200 text-sm text-gray-500">
-        <p>Last updated: {article.updatedAt.toDate().toLocaleDateString()}</p>
+        <p>Last updated: {new Date(article.updatedAt.seconds * 1000).toLocaleDateString()}</p>
         {article.metadata?.readingTime && <p>{article.metadata.readingTime} min read</p>}
       </div>
     </article>
