@@ -29,6 +29,45 @@ export async function POST(request: NextRequest) {
 
     const { name, slug, parentId, description, featured = false, order = 0 } = await request.json();
 
+    // Validation: Required fields
+    if (!name || !slug || !description) {
+      return NextResponse.json(
+        { error: "name, slug, and description are required" },
+        { status: 400 }
+      );
+    }
+
+    // Validation: Description type check
+    if (typeof description !== "string") {
+      return NextResponse.json(
+        { error: "description must be a string" },
+        { status: 400 }
+      );
+    }
+
+    // Validation: Trim whitespace and check empty (CRITICAL-04 fix)
+    const trimmedDescription = description.trim();
+
+    if (trimmedDescription.length === 0) {
+      return NextResponse.json(
+        { error: "description cannot be empty or whitespace-only" },
+        { status: 400 }
+      );
+    }
+
+    // Validation: Character limit (300 chars for folders)
+    if (trimmedDescription.length > 300) {
+      return NextResponse.json(
+        {
+          error: "Description must be 300 characters or less",
+          field: "description",
+          current: trimmedDescription.length,
+          max: 300
+        },
+        { status: 400 }
+      );
+    }
+
     // Calculate path from parentId
     let path: string[] = [slug];
     if (parentId) {
@@ -46,7 +85,7 @@ export async function POST(request: NextRequest) {
       name,
       slug,
       parentId: parentId || null,
-      description,
+      description: trimmedDescription, // Use trimmed description
       path,
       order,
       featured,

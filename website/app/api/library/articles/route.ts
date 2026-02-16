@@ -31,7 +31,49 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { title, slug, folderId, content, tags = [], status = "complete", priority = "medium" } = await request.json();
+    const { title, slug, folderId, content, description, status = "complete", priority = "medium" } = await request.json();
+
+    // Validation: Required fields
+    if (!title || !slug || !folderId || !content) {
+      return NextResponse.json(
+        { error: "title, slug, folderId, and content are required" },
+        { status: 400 }
+      );
+    }
+
+    // Validation: Description type check
+    if (description && typeof description !== "string") {
+      return NextResponse.json(
+        { error: "description must be a string" },
+        { status: 400 }
+      );
+    }
+
+    // Generate description from content if not provided (first 200 chars)
+    let finalDescription = description || content.substring(0, 200);
+
+    // Validation: Trim whitespace and check empty (CRITICAL-04 fix)
+    const trimmedDescription = finalDescription.trim();
+
+    if (trimmedDescription.length === 0) {
+      return NextResponse.json(
+        { error: "description cannot be empty or whitespace-only" },
+        { status: 400 }
+      );
+    }
+
+    // Validation: Character limit (200 chars for articles)
+    if (trimmedDescription.length > 200) {
+      return NextResponse.json(
+        {
+          error: "Description must be 200 characters or less",
+          field: "description",
+          current: trimmedDescription.length,
+          max: 200
+        },
+        { status: 400 }
+      );
+    }
 
     // Get folder path
     let folderPath: string[] = [];
@@ -43,9 +85,8 @@ export async function POST(request: NextRequest) {
     // Generate metadata
     const wordCount = content.split(/\s+/).length;
     const readingTime = Math.ceil(wordCount / 200); // 200 words per minute
-    const excerpt = content.substring(0, 200);
 
-    // Create article document
+    // Create article document (using new schema: description instead of excerpt, no tags)
     const articleRef = adminDb.collection("articles").doc();
     await articleRef.set({
       id: articleRef.id,
@@ -54,8 +95,8 @@ export async function POST(request: NextRequest) {
       folderId,
       folderPath,
       content,
-      excerpt,
-      tags,
+      description: trimmedDescription, // Use trimmed description
+      // tags removed (REQ-005)
       order: 0,
       status,
       priority,
@@ -69,13 +110,13 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    // Update search index
+    // Update search index (using new schema: description instead of excerpt, no tags)
     const searchRef = adminDb.collection("search_index").doc(articleRef.id);
     await searchRef.set({
       articleId: articleRef.id,
       title: title.toLowerCase(),
-      excerpt: excerpt.toLowerCase(),
-      tags: tags.map((t: string) => t.toLowerCase()),
+      description: trimmedDescription.toLowerCase(), // Changed from excerpt
+      // tags removed (REQ-005)
       folderPath,
       updatedAt: Timestamp.now(),
     });

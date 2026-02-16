@@ -69,3 +69,31 @@ export async function getFeaturedFolders(): Promise<Folder[]> {
 
   return snapshot.docs.map(doc => serializeDoc<Folder>(doc));
 }
+
+export async function getFolderArticleCount(folderId: string): Promise<number> {
+  // Get direct articles in this folder
+  const directArticles = await adminDb
+    .collection("articles")
+    .where("folderId", "==", folderId)
+    .count()
+    .get();
+
+  // Get sub-folders
+  const subFolders = await adminDb
+    .collection("folders")
+    .where("parentId", "==", folderId)
+    .get();
+
+  // Get articles in each sub-folder
+  let subFolderCount = 0;
+  for (const subFolder of subFolders.docs) {
+    const count = await adminDb
+      .collection("articles")
+      .where("folderId", "==", subFolder.id)
+      .count()
+      .get();
+    subFolderCount += count.data().count;
+  }
+
+  return directArticles.data().count + subFolderCount;
+}
