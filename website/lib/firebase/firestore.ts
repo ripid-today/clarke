@@ -44,6 +44,19 @@ export async function getArticleById(articleId: string): Promise<Article | null>
   return serializeDoc<Article>(doc);
 }
 
+export async function getArticleBySlug(slug: string, folderId?: string): Promise<Article | null> {
+  let query = adminDb.collection("articles").where("slug", "==", slug);
+
+  if (folderId) {
+    query = query.where("folderId", "==", folderId);
+  }
+
+  const snapshot = await query.limit(1).get();
+
+  if (snapshot.empty) return null;
+  return serializeDoc<Article>(snapshot.docs[0]);
+}
+
 export async function searchArticles(searchQuery: string, folderId?: string): Promise<SearchResult[]> {
   const snapshot = await adminDb.collection("search_index").get();
   const lowerQuery = searchQuery.toLowerCase();
