@@ -29,8 +29,8 @@ export interface Article {
   folderId: string;
   folderPath: string[];
   content: string;
-  excerpt: string;
-  tags: string[];
+  description: string; // Renamed from excerpt (max 200 characters)
+  // tags field removed (REQ-005)
   order: number;
   status: string;
   priority: string;
@@ -47,7 +47,7 @@ export interface Article {
 export interface SearchResult {
   articleId: string;
   title: string;
-  excerpt: string;
+  description: string; // Renamed from excerpt (REQ-008)
   folderPath: string[];
   score?: number;
 }

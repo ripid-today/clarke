@@ -1,0 +1,1048 @@
+[
+  {
+    "id": "1SqjvkeWK8HD7JUYYI9L",
+    "articleId": "1SqjvkeWK8HD7JUYYI9L",
+    "title": "requirements classification and states",
+    "excerpt": "# requirements classification and states\n\n## topics covered\n\n- requirements lifecycle states: stated, confirmed, prioritized, approved, implemented, verified\n- requirements attributes and metadata: pr",
+    "tags": [
+      "requirements",
+      "classification",
+      "lifecycle"
+    ],
+    "folderPath": [
+      "business",
+      "business-analysis-masterclass",
+      "requirements-lifecycle-management"
+    ],
+    "updatedAt": {
+      "_seconds": 1771151344,
+      "_nanoseconds": 369000000
+    }
+  },
+  {
+    "id": "26MqoQATkauNUsVoHLvX",
+    "articleId": "26MqoQATkauNUsVoHLvX",
+    "title": "elicitation in agile environments",
+    "excerpt": "# elicitation in agile environments\n\n## topics covered\n\n- how elicitation techniques adapt for agile: stand-ups, refinement sessions, retrospectives\n- story conversations as elicitation: the 3cs (card",
+    "tags": [
+      "agile",
+      "elicitation",
+      "collaboration"
+    ],
+    "folderPath": [
+      "business",
+      "business-analysis-masterclass",
+      "elicitation-and-collaboration"
+    ],
+    "updatedAt": {
+      "_seconds": 1771151342,
+      "_nanoseconds": 94000000
+    }
+  },
+  {
+    "id": "2BvDGBkFlbCLcphqufX9",
+    "articleId": "2BvDGBkFlbCLcphqufX9",
+    "title": "what is business analysis",
+    "excerpt": "# what is business analysis\n\n## topics covered\n\n- definition and scope of business analysis (iiba and pmi perspectives)\n- the value ba brings to organizations: bridging business needs and technology s",
+    "tags": [
+      "introduction",
+      "ba-role",
+      "fundamentals"
+    ],
+    "folderPath": [
+      "business",
+      "business-analysis-masterclass",
+      "foundations-of-business-analysis"
+    ],
+    "updatedAt": {
+      "_seconds": 1771151305,
+      "_nanoseconds": 979000000
+    }
+  },
+  {
+    "id": "5SNw9VuR46aITbyqWZab",
+    "articleId": "5SNw9VuR46aITbyqWZab",
+    "title": "managing communication and conflict",
+    "excerpt": "# managing communication and conflict\n\n## topics covered\n\n- communication styles and adapting to different stakeholder preferences\n- conflict resolution strategies for requirements disagreements\n- neg",
+    "tags": [
+      "communication",
+      "conflict",
+      "negotiation"
+    ],
+    "folderPath": [
+      "business",
+      "business-analysis-masterclass",
+      "elicitation-and-collaboration"
+    ],
+    "updatedAt": {
+      "_seconds": 1771151339,
+      "_nanoseconds": 340000000
+    }
+  },
+  {
+    "id": "8I229lSa6a0drdW6NWxp",
+    "articleId": "8I229lSa6a0drdW6NWxp",
+    "title": "the business analysis core concept model",
+    "excerpt": "# the business analysis core concept model\n\n## topics covered\n\n- the baccm (change, need, solution, stakeholder, value, context)\n- how the six core concepts interrelate and form a unified framework\n- ",
+    "tags": [
+      "baccm",
+      "concepts",
+      "framework"
+    ],
+    "folderPath": [
+      "business",
+      "business-analysis-masterclass",
+      "foundations-of-business-analysis"
+    ],
+    "updatedAt": {
+      "_seconds": 1771151308,
+      "_nanoseconds": 746000000
+    }
+  },
+  {
+    "id": "8fY9l8BuvZ3neKAAFM24",
+    "articleId": "8fY9l8BuvZ3neKAAFM24",
+    "title": "stakeholder analysis and engagement",
+    "excerpt": "# stakeholder analysis and engagement\n\n## topics covered\n\n- identifying stakeholders systematically using multiple techniques\n- stakeholder list, map, and personas (babok technique 10.43)\n- power/inte",
+    "tags": [
+      "stakeholders",
+      "engagement",
+      "communication"
+    ],
+    "folderPath": [
+      "business",
+      "business-analysis-masterclass",
+      "ba-planning-and-monitoring"
+    ],
+    "updatedAt": {
+      "_seconds": 1771151323,
+      "_nanoseconds": 32000000
+    }
+  },
+  {
+    "id": "8pOrU0LMQNrrnANliPus",
+    "articleId": "8pOrU0LMQNrrnANliPus",
+    "title": "agile principles for business analysts",
+    "excerpt": "# agile principles for business analysts\n\n## topics covered\n\n- agile values and principles from a ba perspective\n- agile vs. waterfall: key differences for business analysts\n- lean principles and wast",
+    "tags": [
+      "agile",
+      "principles",
+      "mindset"
+    ],
+    "folderPath": [
+      "business",
+      "business-analysis-masterclass",
+      "agile-business-analysis"
+    ],
+    "updatedAt": {
+      "_seconds": 1771151387,
+      "_nanoseconds": 693000000
+    }
+  },
+  {
+    "id": "9Zisg8jW3Kk7w1AMQdtS",
+    "articleId": "9Zisg8jW3Kk7w1AMQdtS",
+    "title": "ba roles, competencies, and career paths",
+    "excerpt": "# ba roles, competencies, and career paths\n\n## topics covered\n\n- who is a business analyst? formal role vs. task performer\n- core underlying competencies: analytical thinking, communication, interacti",
+    "tags": [
+      "career",
+      "competencies",
+      "roles"
+    ],
+    "folderPath": [
+      "business",
+      "business-analysis-masterclass",
+      "foundations-of-business-analysis"
+    ],
+    "updatedAt": {
+      "_seconds": 1771151314,
+      "_nanoseconds": 608000000
+    }
+  },
+  {
+    "id": "A30Lbld9AcfY4kzsDFxv",
+    "articleId": "A30Lbld9AcfY4kzsDFxv",
+    "title": "analyzing performance gaps",
+    "excerpt": "# analyzing performance gaps\n\n## topics covered\n\n- comparing actual vs. expected solution performance systematically\n- root cause analysis of performance gaps\n- identifying trends and patterns in perf",
+    "tags": [
+      "gaps",
+      "analysis",
+      "performance"
+    ],
+    "folderPath": [
+      "business",
+      "business-analysis-masterclass",
+      "solution-evaluation"
+    ],
+    "updatedAt": {
+      "_seconds": 1771151379,
+      "_nanoseconds": 938000000
+    }
+  },
+  {
+    "id": "A4Yx1yH0aSxQxTSFmv0L",
+    "articleId": "A4Yx1yH0aSxQxTSFmv0L",
+    "title": "use cases, user stories, and acceptance criteria",
+    "excerpt": "# use cases, user stories, and acceptance criteria\n\n## topics covered\n\n- use cases and scenarios: the babok perspective on behavioral requirements\n- user story format (as a... i want... so that...) an",
+    "tags": [
+      "use-cases",
+      "user-stories",
+      "acceptance-criteria"
+    ],
+    "folderPath": [
+      "business",
+      "business-analysis-masterclass",
+      "requirements-analysis-design"
+    ],
+    "updatedAt": {
+      "_seconds": 1771151370,
+      "_nanoseconds": 929000000
+    }
+  },
+  {
+    "id": "Axikg9JbSTlnCmjQo3p1",
+    "articleId": "Axikg9JbSTlnCmjQo3p1",
+    "title": "prototyping and wireframing",
+    "excerpt": "# prototyping and wireframing\n\n## topics covered\n\n- prototyping approaches: throwaway vs. evolutionary prototypes\n- low-fidelity vs. high-fidelity prototypes: when to use each\n- wireframing tools and ",
+    "tags": [
+      "prototyping",
+      "wireframing",
+      "visualization"
+    ],
+    "folderPath": [
+      "business",
+      "business-analysis-masterclass",
+      "requirements-analysis-design"
+    ],
+    "updatedAt": {
+      "_seconds": 1771151374,
+      "_nanoseconds": 758000000
+    }
+  },
+  {
+    "id": "BOo5VM78eTt5hN1pFuXB",
+    "articleId": "BOo5VM78eTt5hN1pFuXB",
+    "title": "iterative analysis and just-in-time requirements",
+    "excerpt": "# iterative analysis and just-in-time requirements\n\n## topics covered\n\n- just-in-time requirements elaboration vs. up-front specification\n- progressive elaboration across sprint boundaries\n- agile doc",
+    "tags": [
+      "iterative",
+      "just-in-time",
+      "agile-requirements"
+    ],
+    "folderPath": [
+      "business",
+      "business-analysis-masterclass",
+      "agile-business-analysis"
+    ],
+    "updatedAt": {
+      "_seconds": 1771151395,
+      "_nanoseconds": 796000000
+    }
+  },
+  {
+    "id": "By1I3Ci2stcq7ktKbYhi",
+    "articleId": "By1I3Ci2stcq7ktKbYhi",
+    "title": "recommending improvements",
+    "excerpt": "# recommending improvements\n\n## topics covered\n\n- formulating improvement recommendations: structure and evidence\n- options analysis and decision analysis techniques (babok 10.16)\n- cost-benefit analy",
+    "tags": [
+      "improvements",
+      "recommendations",
+      "optimization"
+    ],
+    "folderPath": [
+      "business",
+      "business-analysis-masterclass",
+      "solution-evaluation"
+    ],
+    "updatedAt": {
+      "_seconds": 1771151382,
+      "_nanoseconds": 92000000
+    }
+  },
+  {
+    "id": "CWiYcEMlqmZkGNOC0tZv",
+    "articleId": "CWiYcEMlqmZkGNOC0tZv",
+    "title": "solution and enterprise limitations",
+    "excerpt": "# solution and enterprise limitations\n\n## topics covered\n\n- assessing solution limitations: what the current solution cannot do\n- assessing enterprise limitations: organizational constraints on change",
+    "tags": [
+      "limitations",
+      "constraints",
+      "enterprise"
+    ],
+    "folderPath": [
+      "business",
+      "business-analysis-masterclass",
+      "solution-evaluation"
+    ],
+    "updatedAt": {
+      "_seconds": 1771151383,
+      "_nanoseconds": 790000000
+    }
+  },
+  {
+    "id": "DWlpTBpLpQVYbOzGstXB",
+    "articleId": "DWlpTBpLpQVYbOzGstXB",
+    "title": "building ba excellence",
+    "excerpt": "# building ba excellence\n\n## topics covered\n\n- the complete ba competency model: knowledge, skills, and abilities\n- analytical thinking and problem solving mastery\n- systems thinking for bas: seeing t",
+    "tags": [
+      "excellence",
+      "mastery",
+      "skills"
+    ],
+    "folderPath": [
+      "business",
+      "business-analysis-masterclass",
+      "mastery-and-professional-development"
+    ],
+    "updatedAt": {
+      "_seconds": 1771151408,
+      "_nanoseconds": 337000000
+    }
+  },
+  {
+    "id": "Dw0XV98d0ynoeDElchjd",
+    "articleId": "Dw0XV98d0ynoeDElchjd",
+    "title": "prioritization techniques",
+    "excerpt": "# prioritization techniques\n\n## topics covered\n\n- why prioritization is essential: resources are always limited\n- moscow method: must have, should have, could have, won't have\n- timeboxing and budgeti",
+    "tags": [
+      "prioritization",
+      "techniques",
+      "decision-making"
+    ],
+    "folderPath": [
+      "business",
+      "business-analysis-masterclass",
+      "requirements-lifecycle-management"
+    ],
+    "updatedAt": {
+      "_seconds": 1771151352,
+      "_nanoseconds": 22000000
+    }
+  },
+  {
+    "id": "HSQ6fg7i2HsxkNE8QxHg",
+    "articleId": "HSQ6fg7i2HsxkNE8QxHg",
+    "title": "key terminology and glossary",
+    "excerpt": "# key terminology and glossary\n\n## topics covered\n\n- standardized ba vocabulary across iiba and pmi frameworks\n- iiba vs. pmi terminology differences and reconciliation\n- common misused terms: require",
+    "tags": [
+      "terminology",
+      "glossary",
+      "reference"
+    ],
+    "folderPath": [
+      "business",
+      "business-analysis-masterclass",
+      "foundations-of-business-analysis"
+    ],
+    "updatedAt": {
+      "_seconds": 1771151317,
+      "_nanoseconds": 396000000
+    }
+  },
+  {
+    "id": "R4ZBysifSLNyCGboHHjY",
+    "articleId": "R4ZBysifSLNyCGboHHjY",
+    "title": "user story mapping",
+    "excerpt": "# user story mapping\n\n## topics covered\n\n- what is user story mapping and why it works for product discovery\n- building a story map step by step: activities, tasks, and details\n- backbone, walking ske",
+    "tags": [
+      "story-mapping",
+      "discovery",
+      "planning"
+    ],
+    "folderPath": [
+      "business",
+      "business-analysis-masterclass",
+      "agile-business-analysis"
+    ],
+    "updatedAt": {
+      "_seconds": 1771151391,
+      "_nanoseconds": 907000000
+    }
+  },
+  {
+    "id": "TZGChhZIAYwogSyLpXao",
+    "articleId": "TZGChhZIAYwogSyLpXao",
+    "title": "ba governance and information management",
+    "excerpt": "# ba governance and information management\n\n## topics covered\n\n- decision-making authority and escalation paths\n- requirements approval processes and sign-off protocols\n- information management approa",
+    "tags": [
+      "governance",
+      "information-management",
+      "traceability"
+    ],
+    "folderPath": [
+      "business",
+      "business-analysis-masterclass",
+      "ba-planning-and-monitoring"
+    ],
+    "updatedAt": {
+      "_seconds": 1771151324,
+      "_nanoseconds": 977000000
+    }
+  },
+  {
+    "id": "UCHOFjEnOx7ZksCsx4j7",
+    "articleId": "UCHOFjEnOx7ZksCsx4j7",
+    "title": "jira for business analysis",
+    "excerpt": "# jira for business analysis\n\n## topics covered\n\n- jira agile fundamentals and setup: getting started\n- creating and managing scrum boards: configuration and workflow\n- kanban boards for ba workflows:",
+    "tags": [
+      "jira",
+      "tools",
+      "agile-tools"
+    ],
+    "folderPath": [
+      "business",
+      "business-analysis-masterclass",
+      "tools-and-techniques-reference"
+    ],
+    "updatedAt": {
+      "_seconds": 1771151398,
+      "_nanoseconds": 944000000
+    }
+  },
+  {
+    "id": "UqaEmlVcjDli1vztRd9y",
+    "articleId": "UqaEmlVcjDli1vztRd9y",
+    "title": "the ba role in scrum and kanban",
+    "excerpt": "# the ba role in scrum and kanban\n\n## topics covered\n\n- the ba role in agile teams: supporting, not replacing the product owner\n- ba relationship with product owner, scrum master, and development team",
+    "tags": [
+      "scrum",
+      "kanban",
+      "roles"
+    ],
+    "folderPath": [
+      "business",
+      "business-analysis-masterclass",
+      "agile-business-analysis"
+    ],
+    "updatedAt": {
+      "_seconds": 1771151389,
+      "_nanoseconds": 259000000
+    }
+  },
+  {
+    "id": "VWaLB8Z4k5bvgzOB9QCX",
+    "articleId": "VWaLB8Z4k5bvgzOB9QCX",
+    "title": "modeling techniques reference",
+    "excerpt": "# modeling techniques reference\n\n## topics covered\n\n- business process model and notation (bpmn) overview: events, gateways, flows\n- uml diagrams for ba: use case, activity, sequence, state diagrams\n-",
+    "tags": [
+      "modeling",
+      "bpmn",
+      "uml",
+      "erd",
+      "reference"
+    ],
+    "folderPath": [
+      "business",
+      "business-analysis-masterclass",
+      "tools-and-techniques-reference"
+    ],
+    "updatedAt": {
+      "_seconds": 1771151402,
+      "_nanoseconds": 821000000
+    }
+  },
+  {
+    "id": "W9uByzEwTynrcCOaft7D",
+    "articleId": "W9uByzEwTynrcCOaft7D",
+    "title": "decision-making frameworks",
+    "excerpt": "# decision-making frameworks\n\n## topics covered\n\n- decision analysis techniques: structured approaches to choices (babok 10.16)\n- decision tables and decision trees: visualizing complex decisions\n- fi",
+    "tags": [
+      "decision-making",
+      "frameworks",
+      "analysis"
+    ],
+    "folderPath": [
+      "business",
+      "business-analysis-masterclass",
+      "tools-and-techniques-reference"
+    ],
+    "updatedAt": {
+      "_seconds": 1771151404,
+      "_nanoseconds": 536000000
+    }
+  },
+  {
+    "id": "WKicTDWhEB9oHXkSjLpn",
+    "articleId": "WKicTDWhEB9oHXkSjLpn",
+    "title": "performance monitoring and continuous improvement",
+    "excerpt": "# performance monitoring and continuous improvement\n\n## topics covered\n\n- ba performance metrics and kpis: measuring effectiveness\n- identifying improvement opportunities in ba processes\n- lessons lea",
+    "tags": [
+      "monitoring",
+      "improvement",
+      "metrics"
+    ],
+    "folderPath": [
+      "business",
+      "business-analysis-masterclass",
+      "ba-planning-and-monitoring"
+    ],
+    "updatedAt": {
+      "_seconds": 1771151326,
+      "_nanoseconds": 764000000
+    }
+  },
+  {
+    "id": "bd2fd0qLSbtxcWXAv58D",
+    "articleId": "bd2fd0qLSbtxcWXAv58D",
+    "title": "planning in agile vs. predictive contexts",
+    "excerpt": "# planning in agile vs. predictive contexts\n\n## topics covered\n\n- how ba planning differs in agile environments\n- just-in-time planning and progressive elaboration\n- multilevel planning: portfolio, re",
+    "tags": [
+      "agile",
+      "predictive",
+      "planning"
+    ],
+    "folderPath": [
+      "business",
+      "business-analysis-masterclass",
+      "ba-planning-and-monitoring"
+    ],
+    "updatedAt": {
+      "_seconds": 1771151329,
+      "_nanoseconds": 34000000
+    }
+  },
+  {
+    "id": "cQxLZqpCuLfaR9LwCPzd",
+    "articleId": "cQxLZqpCuLfaR9LwCPzd",
+    "title": "certifications guide",
+    "excerpt": "# certifications guide (cbap, pmi-pba, aac)\n\n## topics covered\n\n- cbap (certified business analysis professional): iiba's flagship certification\n- ccba (certification of capability in business analysi",
+    "tags": [
+      "certifications",
+      "cbap",
+      "pmi-pba",
+      "aac",
+      "career"
+    ],
+    "folderPath": [
+      "business",
+      "business-analysis-masterclass",
+      "mastery-and-professional-development"
+    ],
+    "updatedAt": {
+      "_seconds": 1771151413,
+      "_nanoseconds": 915000000
+    }
+  },
+  {
+    "id": "duFxcLfgtl1A8dCzVqn5",
+    "articleId": "duFxcLfgtl1A8dCzVqn5",
+    "title": "continuous improvement practices",
+    "excerpt": "# continuous improvement practices\n\n## topics covered\n\n- retrospectives and lessons learned: structured reflection\n- personal development planning: setting and tracking goals\n- staying current with in",
+    "tags": [
+      "improvement",
+      "learning",
+      "growth"
+    ],
+    "folderPath": [
+      "business",
+      "business-analysis-masterclass",
+      "mastery-and-professional-development"
+    ],
+    "updatedAt": {
+      "_seconds": 1771151412,
+      "_nanoseconds": 705000000
+    }
+  },
+  {
+    "id": "dyhzr1mh4Jm1GzM9Wc7r",
+    "articleId": "dyhzr1mh4Jm1GzM9Wc7r",
+    "title": "defining the change strategy",
+    "excerpt": "# defining the change strategy\n\n## topics covered\n\n- developing the change strategy: from current to future state\n- solution approach options: build, buy, modify, or do nothing\n- transition planning: ",
+    "tags": [
+      "strategy",
+      "change",
+      "transition"
+    ],
+    "folderPath": [
+      "business",
+      "business-analysis-masterclass",
+      "strategy-analysis"
+    ],
+    "updatedAt": {
+      "_seconds": 1771151362,
+      "_nanoseconds": 105000000
+    }
+  },
+  {
+    "id": "ekxZJ8WIaAxqoRibJeWn",
+    "articleId": "ekxZJ8WIaAxqoRibJeWn",
+    "title": "business case development",
+    "excerpt": "# business case development\n\n## topics covered\n\n- business case components and structure: problem, analysis, recommendation\n- financial analysis techniques: roi, npv, payback period (babok 10.20)\n- co",
+    "tags": [
+      "business-case",
+      "financial",
+      "justification"
+    ],
+    "folderPath": [
+      "business",
+      "business-analysis-masterclass",
+      "strategy-analysis"
+    ],
+    "updatedAt": {
+      "_seconds": 1771151363,
+      "_nanoseconds": 761000000
+    }
+  },
+  {
+    "id": "gFgIbKZOptrmrd5MjKjN",
+    "articleId": "gFgIbKZOptrmrd5MjKjN",
+    "title": "baselining and change control",
+    "excerpt": "# baselining and change control\n\n## topics covered\n\n- what is a requirements baseline and why it matters\n- when and how to baseline: timing and process\n- change control processes: request, assess, dec",
+    "tags": [
+      "baseline",
+      "change-control",
+      "governance"
+    ],
+    "folderPath": [
+      "business",
+      "business-analysis-masterclass",
+      "requirements-lifecycle-management"
+    ],
+    "updatedAt": {
+      "_seconds": 1771151349,
+      "_nanoseconds": 344000000
+    }
+  },
+  {
+    "id": "gR1TeiB9bNrVDnVXwhrx",
+    "articleId": "gR1TeiB9bNrVDnVXwhrx",
+    "title": "ba community and knowledge sharing",
+    "excerpt": "# ba community and knowledge sharing\n\n## topics covered\n\n- professional ba communities: iiba chapters, pmi communities of practice\n- conferences and events: ba world, building business capability\n- ba",
+    "tags": [
+      "community",
+      "networking",
+      "knowledge-sharing"
+    ],
+    "folderPath": [
+      "business",
+      "business-analysis-masterclass",
+      "mastery-and-professional-development"
+    ],
+    "updatedAt": {
+      "_seconds": 1771151415,
+      "_nanoseconds": 69000000
+    }
+  },
+  {
+    "id": "gUjFfg3WXLJkZ7s1pwUl",
+    "articleId": "gUjFfg3WXLJkZ7s1pwUl",
+    "title": "data and process modeling",
+    "excerpt": "# data and process modeling\n\n## topics covered\n\n- entity relationship diagrams (erd): modeling data structures\n- data dictionaries and data flow diagrams: defining data elements\n- data modeling fundam",
+    "tags": [
+      "modeling",
+      "data",
+      "process",
+      "diagrams"
+    ],
+    "folderPath": [
+      "business",
+      "business-analysis-masterclass",
+      "requirements-analysis-design"
+    ],
+    "updatedAt": {
+      "_seconds": 1771151372,
+      "_nanoseconds": 587000000
+    }
+  },
+  {
+    "id": "i2kRcg6fETwkc55aymii",
+    "articleId": "i2kRcg6fETwkc55aymii",
+    "title": "effective stakeholder collaboration",
+    "excerpt": "# effective stakeholder collaboration\n\n## topics covered\n\n- communicating ba information effectively to diverse audiences\n- managing stakeholder collaboration throughout the project lifecycle\n- active",
+    "tags": [
+      "collaboration",
+      "communication",
+      "stakeholders"
+    ],
+    "folderPath": [
+      "business",
+      "business-analysis-masterclass",
+      "elicitation-and-collaboration"
+    ],
+    "updatedAt": {
+      "_seconds": 1771151337,
+      "_nanoseconds": 108000000
+    }
+  },
+  {
+    "id": "jQjzL0VNa3tt9LiHSeaU",
+    "articleId": "jQjzL0VNa3tt9LiHSeaU",
+    "title": "value delivery and benefits realization",
+    "excerpt": "# value delivery and benefits realization\n\n## topics covered\n\n- benefits realization planning: ensuring expected value is achieved\n- tracking value delivery over time: measurement cadence\n- organizati",
+    "tags": [
+      "value",
+      "benefits",
+      "realization"
+    ],
+    "folderPath": [
+      "business",
+      "business-analysis-masterclass",
+      "solution-evaluation"
+    ],
+    "updatedAt": {
+      "_seconds": 1771151385,
+      "_nanoseconds": 514000000
+    }
+  },
+  {
+    "id": "kIwUmu5RIjLb67TYM1qb",
+    "articleId": "kIwUmu5RIjLb67TYM1qb",
+    "title": "cross-functional collaboration mastery",
+    "excerpt": "# cross-functional collaboration mastery\n\n## topics covered\n\n- working effectively with it teams: bridging the business-technology gap\n- collaborating with project managers: complementary roles\n- enga",
+    "tags": [
+      "collaboration",
+      "cross-functional",
+      "leadership"
+    ],
+    "folderPath": [
+      "business",
+      "business-analysis-masterclass",
+      "mastery-and-professional-development"
+    ],
+    "updatedAt": {
+      "_seconds": 1771151411,
+      "_nanoseconds": 464000000
+    }
+  },
+  {
+    "id": "knAIqnMroDUcmRhdQglJ",
+    "articleId": "knAIqnMroDUcmRhdQglJ",
+    "title": "product backlog management and refinement",
+    "excerpt": "# product backlog management and refinement\n\n## topics covered\n\n- product backlog structure and management: ordered list of everything needed\n- backlog grooming/refinement sessions: preparing items fo",
+    "tags": [
+      "backlog",
+      "refinement",
+      "grooming"
+    ],
+    "folderPath": [
+      "business",
+      "business-analysis-masterclass",
+      "agile-business-analysis"
+    ],
+    "updatedAt": {
+      "_seconds": 1771151394,
+      "_nanoseconds": 62000000
+    }
+  },
+  {
+    "id": "lxJCpOZeIJMH6l4vTK2f",
+    "articleId": "lxJCpOZeIJMH6l4vTK2f",
+    "title": "risk assessment and constraints",
+    "excerpt": "# risk assessment and constraints\n\n## topics covered\n\n- risk analysis and management techniques (babok 10.38)\n- identifying constraints and assumptions that limit solutions\n- risk tolerance and mitiga",
+    "tags": [
+      "risk",
+      "constraints",
+      "assessment"
+    ],
+    "folderPath": [
+      "business",
+      "business-analysis-masterclass",
+      "strategy-analysis"
+    ],
+    "updatedAt": {
+      "_seconds": 1771151359,
+      "_nanoseconds": 875000000
+    }
+  },
+  {
+    "id": "m1g1JOCWkFeGTatORxF8",
+    "articleId": "m1g1JOCWkFeGTatORxF8",
+    "title": "ba technique selection guide",
+    "excerpt": "# ba technique selection guide\n\n## topics covered\n\n- complete technique catalog organized by purpose: elicitation, analysis, modeling, evaluation\n- technique-to-knowledge-area mapping: which technique",
+    "tags": [
+      "techniques",
+      "selection",
+      "guide",
+      "reference"
+    ],
+    "folderPath": [
+      "business",
+      "business-analysis-masterclass",
+      "tools-and-techniques-reference"
+    ],
+    "updatedAt": {
+      "_seconds": 1771151405,
+      "_nanoseconds": 952000000
+    }
+  },
+  {
+    "id": "mCuWdi5n0qo7EmWPfocw",
+    "articleId": "mCuWdi5n0qo7EmWPfocw",
+    "title": "measuring solution performance",
+    "excerpt": "# measuring solution performance\n\n## topics covered\n\n- defining solution performance measures: what to measure and why\n- metrics and kpis for solution evaluation (babok 10.28)\n- benchmarking and marke",
+    "tags": [
+      "measurement",
+      "performance",
+      "metrics"
+    ],
+    "folderPath": [
+      "business",
+      "business-analysis-masterclass",
+      "solution-evaluation"
+    ],
+    "updatedAt": {
+      "_seconds": 1771151377,
+      "_nanoseconds": 570000000
+    }
+  },
+  {
+    "id": "nAh7WbIgIGWsbEZrBjuE",
+    "articleId": "nAh7WbIgIGWsbEZrBjuE",
+    "title": "verifying and validating requirements",
+    "excerpt": "# verifying and validating requirements\n\n## topics covered\n\n- verification: are requirements well-formed? (correctness, completeness, consistency)\n- validation: do requirements deliver value? (alignme",
+    "tags": [
+      "verification",
+      "validation",
+      "quality"
+    ],
+    "folderPath": [
+      "business",
+      "business-analysis-masterclass",
+      "requirements-analysis-design"
+    ],
+    "updatedAt": {
+      "_seconds": 1771151376,
+      "_nanoseconds": 174000000
+    }
+  },
+  {
+    "id": "nC8grRU6Oju0njKRhEvU",
+    "articleId": "nC8grRU6Oju0njKRhEvU",
+    "title": "planning the ba approach",
+    "excerpt": "# planning the ba approach\n\n## topics covered\n\n- choosing predictive, adaptive, or hybrid approaches for ba work\n- planning ba activities, deliverables, and timelines\n- formality vs. agility: scaling ",
+    "tags": [
+      "planning",
+      "approach",
+      "methodology"
+    ],
+    "folderPath": [
+      "business",
+      "business-analysis-masterclass",
+      "ba-planning-and-monitoring"
+    ],
+    "updatedAt": {
+      "_seconds": 1771151320,
+      "_nanoseconds": 574000000
+    }
+  },
+  {
+    "id": "pHR5x2GwRmSZmPZN0vWe",
+    "articleId": "pHR5x2GwRmSZmPZN0vWe",
+    "title": "traceability",
+    "excerpt": "# traceability\n\n## topics covered\n\n- what is requirements traceability and why it matters for project success\n- traceability matrix construction: rows, columns, and relationship types\n- forward and ba",
+    "tags": [
+      "traceability",
+      "matrix",
+      "relationships"
+    ],
+    "folderPath": [
+      "business",
+      "business-analysis-masterclass",
+      "requirements-lifecycle-management"
+    ],
+    "updatedAt": {
+      "_seconds": 1771151347,
+      "_nanoseconds": 123000000
+    }
+  },
+  {
+    "id": "qvIaeX59ziXQgWCg8Q6f",
+    "articleId": "qvIaeX59ziXQgWCg8Q6f",
+    "title": "functional vs. non-functional requirements",
+    "excerpt": "# functional vs. non-functional requirements\n\n## topics covered\n\n- functional requirements: what the system must do\n- non-functional (quality attribute) requirements: how well it must perform\n- perfor",
+    "tags": [
+      "functional",
+      "nonfunctional",
+      "quality-attributes"
+    ],
+    "folderPath": [
+      "business",
+      "business-analysis-masterclass",
+      "requirements-analysis-design"
+    ],
+    "updatedAt": {
+      "_seconds": 1771151368,
+      "_nanoseconds": 228000000
+    }
+  },
+  {
+    "id": "rrXuqNB1lDCnpo7dgfH2",
+    "articleId": "rrXuqNB1lDCnpo7dgfH2",
+    "title": "requirements reuse and patterns",
+    "excerpt": "# requirements reuse and patterns\n\n## topics covered\n\n- identifying reusable requirements across projects\n- requirements patterns and templates: building organizational assets\n- building organizationa",
+    "tags": [
+      "reuse",
+      "patterns",
+      "efficiency"
+    ],
+    "folderPath": [
+      "business",
+      "business-analysis-masterclass",
+      "requirements-lifecycle-management"
+    ],
+    "updatedAt": {
+      "_seconds": 1771151354,
+      "_nanoseconds": 167000000
+    }
+  },
+  {
+    "id": "sy6S0yG93YvrtJwVHDqk",
+    "articleId": "sy6S0yG93YvrtJwVHDqk",
+    "title": "elicitation fundamentals",
+    "excerpt": "# elicitation fundamentals\n\n## topics covered\n\n- preparing for elicitation: defining objectives, scope, logistics, and participants\n- conducting elicitation sessions effectively\n- confirming and docum",
+    "tags": [
+      "elicitation",
+      "preparation",
+      "fundamentals"
+    ],
+    "folderPath": [
+      "business",
+      "business-analysis-masterclass",
+      "elicitation-and-collaboration"
+    ],
+    "updatedAt": {
+      "_seconds": 1771151332,
+      "_nanoseconds": 86000000
+    }
+  },
+  {
+    "id": "tYHWaH80mdYPwAAkTdUK",
+    "articleId": "tYHWaH80mdYPwAAkTdUK",
+    "title": "requirements classification schema",
+    "excerpt": "# requirements classification schema\n\n## topics covered\n\n- business requirements: high-level goals and objectives of the organization\n- stakeholder requirements: needs of specific stakeholder groups\n-",
+    "tags": [
+      "requirements",
+      "classification",
+      "fundamentals"
+    ],
+    "folderPath": [
+      "business",
+      "business-analysis-masterclass",
+      "foundations-of-business-analysis"
+    ],
+    "updatedAt": {
+      "_seconds": 1771151311,
+      "_nanoseconds": 543000000
+    }
+  },
+  {
+    "id": "wsWYbyWCGNwWpfErbAOs",
+    "articleId": "wsWYbyWCGNwWpfErbAOs",
+    "title": "understanding current state",
+    "excerpt": "# understanding current state\n\n## topics covered\n\n- analyzing the current state of the enterprise systematically\n- business capability analysis: what the organization can do today (babok 10.6)\n- organ",
+    "tags": [
+      "current-state",
+      "analysis",
+      "assessment"
+    ],
+    "folderPath": [
+      "business",
+      "business-analysis-masterclass",
+      "strategy-analysis"
+    ],
+    "updatedAt": {
+      "_seconds": 1771151356,
+      "_nanoseconds": 273000000
+    }
+  },
+  {
+    "id": "x072tnli1zoPAfTUWedJ",
+    "articleId": "x072tnli1zoPAfTUWedJ",
+    "title": "agile estimation and planning",
+    "excerpt": "# agile estimation and planning\n\n## topics covered\n\n- story points and relative estimation: why relative sizing works\n- planning poker and other estimation techniques\n- velocity tracking and forecasti",
+    "tags": [
+      "estimation",
+      "planning",
+      "velocity"
+    ],
+    "folderPath": [
+      "business",
+      "business-analysis-masterclass",
+      "agile-business-analysis"
+    ],
+    "updatedAt": {
+      "_seconds": 1771151397,
+      "_nanoseconds": 362000000
+    }
+  },
+  {
+    "id": "xDGyJPVIimhGenfEFW2m",
+    "articleId": "xDGyJPVIimhGenfEFW2m",
+    "title": "elicitation techniques catalog",
+    "excerpt": "# elicitation techniques catalog\n\n## topics covered\n\n- interviews: structured, unstructured, and contextual approaches\n- workshops and facilitated sessions: design and facilitation skills\n- focus grou",
+    "tags": [
+      "techniques",
+      "elicitation",
+      "catalog"
+    ],
+    "folderPath": [
+      "business",
+      "business-analysis-masterclass",
+      "elicitation-and-collaboration"
+    ],
+    "updatedAt": {
+      "_seconds": 1771151334,
+      "_nanoseconds": 896000000
+    }
+  },
+  {
+    "id": "xpW2vUuLMrFY8WQYx2kA",
+    "articleId": "xpW2vUuLMrFY8WQYx2kA",
+    "title": "defining future state and business need",
+    "excerpt": "# defining future state and business need\n\n## topics covered\n\n- defining the desired future state: vision and objectives\n- situation statements: the pmi approach to framing problems and opportunities\n",
+    "tags": [
+      "future-state",
+      "vision",
+      "business-need"
+    ],
+    "folderPath": [
+      "business",
+      "business-analysis-masterclass",
+      "strategy-analysis"
+    ],
+    "updatedAt": {
+      "_seconds": 1771151358,
+      "_nanoseconds": 36000000
+    }
+  },
+  {
+    "id": "yi6JfneAjzCy8dL3CPHM",
+    "articleId": "yi6JfneAjzCy8dL3CPHM",
+    "title": "documentation tools and templates",
+    "excerpt": "# documentation tools and templates\n\n## topics covered\n\n- srs templates and standards: ieee 830 and modern alternatives\n- requirements document structures: organizing for readability\n- agile documenta",
+    "tags": [
+      "documentation",
+      "templates",
+      "tools"
+    ],
+    "folderPath": [
+      "business",
+      "business-analysis-masterclass",
+      "tools-and-techniques-reference"
+    ],
+    "updatedAt": {
+      "_seconds": 1771151400,
+      "_nanoseconds": 913000000
+    }
+  },
+  {
+    "id": "zXhAu9RHRh9IJ6sgZ1v7",
+    "articleId": "zXhAu9RHRh9IJ6sgZ1v7",
+    "title": "specifying and modeling requirements",
+    "excerpt": "# specifying and modeling requirements\n\n## topics covered\n\n- requirements specification best practices: clarity, precision, testability\n- writing clear, testable, atomic requirements\n- requirements at",
+    "tags": [
+      "specification",
+      "modeling",
+      "analysis"
+    ],
+    "folderPath": [
+      "business",
+      "business-analysis-masterclass",
+      "requirements-analysis-design"
+    ],
+    "updatedAt": {
+      "_seconds": 1771151366,
+      "_nanoseconds": 166000000
+    }
+  }
+]

@@ -53,7 +53,7 @@ export async function searchArticles(searchQuery: string, folderId?: string): Pr
     .filter(result => {
       const matchesQuery =
         result.title.toLowerCase().includes(lowerQuery) ||
-        result.excerpt.toLowerCase().includes(lowerQuery);
+        result.description.toLowerCase().includes(lowerQuery); // Changed from excerpt to description
       const matchesFolder = !folderId || result.folderPath.includes(folderId);
       return matchesQuery && matchesFolder;
     })

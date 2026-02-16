@@ -1,0 +1,4404 @@
+[
+  {
+    "id": "1SqjvkeWK8HD7JUYYI9L",
+    "title": "Requirements Classification and States",
+    "slug": "requirements-classification-states",
+    "folderId": "MFV5l6ITm2MRS2VwCNnX",
+    "folderPath": [
+      "business",
+      "business-analysis-masterclass",
+      "requirements-lifecycle-management"
+    ],
+    "content": "# Requirements Classification and States\n\n## Topics Covered\n\n- Requirements lifecycle states: stated, confirmed, prioritized, approved, implemented, verified\n- Requirements attributes and metadata: priority, status, rationale, source, complexity\n- Requirements quality characteristics: clear, complete, consistent, testable, traceable\n- Maintaining requirements over time: ongoing care and feeding\n- Requirements process overview from the PMI perspective\n- State transitions and governance checkpoints\n\n## Key Sources\n- BABOK Guide V3 Sections 5.1-5.2\n- Requirements Management Practice Guide Chapter 2\n- Software Requirements Essentials Chapter 7",
+    "excerpt": "# Requirements Classification and States\n\n## Topics Covered\n\n- Requirements lifecycle states: stated, confirmed, prioritized, approved, implemented, verified\n- Requirements attributes and metadata: pr",
+    "tags": [
+      "requirements",
+      "classification",
+      "lifecycle"
+    ],
+    "order": 0,
+    "status": "draft",
+    "priority": "high",
+    "createdAt": {
+      "_seconds": 1771151343,
+      "_nanoseconds": 345000000
+    },
+    "updatedAt": {
+      "_seconds": 1771151343,
+      "_nanoseconds": 345000000
+    },
+    "metadata": {
+      "wordCount": 82,
+      "readingTime": 1,
+      "lastModifiedBy": "ai-agent",
+      "version": 1
+    }
+  },
+  {
+    "id": "26MqoQATkauNUsVoHLvX",
+    "title": "Elicitation in Agile Environments",
+    "slug": "elicitation-agile-environments",
+    "folderId": "JBgfvhGXtSW76JgaQTb4",
+    "folderPath": [
+      "business",
+      "business-analysis-masterclass",
+      "elicitation-and-collaboration"
+    ],
+    "content": "# Elicitation in Agile Environments\n\n## Topics Covered\n\n- How elicitation techniques adapt for agile: stand-ups, refinement sessions, retrospectives\n- Story conversations as elicitation: the 3Cs (Card, Conversation, Confirmation) in practice\n- User story workshops and collaborative games for backlog creation\n- Story mapping as a collaborative discovery technique\n- Observation and participatory design in agile sprints\n- Continuous elicitation vs. phase-gated elicitation\n\n## Key Sources\n- Agile Business Analysis Chapter 4\n- User Story Mapping Chapters 5-7\n- Essential Scrum Chapter 5",
+    "excerpt": "# Elicitation in Agile Environments\n\n## Topics Covered\n\n- How elicitation techniques adapt for agile: stand-ups, refinement sessions, retrospectives\n- Story conversations as elicitation: the 3Cs (Card",
+    "tags": [
+      "agile",
+      "elicitation",
+      "collaboration"
+    ],
+    "order": 0,
+    "status": "draft",
+    "priority": "high",
+    "createdAt": {
+      "_seconds": 1771151341,
+      "_nanoseconds": 125000000
+    },
+    "updatedAt": {
+      "_seconds": 1771151341,
+      "_nanoseconds": 125000000
+    },
+    "metadata": {
+      "wordCount": 83,
+      "readingTime": 1,
+      "lastModifiedBy": "ai-agent",
+      "version": 1
+    }
+  },
+  {
+    "id": "2BvDGBkFlbCLcphqufX9",
+    "title": "What is Business Analysis",
+    "slug": "what-is-business-analysis",
+    "folderId": "7wBVsIeXGQW5caxaixWy",
+    "folderPath": [
+      "business",
+      "business-analysis-masterclass",
+      "foundations-of-business-analysis"
+    ],
+    "content": "# What is Business Analysis\n\n## Topics Covered\n\n- Definition and scope of business analysis (IIBA and PMI perspectives)\n- The value BA brings to organizations: bridging business needs and technology solutions\n- BA vs. project management vs. systems analysis: clarifying boundaries\n- Business analysis as a discipline vs. a role: anyone can perform BA tasks\n- How BA fits within the project and product lifecycle\n- The evolution of business analysis as a profession\n\n## Key Sources\n- BABOK Guide V3 Section 1.2\n- Seven Steps to Mastering BA Chapter 1\n- BA for Practitioners (PMI) Chapter 1",
+    "excerpt": "# What is Business Analysis\n\n## Topics Covered\n\n- Definition and scope of business analysis (IIBA and PMI perspectives)\n- The value BA brings to organizations: bridging business needs and technology s",
+    "tags": [
+      "introduction",
+      "ba-role",
+      "fundamentals"
+    ],
+    "order": 0,
+    "status": "draft",
+    "priority": "high",
+    "createdAt": {
+      "_seconds": 1771151304,
+      "_nanoseconds": 980000000
+    },
+    "updatedAt": {
+      "_seconds": 1771151304,
+      "_nanoseconds": 980000000
+    },
+    "metadata": {
+      "wordCount": 99,
+      "readingTime": 1,
+      "lastModifiedBy": "ai-agent",
+      "version": 1
+    }
+  },
+  {
+    "id": "5SNw9VuR46aITbyqWZab",
+    "title": "Managing Communication and Conflict",
+    "slug": "managing-communication-conflict",
+    "folderId": "JBgfvhGXtSW76JgaQTb4",
+    "folderPath": [
+      "business",
+      "business-analysis-masterclass",
+      "elicitation-and-collaboration"
+    ],
+    "content": "# Managing Communication and Conflict\n\n## Topics Covered\n\n- Communication styles and adapting to different stakeholder preferences\n- Conflict resolution strategies for requirements disagreements\n- Negotiating requirements between competing interests\n- Managing difficult stakeholders: tactics and approaches\n- Cross-functional collaboration skills for complex organizations\n- Building consensus when stakeholders have opposing views\n\n## Key Sources\n- BABOK Guide V3 Sections 9.2-9.3\n- Seven Steps to Mastering BA Chapters 2 and 7\n- BA for Practitioners (PMI) Chapter 6",
+    "excerpt": "# Managing Communication and Conflict\n\n## Topics Covered\n\n- Communication styles and adapting to different stakeholder preferences\n- Conflict resolution strategies for requirements disagreements\n- Neg",
+    "tags": [
+      "communication",
+      "conflict",
+      "negotiation"
+    ],
+    "order": 0,
+    "status": "draft",
+    "priority": "high",
+    "createdAt": {
+      "_seconds": 1771151338,
+      "_nanoseconds": 828000000
+    },
+    "updatedAt": {
+      "_seconds": 1771151338,
+      "_nanoseconds": 828000000
+    },
+    "metadata": {
+      "wordCount": 78,
+      "readingTime": 1,
+      "lastModifiedBy": "ai-agent",
+      "version": 1
+    }
+  },
+  {
+    "id": "8I229lSa6a0drdW6NWxp",
+    "title": "The Business Analysis Core Concept Model",
+    "slug": "ba-core-concept-model",
+    "folderId": "7wBVsIeXGQW5caxaixWy",
+    "folderPath": [
+      "business",
+      "business-analysis-masterclass",
+      "foundations-of-business-analysis"
+    ],
+    "content": "# The Business Analysis Core Concept Model\n\n## Topics Covered\n\n- The BACCM (Change, Need, Solution, Stakeholder, Value, Context)\n- How the six core concepts interrelate and form a unified framework\n- Using BACCM to frame any BA activity or decision\n- PMI's complementary domain model: six performance domains\n- Applying the core concept model to real-world scenarios\n- BACCM as a communication tool with stakeholders\n\n## Key Sources\n- BABOK Guide V3 Section 2.1\n- BA for Practitioners (PMI) Chapter 1",
+    "excerpt": "# The Business Analysis Core Concept Model\n\n## Topics Covered\n\n- The BACCM (Change, Need, Solution, Stakeholder, Value, Context)\n- How the six core concepts interrelate and form a unified framework\n- ",
+    "tags": [
+      "baccm",
+      "concepts",
+      "framework"
+    ],
+    "order": 0,
+    "status": "draft",
+    "priority": "high",
+    "createdAt": {
+      "_seconds": 1771151307,
+      "_nanoseconds": 688000000
+    },
+    "updatedAt": {
+      "_seconds": 1771151307,
+      "_nanoseconds": 688000000
+    },
+    "metadata": {
+      "wordCount": 82,
+      "readingTime": 1,
+      "lastModifiedBy": "ai-agent",
+      "version": 1
+    }
+  },
+  {
+    "id": "8fY9l8BuvZ3neKAAFM24",
+    "title": "Stakeholder Analysis and Engagement",
+    "slug": "stakeholder-analysis-engagement",
+    "folderId": "kHre62Oej3JgCZzf6BpF",
+    "folderPath": [
+      "business",
+      "business-analysis-masterclass",
+      "ba-planning-and-monitoring"
+    ],
+    "content": "# Stakeholder Analysis and Engagement\n\n## Topics Covered\n\n- Identifying stakeholders systematically using multiple techniques\n- Stakeholder list, map, and personas (BABOK technique 10.43)\n- Power/interest grid and RACI matrix for engagement planning\n- Stakeholder engagement strategies: inform, consult, involve, collaborate, empower\n- Building trust with stakeholders through credibility and reliability\n- Working with dispersed and remote teams\n- Balancing conflicting stakeholder needs through negotiation\n\n## Key Sources\n- BABOK Guide V3 Section 3.2\n- Seven Steps to Mastering BA Chapter 2\n- BA for Practitioners (PMI) Chapter 3",
+    "excerpt": "# Stakeholder Analysis and Engagement\n\n## Topics Covered\n\n- Identifying stakeholders systematically using multiple techniques\n- Stakeholder list, map, and personas (BABOK technique 10.43)\n- Power/inte",
+    "tags": [
+      "stakeholders",
+      "engagement",
+      "communication"
+    ],
+    "order": 0,
+    "status": "draft",
+    "priority": "high",
+    "createdAt": {
+      "_seconds": 1771151321,
+      "_nanoseconds": 951000000
+    },
+    "updatedAt": {
+      "_seconds": 1771151321,
+      "_nanoseconds": 951000000
+    },
+    "metadata": {
+      "wordCount": 89,
+      "readingTime": 1,
+      "lastModifiedBy": "ai-agent",
+      "version": 1
+    }
+  },
+  {
+    "id": "8pOrU0LMQNrrnANliPus",
+    "title": "Agile Principles for Business Analysts",
+    "slug": "agile-principles-for-bas",
+    "folderId": "GpsuNFLV3cA6Qmj8U2Vd",
+    "folderPath": [
+      "business",
+      "business-analysis-masterclass",
+      "agile-business-analysis"
+    ],
+    "content": "# Agile Principles for Business Analysts\n\n## Topics Covered\n\n- Agile values and principles from a BA perspective\n- Agile vs. waterfall: key differences for business analysts\n- Lean principles and waste elimination: the seven wastes\n- The Agile Manifesto through BA eyes: what changes and what stays\n- Common agile challenges and misconceptions about BA work\n- Agile readiness assessment: is your organization ready?\n\n## Key Sources\n- Agile Business Analysis Chapters 1-2\n- Essential Scrum Chapters 1 and 3\n- BABOK Guide V3 Section 11.1 (Agile Perspective)",
+    "excerpt": "# Agile Principles for Business Analysts\n\n## Topics Covered\n\n- Agile values and principles from a BA perspective\n- Agile vs. waterfall: key differences for business analysts\n- Lean principles and wast",
+    "tags": [
+      "agile",
+      "principles",
+      "mindset"
+    ],
+    "order": 0,
+    "status": "draft",
+    "priority": "high",
+    "createdAt": {
+      "_seconds": 1771151387,
+      "_nanoseconds": 228000000
+    },
+    "updatedAt": {
+      "_seconds": 1771151387,
+      "_nanoseconds": 228000000
+    },
+    "metadata": {
+      "wordCount": 89,
+      "readingTime": 1,
+      "lastModifiedBy": "ai-agent",
+      "version": 1
+    }
+  },
+  {
+    "id": "9Zisg8jW3Kk7w1AMQdtS",
+    "title": "BA Roles, Competencies, and Career Paths",
+    "slug": "ba-roles-competencies-career-paths",
+    "folderId": "7wBVsIeXGQW5caxaixWy",
+    "folderPath": [
+      "business",
+      "business-analysis-masterclass",
+      "foundations-of-business-analysis"
+    ],
+    "content": "# BA Roles, Competencies, and Career Paths\n\n## Topics Covered\n\n- Who is a business analyst? Formal role vs. task performer\n- Core underlying competencies: analytical thinking, communication, interaction skills\n- BA personality traits and self-assessment questionnaire\n- Career paths: junior BA to senior BA to lead BA to chief BA\n- Certifications overview: CBAP, CCBA, PMI-PBA, AAC\n- Tools and technology competency for modern BAs\n\n## Key Sources\n- BABOK Guide V3 Sections 1.3, 9.1-9.4\n- Seven Steps to Mastering BA Chapters 1 and 7",
+    "excerpt": "# BA Roles, Competencies, and Career Paths\n\n## Topics Covered\n\n- Who is a business analyst? Formal role vs. task performer\n- Core underlying competencies: analytical thinking, communication, interacti",
+    "tags": [
+      "career",
+      "competencies",
+      "roles"
+    ],
+    "order": 0,
+    "status": "draft",
+    "priority": "high",
+    "createdAt": {
+      "_seconds": 1771151313,
+      "_nanoseconds": 277000000
+    },
+    "updatedAt": {
+      "_seconds": 1771151313,
+      "_nanoseconds": 277000000
+    },
+    "metadata": {
+      "wordCount": 86,
+      "readingTime": 1,
+      "lastModifiedBy": "ai-agent",
+      "version": 1
+    }
+  },
+  {
+    "id": "A30Lbld9AcfY4kzsDFxv",
+    "title": "Analyzing Performance Gaps",
+    "slug": "analyzing-performance-gaps",
+    "folderId": "g7dC45FqgBuzvAAEfEgd",
+    "folderPath": [
+      "business",
+      "business-analysis-masterclass",
+      "solution-evaluation"
+    ],
+    "content": "# Analyzing Performance Gaps\n\n## Topics Covered\n\n- Comparing actual vs. expected solution performance systematically\n- Root cause analysis of performance gaps\n- Identifying trends and patterns in performance data\n- Stakeholder impact assessment: who is affected by gaps\n- Distinguishing between solution issues and process issues\n- Prioritizing gaps for remediation\n\n## Key Sources\n- BABOK Guide V3 Section 8.2\n- BA for Practitioners (PMI) Chapter 5",
+    "excerpt": "# Analyzing Performance Gaps\n\n## Topics Covered\n\n- Comparing actual vs. expected solution performance systematically\n- Root cause analysis of performance gaps\n- Identifying trends and patterns in perf",
+    "tags": [
+      "gaps",
+      "analysis",
+      "performance"
+    ],
+    "order": 0,
+    "status": "draft",
+    "priority": "high",
+    "createdAt": {
+      "_seconds": 1771151378,
+      "_nanoseconds": 922000000
+    },
+    "updatedAt": {
+      "_seconds": 1771151378,
+      "_nanoseconds": 922000000
+    },
+    "metadata": {
+      "wordCount": 68,
+      "readingTime": 1,
+      "lastModifiedBy": "ai-agent",
+      "version": 1
+    }
+  },
+  {
+    "id": "A4Yx1yH0aSxQxTSFmv0L",
+    "title": "Use Cases, User Stories, and Acceptance Criteria",
+    "slug": "use-cases-user-stories-acceptance-criteria",
+    "folderId": "TLRg7xbRj5YLTb9n5COf",
+    "folderPath": [
+      "business",
+      "business-analysis-masterclass",
+      "requirements-analysis-design"
+    ],
+    "content": "# Use Cases, User Stories, and Acceptance Criteria\n\n## Topics Covered\n\n- Use cases and scenarios: the BABOK perspective on behavioral requirements\n- User story format (As a... I want... So that...) and INVEST criteria\n- Card, Conversation, Confirmation: the 3Cs of user stories\n- Writing effective acceptance criteria using Given/When/Then format\n- Epics, themes, and story hierarchy: organizing at scale\n- Choosing between use cases and user stories based on context\n- Story splitting techniques: vertical slices and patterns\n\n## Key Sources\n- BABOK Guide V3 Sections 10.47-10.48\n- Software Requirements Essentials Chapter 3\n- User Story Mapping Chapters 6-9\n- Essential Scrum Chapter 5",
+    "excerpt": "# Use Cases, User Stories, and Acceptance Criteria\n\n## Topics Covered\n\n- Use cases and scenarios: the BABOK perspective on behavioral requirements\n- User story format (As a... I want... So that...) an",
+    "tags": [
+      "use-cases",
+      "user-stories",
+      "acceptance-criteria"
+    ],
+    "order": 0,
+    "status": "draft",
+    "priority": "high",
+    "createdAt": {
+      "_seconds": 1771151370,
+      "_nanoseconds": 250000000
+    },
+    "updatedAt": {
+      "_seconds": 1771151370,
+      "_nanoseconds": 250000000
+    },
+    "metadata": {
+      "wordCount": 106,
+      "readingTime": 1,
+      "lastModifiedBy": "ai-agent",
+      "version": 1
+    }
+  },
+  {
+    "id": "Axikg9JbSTlnCmjQo3p1",
+    "title": "Prototyping and Wireframing",
+    "slug": "prototyping-wireframing",
+    "folderId": "TLRg7xbRj5YLTb9n5COf",
+    "folderPath": [
+      "business",
+      "business-analysis-masterclass",
+      "requirements-analysis-design"
+    ],
+    "content": "# Prototyping and Wireframing\n\n## Topics Covered\n\n- Prototyping approaches: throwaway vs. evolutionary prototypes\n- Low-fidelity vs. high-fidelity prototypes: when to use each\n- Wireframing tools and techniques for requirements communication\n- Using prototypes for requirements validation and stakeholder feedback\n- Product discovery and validated learning through experimentation\n- Minimum viable product (MVP) concept: building the smallest useful thing\n\n## Key Sources\n- BABOK Guide V3 Section 10.36\n- Software Requirements Essentials Chapter 4\n- User Story Mapping Chapters 14-15",
+    "excerpt": "# Prototyping and Wireframing\n\n## Topics Covered\n\n- Prototyping approaches: throwaway vs. evolutionary prototypes\n- Low-fidelity vs. high-fidelity prototypes: when to use each\n- Wireframing tools and ",
+    "tags": [
+      "prototyping",
+      "wireframing",
+      "visualization"
+    ],
+    "order": 0,
+    "status": "draft",
+    "priority": "high",
+    "createdAt": {
+      "_seconds": 1771151374,
+      "_nanoseconds": 483000000
+    },
+    "updatedAt": {
+      "_seconds": 1771151374,
+      "_nanoseconds": 483000000
+    },
+    "metadata": {
+      "wordCount": 80,
+      "readingTime": 1,
+      "lastModifiedBy": "ai-agent",
+      "version": 1
+    }
+  },
+  {
+    "id": "BOo5VM78eTt5hN1pFuXB",
+    "title": "Iterative Analysis and Just-in-Time Requirements",
+    "slug": "iterative-analysis-just-in-time-requirements",
+    "folderId": "GpsuNFLV3cA6Qmj8U2Vd",
+    "folderPath": [
+      "business",
+      "business-analysis-masterclass",
+      "agile-business-analysis"
+    ],
+    "content": "# Iterative Analysis and Just-in-Time Requirements\n\n## Topics Covered\n\n- Just-in-time requirements elaboration vs. up-front specification\n- Progressive elaboration across sprint boundaries\n- Agile documentation: the right amount at the right time\n- Handling change in agile requirements: scope management without change control boards\n- Definition of Done and acceptance criteria management\n- Agile testing and solution evaluation: the BA's role in quality\n\n## Key Sources\n- Agile Business Analysis Chapters 4-5 and 8\n- User Story Mapping Chapter 16\n- Essential Scrum Chapter 5",
+    "excerpt": "# Iterative Analysis and Just-in-Time Requirements\n\n## Topics Covered\n\n- Just-in-time requirements elaboration vs. up-front specification\n- Progressive elaboration across sprint boundaries\n- Agile doc",
+    "tags": [
+      "iterative",
+      "just-in-time",
+      "agile-requirements"
+    ],
+    "order": 0,
+    "status": "draft",
+    "priority": "high",
+    "createdAt": {
+      "_seconds": 1771151395,
+      "_nanoseconds": 357000000
+    },
+    "updatedAt": {
+      "_seconds": 1771151395,
+      "_nanoseconds": 357000000
+    },
+    "metadata": {
+      "wordCount": 85,
+      "readingTime": 1,
+      "lastModifiedBy": "ai-agent",
+      "version": 1
+    }
+  },
+  {
+    "id": "By1I3Ci2stcq7ktKbYhi",
+    "title": "Recommending Improvements",
+    "slug": "recommending-improvements",
+    "folderId": "g7dC45FqgBuzvAAEfEgd",
+    "folderPath": [
+      "business",
+      "business-analysis-masterclass",
+      "solution-evaluation"
+    ],
+    "content": "# Recommending Improvements\n\n## Topics Covered\n\n- Formulating improvement recommendations: structure and evidence\n- Options analysis and decision analysis techniques (BABOK 10.16)\n- Cost-benefit analysis of proposed changes\n- Vendor assessment for build-vs-buy decisions (BABOK 10.49)\n- Recommending actions to increase solution value\n- Continuous improvement frameworks: Plan-Do-Check-Act\n\n## Key Sources\n- BABOK Guide V3 Section 8.5\n- BA for Practitioners (PMI) Chapter 5",
+    "excerpt": "# Recommending Improvements\n\n## Topics Covered\n\n- Formulating improvement recommendations: structure and evidence\n- Options analysis and decision analysis techniques (BABOK 10.16)\n- Cost-benefit analy",
+    "tags": [
+      "improvements",
+      "recommendations",
+      "optimization"
+    ],
+    "order": 0,
+    "status": "draft",
+    "priority": "high",
+    "createdAt": {
+      "_seconds": 1771151381,
+      "_nanoseconds": 621000000
+    },
+    "updatedAt": {
+      "_seconds": 1771151381,
+      "_nanoseconds": 621000000
+    },
+    "metadata": {
+      "wordCount": 64,
+      "readingTime": 1,
+      "lastModifiedBy": "ai-agent",
+      "version": 1
+    }
+  },
+  {
+    "id": "CWiYcEMlqmZkGNOC0tZv",
+    "title": "Solution and Enterprise Limitations",
+    "slug": "solution-enterprise-limitations",
+    "folderId": "g7dC45FqgBuzvAAEfEgd",
+    "folderPath": [
+      "business",
+      "business-analysis-masterclass",
+      "solution-evaluation"
+    ],
+    "content": "# Solution and Enterprise Limitations\n\n## Topics Covered\n\n- Assessing solution limitations: what the current solution cannot do\n- Assessing enterprise limitations: organizational constraints on change\n- Technical debt: types, impact, and management strategies\n- Accruing vs. servicing technical debt: strategic decisions\n- Organizational constraints and dependencies affecting solutions\n- When to replace vs. enhance solutions: the tipping point\n\n## Key Sources\n- BABOK Guide V3 Sections 8.3-8.4\n- BA for Practitioners (PMI) Chapter 5\n- Essential Scrum Chapter 8",
+    "excerpt": "# Solution and Enterprise Limitations\n\n## Topics Covered\n\n- Assessing solution limitations: what the current solution cannot do\n- Assessing enterprise limitations: organizational constraints on change",
+    "tags": [
+      "limitations",
+      "constraints",
+      "enterprise"
+    ],
+    "order": 0,
+    "status": "draft",
+    "priority": "high",
+    "createdAt": {
+      "_seconds": 1771151383,
+      "_nanoseconds": 514000000
+    },
+    "updatedAt": {
+      "_seconds": 1771151383,
+      "_nanoseconds": 514000000
+    },
+    "metadata": {
+      "wordCount": 80,
+      "readingTime": 1,
+      "lastModifiedBy": "ai-agent",
+      "version": 1
+    }
+  },
+  {
+    "id": "DWlpTBpLpQVYbOzGstXB",
+    "title": "Building BA Excellence",
+    "slug": "building-ba-excellence",
+    "folderId": "9XS1q4biY4IPpBivEnvk",
+    "folderPath": [
+      "business",
+      "business-analysis-masterclass",
+      "mastery-and-professional-development"
+    ],
+    "content": "# Building BA Excellence\n\n## Topics Covered\n\n- The complete BA competency model: knowledge, skills, and abilities\n- Analytical thinking and problem solving mastery\n- Systems thinking for BAs: seeing the big picture\n- Building domain expertise: becoming the subject matter bridge\n- Personal effectiveness and self-management\n- BA stewardship and organizational excellence\n\n## Key Sources\n- Seven Steps to Mastering BA Chapter 7\n- BABOK Guide V3 Chapter 9\n- BA for Practitioners (PMI) Chapter 6",
+    "excerpt": "# Building BA Excellence\n\n## Topics Covered\n\n- The complete BA competency model: knowledge, skills, and abilities\n- Analytical thinking and problem solving mastery\n- Systems thinking for BAs: seeing t",
+    "tags": [
+      "excellence",
+      "mastery",
+      "skills"
+    ],
+    "order": 0,
+    "status": "draft",
+    "priority": "high",
+    "createdAt": {
+      "_seconds": 1771151407,
+      "_nanoseconds": 837000000
+    },
+    "updatedAt": {
+      "_seconds": 1771151407,
+      "_nanoseconds": 837000000
+    },
+    "metadata": {
+      "wordCount": 77,
+      "readingTime": 1,
+      "lastModifiedBy": "ai-agent",
+      "version": 1
+    }
+  },
+  {
+    "id": "Dw0XV98d0ynoeDElchjd",
+    "title": "Prioritization Techniques",
+    "slug": "prioritization-techniques",
+    "folderId": "MFV5l6ITm2MRS2VwCNnX",
+    "folderPath": [
+      "business",
+      "business-analysis-masterclass",
+      "requirements-lifecycle-management"
+    ],
+    "content": "# Prioritization Techniques\n\n## Topics Covered\n\n- Why prioritization is essential: resources are always limited\n- MoSCoW method: Must have, Should have, Could have, Won't have\n- Timeboxing and budgeting approaches to prioritization\n- Weighted scoring and multi-criteria analysis\n- Kano model: delighters, satisfiers, and dissatisfiers\n- Buy-a-feature and other collaborative prioritization techniques\n- Prioritization in agile backlogs: value vs. effort vs. risk\n- Managing stakeholder expectations around priority decisions\n\n## Key Sources\n- BABOK Guide V3 Section 5.3\n- Software Requirements Essentials Chapter 4\n- Agile Business Analysis Chapter 7\n- Essential Scrum Chapter 6",
+    "excerpt": "# Prioritization Techniques\n\n## Topics Covered\n\n- Why prioritization is essential: resources are always limited\n- MoSCoW method: Must have, Should have, Could have, Won't have\n- Timeboxing and budgeti",
+    "tags": [
+      "prioritization",
+      "techniques",
+      "decision-making"
+    ],
+    "order": 0,
+    "status": "draft",
+    "priority": "high",
+    "createdAt": {
+      "_seconds": 1771151351,
+      "_nanoseconds": 43000000
+    },
+    "updatedAt": {
+      "_seconds": 1771151351,
+      "_nanoseconds": 43000000
+    },
+    "metadata": {
+      "wordCount": 96,
+      "readingTime": 1,
+      "lastModifiedBy": "ai-agent",
+      "version": 1
+    }
+  },
+  {
+    "id": "HSQ6fg7i2HsxkNE8QxHg",
+    "title": "Key Terminology and Glossary",
+    "slug": "key-terminology-glossary",
+    "folderId": "7wBVsIeXGQW5caxaixWy",
+    "folderPath": [
+      "business",
+      "business-analysis-masterclass",
+      "foundations-of-business-analysis"
+    ],
+    "content": "# Key Terminology and Glossary\n\n## Topics Covered\n\n- Standardized BA vocabulary across IIBA and PMI frameworks\n- IIBA vs. PMI terminology differences and reconciliation\n- Common misused terms: requirement vs. specification, scope vs. solution\n- Building and maintaining a project glossary as a BA best practice\n- Domain-specific terminology management\n- Using consistent language to reduce ambiguity\n\n## Key Sources\n- BABOK Guide V3 Section 2.2\n- Requirements Management Practice Guide Glossary\n- Software Requirements Essentials Chapter 1",
+    "excerpt": "# Key Terminology and Glossary\n\n## Topics Covered\n\n- Standardized BA vocabulary across IIBA and PMI frameworks\n- IIBA vs. PMI terminology differences and reconciliation\n- Common misused terms: require",
+    "tags": [
+      "terminology",
+      "glossary",
+      "reference"
+    ],
+    "order": 0,
+    "status": "draft",
+    "priority": "high",
+    "createdAt": {
+      "_seconds": 1771151316,
+      "_nanoseconds": 364000000
+    },
+    "updatedAt": {
+      "_seconds": 1771151316,
+      "_nanoseconds": 364000000
+    },
+    "metadata": {
+      "wordCount": 79,
+      "readingTime": 1,
+      "lastModifiedBy": "ai-agent",
+      "version": 1
+    }
+  },
+  {
+    "id": "R4ZBysifSLNyCGboHHjY",
+    "title": "User Story Mapping",
+    "slug": "user-story-mapping",
+    "folderId": "GpsuNFLV3cA6Qmj8U2Vd",
+    "folderPath": [
+      "business",
+      "business-analysis-masterclass",
+      "agile-business-analysis"
+    ],
+    "content": "# User Story Mapping\n\n## Topics Covered\n\n- What is user story mapping and why it works for product discovery\n- Building a story map step by step: activities, tasks, and details\n- Backbone, walking skeleton, and story slicing techniques\n- Using maps for release planning: horizontal slices across the backbone\n- Story mapping for discovery and shared understanding\n- Scaling story mapping for large products and multiple teams\n- Story maps as living documents: updating throughout the project\n\n## Key Sources\n- User Story Mapping Chapters 1-5 and 12-14\n- Agile Business Analysis Chapter 4",
+    "excerpt": "# User Story Mapping\n\n## Topics Covered\n\n- What is user story mapping and why it works for product discovery\n- Building a story map step by step: activities, tasks, and details\n- Backbone, walking ske",
+    "tags": [
+      "story-mapping",
+      "discovery",
+      "planning"
+    ],
+    "order": 0,
+    "status": "draft",
+    "priority": "high",
+    "createdAt": {
+      "_seconds": 1771151391,
+      "_nanoseconds": 430000000
+    },
+    "updatedAt": {
+      "_seconds": 1771151391,
+      "_nanoseconds": 430000000
+    },
+    "metadata": {
+      "wordCount": 96,
+      "readingTime": 1,
+      "lastModifiedBy": "ai-agent",
+      "version": 1
+    }
+  },
+  {
+    "id": "TZGChhZIAYwogSyLpXao",
+    "title": "BA Governance and Information Management",
+    "slug": "ba-governance-information-management",
+    "folderId": "kHre62Oej3JgCZzf6BpF",
+    "folderPath": [
+      "business",
+      "business-analysis-masterclass",
+      "ba-planning-and-monitoring"
+    ],
+    "content": "# BA Governance and Information Management\n\n## Topics Covered\n\n- Decision-making authority and escalation paths\n- Requirements approval processes and sign-off protocols\n- Information management approaches: storage, access, retrieval\n- Requirements repositories and tools selection\n- Version control and baselining requirements documents\n- Information access, security, and compliance considerations\n\n## Key Sources\n- BABOK Guide V3 Sections 3.3-3.4\n- Requirements Management Practice Guide Chapter 4\n- Software Requirements Essentials Chapter 7",
+    "excerpt": "# BA Governance and Information Management\n\n## Topics Covered\n\n- Decision-making authority and escalation paths\n- Requirements approval processes and sign-off protocols\n- Information management approa",
+    "tags": [
+      "governance",
+      "information-management",
+      "traceability"
+    ],
+    "order": 0,
+    "status": "draft",
+    "priority": "high",
+    "createdAt": {
+      "_seconds": 1771151324,
+      "_nanoseconds": 569000000
+    },
+    "updatedAt": {
+      "_seconds": 1771151324,
+      "_nanoseconds": 569000000
+    },
+    "metadata": {
+      "wordCount": 71,
+      "readingTime": 1,
+      "lastModifiedBy": "ai-agent",
+      "version": 1
+    }
+  },
+  {
+    "id": "UCHOFjEnOx7ZksCsx4j7",
+    "title": "JIRA for Business Analysis",
+    "slug": "jira-for-business-analysis",
+    "folderId": "1hGCsRTD3gXXT63P4syl",
+    "folderPath": [
+      "business",
+      "business-analysis-masterclass",
+      "tools-and-techniques-reference"
+    ],
+    "content": "# JIRA for Business Analysis\n\n## Topics Covered\n\n- JIRA Agile fundamentals and setup: getting started\n- Creating and managing Scrum boards: configuration and workflow\n- Kanban boards for BA workflows: visualizing work in progress\n- Managing epics, stories, and tasks in JIRA: hierarchy and linking\n- Sprint management and reporting: burndown, velocity, cumulative flow\n- Customizing boards: columns, swimlanes, quick filters\n- Using JIRA for requirements traceability: linking stories to epics and goals\n\n## Key Sources\n- JIRA Agile Essentials Chapters 1-4",
+    "excerpt": "# JIRA for Business Analysis\n\n## Topics Covered\n\n- JIRA Agile fundamentals and setup: getting started\n- Creating and managing Scrum boards: configuration and workflow\n- Kanban boards for BA workflows:",
+    "tags": [
+      "jira",
+      "tools",
+      "agile-tools"
+    ],
+    "order": 0,
+    "status": "draft",
+    "priority": "high",
+    "createdAt": {
+      "_seconds": 1771151398,
+      "_nanoseconds": 647000000
+    },
+    "updatedAt": {
+      "_seconds": 1771151398,
+      "_nanoseconds": 647000000
+    },
+    "metadata": {
+      "wordCount": 83,
+      "readingTime": 1,
+      "lastModifiedBy": "ai-agent",
+      "version": 1
+    }
+  },
+  {
+    "id": "UqaEmlVcjDli1vztRd9y",
+    "title": "The BA Role in Scrum and Kanban",
+    "slug": "ba-role-scrum-kanban",
+    "folderId": "GpsuNFLV3cA6Qmj8U2Vd",
+    "folderPath": [
+      "business",
+      "business-analysis-masterclass",
+      "agile-business-analysis"
+    ],
+    "content": "# The BA Role in Scrum and Kanban\n\n## Topics Covered\n\n- The BA role in agile teams: supporting, not replacing the product owner\n- BA relationship with product owner, Scrum Master, and development team\n- A day in the life of an agile BA: iteration start, middle, and end\n- BA responsibilities in Scrum ceremonies: planning, daily, review, retro\n- BA support for Kanban workflows: flow management and WIP limits\n- Scrum team structures and scaling: multiple teams and complex products\n\n## Key Sources\n- Agile Business Analysis Chapters 3 and 9\n- Essential Scrum Chapters 9-13",
+    "excerpt": "# The BA Role in Scrum and Kanban\n\n## Topics Covered\n\n- The BA role in agile teams: supporting, not replacing the product owner\n- BA relationship with product owner, Scrum Master, and development team",
+    "tags": [
+      "scrum",
+      "kanban",
+      "roles"
+    ],
+    "order": 0,
+    "status": "draft",
+    "priority": "high",
+    "createdAt": {
+      "_seconds": 1771151388,
+      "_nanoseconds": 839000000
+    },
+    "updatedAt": {
+      "_seconds": 1771151388,
+      "_nanoseconds": 839000000
+    },
+    "metadata": {
+      "wordCount": 98,
+      "readingTime": 1,
+      "lastModifiedBy": "ai-agent",
+      "version": 1
+    }
+  },
+  {
+    "id": "VWaLB8Z4k5bvgzOB9QCX",
+    "title": "Modeling Techniques Reference",
+    "slug": "modeling-techniques-reference",
+    "folderId": "1hGCsRTD3gXXT63P4syl",
+    "folderPath": [
+      "business",
+      "business-analysis-masterclass",
+      "tools-and-techniques-reference"
+    ],
+    "content": "# Modeling Techniques Reference\n\n## Topics Covered\n\n- Business process model and notation (BPMN) overview: events, gateways, flows\n- UML diagrams for BA: use case, activity, sequence, state diagrams\n- Entity relationship diagrams: data modeling notation\n- Context diagrams and ecosystem maps: system boundaries\n- Concept modeling: domain concepts and relationships (BABOK 10.11)\n- Scope modeling: defining solution boundaries (BABOK 10.41)\n- Decision modeling: rules and logic visualization (BABOK 10.17)\n- When to use which modeling technique: a selection guide\n\n## Key Sources\n- BABOK Guide V3 Sections 10.11-10.15, 10.34-10.35, 10.41-10.44\n- Software Requirements Essentials Chapters 3-4",
+    "excerpt": "# Modeling Techniques Reference\n\n## Topics Covered\n\n- Business process model and notation (BPMN) overview: events, gateways, flows\n- UML diagrams for BA: use case, activity, sequence, state diagrams\n-",
+    "tags": [
+      "modeling",
+      "bpmn",
+      "uml",
+      "erd",
+      "reference"
+    ],
+    "order": 0,
+    "status": "draft",
+    "priority": "high",
+    "createdAt": {
+      "_seconds": 1771151402,
+      "_nanoseconds": 527000000
+    },
+    "updatedAt": {
+      "_seconds": 1771151402,
+      "_nanoseconds": 527000000
+    },
+    "metadata": {
+      "wordCount": 97,
+      "readingTime": 1,
+      "lastModifiedBy": "ai-agent",
+      "version": 1
+    }
+  },
+  {
+    "id": "W9uByzEwTynrcCOaft7D",
+    "title": "Decision-Making Frameworks",
+    "slug": "decision-making-frameworks",
+    "folderId": "1hGCsRTD3gXXT63P4syl",
+    "folderPath": [
+      "business",
+      "business-analysis-masterclass",
+      "tools-and-techniques-reference"
+    ],
+    "content": "# Decision-Making Frameworks\n\n## Topics Covered\n\n- Decision analysis techniques: structured approaches to choices (BABOK 10.16)\n- Decision tables and decision trees: visualizing complex decisions\n- Financial analysis for decision support: ROI, NPV, IRR\n- SWOT analysis: strategic decision framework\n- Weighted criteria and scoring models: multi-attribute evaluation\n- Multi-criteria decision analysis: comparing complex alternatives\n\n## Key Sources\n- BABOK Guide V3 Sections 10.16-10.17, 10.20, 10.46\n- Software Requirements Essentials Chapter 4",
+    "excerpt": "# Decision-Making Frameworks\n\n## Topics Covered\n\n- Decision analysis techniques: structured approaches to choices (BABOK 10.16)\n- Decision tables and decision trees: visualizing complex decisions\n- Fi",
+    "tags": [
+      "decision-making",
+      "frameworks",
+      "analysis"
+    ],
+    "order": 0,
+    "status": "draft",
+    "priority": "high",
+    "createdAt": {
+      "_seconds": 1771151404,
+      "_nanoseconds": 58000000
+    },
+    "updatedAt": {
+      "_seconds": 1771151404,
+      "_nanoseconds": 58000000
+    },
+    "metadata": {
+      "wordCount": 72,
+      "readingTime": 1,
+      "lastModifiedBy": "ai-agent",
+      "version": 1
+    }
+  },
+  {
+    "id": "WKicTDWhEB9oHXkSjLpn",
+    "title": "Performance Monitoring and Continuous Improvement",
+    "slug": "performance-monitoring-continuous-improvement",
+    "folderId": "kHre62Oej3JgCZzf6BpF",
+    "folderPath": [
+      "business",
+      "business-analysis-masterclass",
+      "ba-planning-and-monitoring"
+    ],
+    "content": "# Performance Monitoring and Continuous Improvement\n\n## Topics Covered\n\n- BA performance metrics and KPIs: measuring effectiveness\n- Identifying improvement opportunities in BA processes\n- Lessons learned processes: capturing and applying insights\n- BA stewardship responsibilities (PMI domain 6)\n- Organizational process assets for BA: templates, checklists, standards\n- Building a culture of continuous BA improvement\n\n## Key Sources\n- BABOK Guide V3 Section 3.5\n- Seven Steps to Mastering BA Chapter 7\n- BA for Practitioners (PMI) Chapter 6",
+    "excerpt": "# Performance Monitoring and Continuous Improvement\n\n## Topics Covered\n\n- BA performance metrics and KPIs: measuring effectiveness\n- Identifying improvement opportunities in BA processes\n- Lessons lea",
+    "tags": [
+      "monitoring",
+      "improvement",
+      "metrics"
+    ],
+    "order": 0,
+    "status": "draft",
+    "priority": "high",
+    "createdAt": {
+      "_seconds": 1771151326,
+      "_nanoseconds": 480000000
+    },
+    "updatedAt": {
+      "_seconds": 1771151326,
+      "_nanoseconds": 480000000
+    },
+    "metadata": {
+      "wordCount": 80,
+      "readingTime": 1,
+      "lastModifiedBy": "ai-agent",
+      "version": 1
+    }
+  },
+  {
+    "id": "agile-business-analysis-acceptance-criteria-and-definition-of-done-gherkin",
+    "title": "Acceptance Criteria and Definition of Done (Gherkin)",
+    "slug": "acceptance-criteria-and-definition-of-done-gherkin",
+    "folderId": "agile-business-analysis",
+    "folderPath": [
+      "business-analysis-masterclass",
+      "agile-business-analysis"
+    ],
+    "content": "",
+    "excerpt": "Writing testable acceptance criteria using Given-When-Then format (Gherkin), and ensuring stories meet Definition of Done before sprint completion.",
+    "tags": [],
+    "order": 5,
+    "status": "draft",
+    "priority": "medium",
+    "metadata": {
+      "wordCount": 0,
+      "readingTime": 0
+    },
+    "createdAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    },
+    "updatedAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    }
+  },
+  {
+    "id": "agile-business-analysis-agile-ba-mindset-and-principles",
+    "title": "Agile BA Mindset and Principles",
+    "slug": "agile-ba-mindset-and-principles",
+    "folderId": "agile-business-analysis",
+    "folderPath": [
+      "business-analysis-masterclass",
+      "agile-business-analysis"
+    ],
+    "content": "",
+    "excerpt": "Agile Manifesto principles applied to BA work: embracing change, continuous collaboration, iterative discovery, and working software over documentation.",
+    "tags": [],
+    "order": 1,
+    "status": "draft",
+    "priority": "medium",
+    "metadata": {
+      "wordCount": 0,
+      "readingTime": 0
+    },
+    "createdAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    },
+    "updatedAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    }
+  },
+  {
+    "id": "agile-business-analysis-agile-requirements-documentation",
+    "title": "Agile Requirements Documentation",
+    "slug": "agile-requirements-documentation",
+    "folderId": "agile-business-analysis",
+    "folderPath": [
+      "business-analysis-masterclass",
+      "agile-business-analysis"
+    ],
+    "content": "",
+    "excerpt": "Lightweight documentation in agile: living backlogs, wiki pages, just-in-time elaboration, and balancing documentation with conversation.",
+    "tags": [],
+    "order": 6,
+    "status": "draft",
+    "priority": "medium",
+    "metadata": {
+      "wordCount": 0,
+      "readingTime": 0
+    },
+    "createdAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    },
+    "updatedAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    }
+  },
+  {
+    "id": "agile-business-analysis-ba-in-safe-scaled-agile-framework",
+    "title": "BA in SAFe (Scaled Agile Framework)",
+    "slug": "ba-in-safe-scaled-agile-framework",
+    "folderId": "agile-business-analysis",
+    "folderPath": [
+      "business-analysis-masterclass",
+      "agile-business-analysis"
+    ],
+    "content": "",
+    "excerpt": "Business Analyst role in large-scale agile: Program Increment planning, feature definition, solution intent, and coordinating across agile teams.",
+    "tags": [],
+    "order": 7,
+    "status": "draft",
+    "priority": "medium",
+    "metadata": {
+      "wordCount": 0,
+      "readingTime": 0
+    },
+    "createdAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    },
+    "updatedAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    }
+  },
+  {
+    "id": "agile-business-analysis-backlog-refinement-best-practices",
+    "title": "Backlog Refinement Best Practices",
+    "slug": "backlog-refinement-best-practices",
+    "folderId": "agile-business-analysis",
+    "folderPath": [
+      "business-analysis-masterclass",
+      "agile-business-analysis"
+    ],
+    "content": "",
+    "excerpt": "Continuous backlog grooming, breaking down epics into stories, adding acceptance criteria, estimating, and keeping the backlog ready for sprint planning.",
+    "tags": [],
+    "order": 3,
+    "status": "draft",
+    "priority": "medium",
+    "metadata": {
+      "wordCount": 0,
+      "readingTime": 0
+    },
+    "createdAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    },
+    "updatedAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    }
+  },
+  {
+    "id": "agile-business-analysis-kanban-for-requirements-flow",
+    "title": "Kanban for Requirements Flow",
+    "slug": "kanban-for-requirements-flow",
+    "folderId": "agile-business-analysis",
+    "folderPath": [
+      "business-analysis-masterclass",
+      "agile-business-analysis"
+    ],
+    "content": "",
+    "excerpt": "Using Kanban boards to visualize requirements workflow, WIP limits, managing flow efficiency, and continuous delivery of requirements.",
+    "tags": [],
+    "order": 8,
+    "status": "draft",
+    "priority": "medium",
+    "metadata": {
+      "wordCount": 0,
+      "readingTime": 0
+    },
+    "createdAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    },
+    "updatedAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    }
+  },
+  {
+    "id": "agile-business-analysis-sprint-reviews-and-retrospectives-for-bas",
+    "title": "Sprint Reviews and Retrospectives for BAs",
+    "slug": "sprint-reviews-and-retrospectives-for-bas",
+    "folderId": "agile-business-analysis",
+    "folderPath": [
+      "business-analysis-masterclass",
+      "agile-business-analysis"
+    ],
+    "content": "",
+    "excerpt": "BA participation in sprint reviews (demo feedback, acceptance), and retrospectives (process improvement, elicitation effectiveness).",
+    "tags": [],
+    "order": 9,
+    "status": "draft",
+    "priority": "medium",
+    "metadata": {
+      "wordCount": 0,
+      "readingTime": 0
+    },
+    "createdAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    },
+    "updatedAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    }
+  },
+  {
+    "id": "agile-business-analysis-story-estimation-and-sizing",
+    "title": "Story Estimation and Sizing",
+    "slug": "story-estimation-and-sizing",
+    "folderId": "agile-business-analysis",
+    "folderPath": [
+      "business-analysis-masterclass",
+      "agile-business-analysis"
+    ],
+    "content": "",
+    "excerpt": "Estimation techniques: story points, planning poker, t-shirt sizing, relative estimation, and right-sizing stories for sprint commitment.",
+    "tags": [],
+    "order": 4,
+    "status": "draft",
+    "priority": "medium",
+    "metadata": {
+      "wordCount": 0,
+      "readingTime": 0
+    },
+    "createdAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    },
+    "updatedAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    }
+  },
+  {
+    "id": "agile-business-analysis-the-ba-role-in-scrum",
+    "title": "The BA Role in Scrum",
+    "slug": "the-ba-role-in-scrum",
+    "folderId": "agile-business-analysis",
+    "folderPath": [
+      "business-analysis-masterclass",
+      "agile-business-analysis"
+    ],
+    "content": "",
+    "excerpt": "How BAs fit into Scrum teams, relationship with Product Owner, participating in sprints, and balancing analysis with delivery cadence.",
+    "tags": [],
+    "order": 2,
+    "status": "draft",
+    "priority": "medium",
+    "metadata": {
+      "wordCount": 0,
+      "readingTime": 0
+    },
+    "createdAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    },
+    "updatedAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    }
+  },
+  {
+    "id": "applied-ba-case-studies-case-study-agile-transformation",
+    "title": "Case Study: Agile Transformation",
+    "slug": "case-study-agile-transformation",
+    "folderId": "applied-ba-case-studies",
+    "folderPath": [
+      "business-analysis-masterclass",
+      "applied-ba-case-studies"
+    ],
+    "content": "",
+    "excerpt": "Transitioning from waterfall to agile: BA role evolution, backlog creation from BRDs, coaching teams, managing cultural resistance, and lessons learned.",
+    "tags": [],
+    "order": 4,
+    "status": "draft",
+    "priority": "medium",
+    "metadata": {
+      "wordCount": 0,
+      "readingTime": 0
+    },
+    "createdAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    },
+    "updatedAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    }
+  },
+  {
+    "id": "applied-ba-case-studies-case-study-api-platform-requirements",
+    "title": "Case Study: API Platform Requirements",
+    "slug": "case-study-api-platform-requirements",
+    "folderId": "applied-ba-case-studies",
+    "folderPath": [
+      "business-analysis-masterclass",
+      "applied-ba-case-studies"
+    ],
+    "content": "",
+    "excerpt": "Technical requirements for API platforms: REST API design, authentication (OAuth), rate limiting, API documentation, versioning, and developer experience.",
+    "tags": [],
+    "order": 5,
+    "status": "draft",
+    "priority": "medium",
+    "metadata": {
+      "wordCount": 0,
+      "readingTime": 0
+    },
+    "createdAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    },
+    "updatedAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    }
+  },
+  {
+    "id": "applied-ba-case-studies-case-study-business-process-re-engineering",
+    "title": "Case Study: Business Process Re-engineering",
+    "slug": "case-study-business-process-re-engineering",
+    "folderId": "applied-ba-case-studies",
+    "folderPath": [
+      "business-analysis-masterclass",
+      "applied-ba-case-studies"
+    ],
+    "content": "",
+    "excerpt": "End-to-end process redesign using Lean Six Sigma DMAIC: baseline metrics, waste elimination, automation opportunities, and achieving ROI targets.",
+    "tags": [],
+    "order": 7,
+    "status": "draft",
+    "priority": "medium",
+    "metadata": {
+      "wordCount": 0,
+      "readingTime": 0
+    },
+    "createdAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    },
+    "updatedAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    }
+  },
+  {
+    "id": "applied-ba-case-studies-case-study-data-migration-project",
+    "title": "Case Study: Data Migration Project",
+    "slug": "case-study-data-migration-project",
+    "folderId": "applied-ba-case-studies",
+    "folderPath": [
+      "business-analysis-masterclass",
+      "applied-ba-case-studies"
+    ],
+    "content": "",
+    "excerpt": "Legacy system replacement: data mapping requirements, migration scripts, cutover planning, rollback strategy, validation criteria, and parallel run.",
+    "tags": [],
+    "order": 6,
+    "status": "draft",
+    "priority": "medium",
+    "metadata": {
+      "wordCount": 0,
+      "readingTime": 0
+    },
+    "createdAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    },
+    "updatedAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    }
+  },
+  {
+    "id": "applied-ba-case-studies-case-study-e-commerce-checkout-redesign",
+    "title": "Case Study: E-commerce Checkout Redesign",
+    "slug": "case-study-e-commerce-checkout-redesign",
+    "folderId": "applied-ba-case-studies",
+    "folderPath": [
+      "business-analysis-masterclass",
+      "applied-ba-case-studies"
+    ],
+    "content": "",
+    "excerpt": "Complete BA walkthrough: stakeholder analysis, usability requirements, A/B testing criteria, payment gateway integration, and measuring conversion lift.",
+    "tags": [],
+    "order": 1,
+    "status": "draft",
+    "priority": "medium",
+    "metadata": {
+      "wordCount": 0,
+      "readingTime": 0
+    },
+    "createdAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    },
+    "updatedAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    }
+  },
+  {
+    "id": "applied-ba-case-studies-case-study-financial-regulatory-compliance",
+    "title": "Case Study: Financial Regulatory Compliance",
+    "slug": "case-study-financial-regulatory-compliance",
+    "folderId": "applied-ba-case-studies",
+    "folderPath": [
+      "business-analysis-masterclass",
+      "applied-ba-case-studies"
+    ],
+    "content": "",
+    "excerpt": "SOX compliance project: working with auditors, defining internal controls, traceability to regulations, validation requirements, and audit trail reporting.",
+    "tags": [],
+    "order": 2,
+    "status": "draft",
+    "priority": "medium",
+    "metadata": {
+      "wordCount": 0,
+      "readingTime": 0
+    },
+    "createdAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    },
+    "updatedAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    }
+  },
+  {
+    "id": "applied-ba-case-studies-case-study-healthcare-emr-integration",
+    "title": "Case Study: Healthcare EMR Integration",
+    "slug": "case-study-healthcare-emr-integration",
+    "folderId": "applied-ba-case-studies",
+    "folderPath": [
+      "business-analysis-masterclass",
+      "applied-ba-case-studies"
+    ],
+    "content": "",
+    "excerpt": "Electronic Medical Records integration: HIPAA compliance, HL7 messaging standards, clinical workflow analysis, and managing physician stakeholders.",
+    "tags": [],
+    "order": 3,
+    "status": "draft",
+    "priority": "medium",
+    "metadata": {
+      "wordCount": 0,
+      "readingTime": 0
+    },
+    "createdAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    },
+    "updatedAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    }
+  },
+  {
+    "id": "applied-ba-case-studies-lessons-learned-from-failed-projects",
+    "title": "Lessons Learned from Failed Projects",
+    "slug": "lessons-learned-from-failed-projects",
+    "folderId": "applied-ba-case-studies",
+    "folderPath": [
+      "business-analysis-masterclass",
+      "applied-ba-case-studies"
+    ],
+    "content": "",
+    "excerpt": "Common failure patterns: inadequate stakeholder engagement, unclear requirements, scope creep, lack of validation, and how to recognize red flags early.",
+    "tags": [],
+    "order": 8,
+    "status": "draft",
+    "priority": "medium",
+    "metadata": {
+      "wordCount": 0,
+      "readingTime": 0
+    },
+    "createdAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    },
+    "updatedAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    }
+  },
+  {
+    "id": "ba-foundations-agile-vs-waterfall-ba-approaches",
+    "title": "Agile vs Waterfall BA Approaches",
+    "slug": "agile-vs-waterfall-ba-approaches",
+    "folderId": "ba-foundations",
+    "folderPath": [
+      "business-analysis-masterclass",
+      "ba-foundations"
+    ],
+    "content": "",
+    "excerpt": "How BA practices differ between traditional waterfall and agile methodologies, including deliverables, ceremonies, and stakeholder collaboration.",
+    "tags": [],
+    "order": 5,
+    "status": "draft",
+    "priority": "medium",
+    "metadata": {
+      "wordCount": 0,
+      "readingTime": 0
+    },
+    "createdAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    },
+    "updatedAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    }
+  },
+  {
+    "id": "ba-foundations-ba-career-paths-and-specializations",
+    "title": "BA Career Paths and Specializations",
+    "slug": "ba-career-paths-and-specializations",
+    "folderId": "ba-foundations",
+    "folderPath": [
+      "business-analysis-masterclass",
+      "ba-foundations"
+    ],
+    "content": "",
+    "excerpt": "Career progression from junior to senior BA, domain specializations (process, data, industry), and transition paths to PM, Product Owner, or Architect.",
+    "tags": [],
+    "order": 4,
+    "status": "draft",
+    "priority": "medium",
+    "metadata": {
+      "wordCount": 0,
+      "readingTime": 0
+    },
+    "createdAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    },
+    "updatedAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    }
+  },
+  {
+    "id": "ba-foundations-ba-competency-model-babok-v3",
+    "title": "BA Competency Model (BABOK V3)",
+    "slug": "ba-competency-model-babok-v3",
+    "folderId": "ba-foundations",
+    "folderPath": [
+      "business-analysis-masterclass",
+      "ba-foundations"
+    ],
+    "content": "",
+    "excerpt": "Six knowledge areas, underlying competencies, analytical thinking techniques, and behavioral characteristics of effective business analysts.",
+    "tags": [],
+    "order": 3,
+    "status": "draft",
+    "priority": "medium",
+    "metadata": {
+      "wordCount": 0,
+      "readingTime": 0
+    },
+    "createdAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    },
+    "updatedAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    }
+  },
+  {
+    "id": "ba-foundations-ba-toolkit-overview",
+    "title": "BA Toolkit Overview",
+    "slug": "ba-toolkit-overview",
+    "folderId": "ba-foundations",
+    "folderPath": [
+      "business-analysis-masterclass",
+      "ba-foundations"
+    ],
+    "content": "",
+    "excerpt": "Essential tools for requirements management (Jira, Azure DevOps), modeling (Visio, Lucidchart), collaboration (Confluence, Miro), and documentation.",
+    "tags": [],
+    "order": 7,
+    "status": "draft",
+    "priority": "medium",
+    "metadata": {
+      "wordCount": 0,
+      "readingTime": 0
+    },
+    "createdAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    },
+    "updatedAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    }
+  },
+  {
+    "id": "ba-foundations-business-writing-for-bas",
+    "title": "Business Writing for BAs",
+    "slug": "business-writing-for-bas",
+    "folderId": "ba-foundations",
+    "folderPath": [
+      "business-analysis-masterclass",
+      "ba-foundations"
+    ],
+    "content": "",
+    "excerpt": "Clear, concise writing principles for requirements documents, emails, presentations, and stakeholder communications. Avoiding jargon and ambiguity.",
+    "tags": [],
+    "order": 6,
+    "status": "draft",
+    "priority": "medium",
+    "metadata": {
+      "wordCount": 0,
+      "readingTime": 0
+    },
+    "createdAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    },
+    "updatedAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    }
+  },
+  {
+    "id": "ba-foundations-critical-thinking-for-business-analysts",
+    "title": "Critical Thinking for Business Analysts",
+    "slug": "critical-thinking-for-business-analysts",
+    "folderId": "ba-foundations",
+    "folderPath": [
+      "business-analysis-masterclass",
+      "ba-foundations"
+    ],
+    "content": "",
+    "excerpt": "Questioning assumptions, root cause analysis, logical reasoning, identifying biases, and making evidence-based recommendations.",
+    "tags": [],
+    "order": 8,
+    "status": "draft",
+    "priority": "medium",
+    "metadata": {
+      "wordCount": 0,
+      "readingTime": 0
+    },
+    "createdAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    },
+    "updatedAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    }
+  },
+  {
+    "id": "ba-foundations-ethics-and-professional-standards",
+    "title": "Ethics and Professional Standards",
+    "slug": "ethics-and-professional-standards",
+    "folderId": "ba-foundations",
+    "folderPath": [
+      "business-analysis-masterclass",
+      "ba-foundations"
+    ],
+    "content": "",
+    "excerpt": "Ethical principles for BAs, handling confidential information, managing conflicts of interest, and professional certifications (CBAP, PMI-PBA).",
+    "tags": [],
+    "order": 9,
+    "status": "draft",
+    "priority": "medium",
+    "metadata": {
+      "wordCount": 0,
+      "readingTime": 0
+    },
+    "createdAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    },
+    "updatedAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    }
+  },
+  {
+    "id": "ba-foundations-the-business-analyst-role",
+    "title": "The Business Analyst Role",
+    "slug": "the-business-analyst-role",
+    "folderId": "ba-foundations",
+    "folderPath": [
+      "business-analysis-masterclass",
+      "ba-foundations"
+    ],
+    "content": "",
+    "excerpt": "BA responsibilities, day-to-day activities, key deliverables, and how the role varies across waterfall, agile, and hybrid environments.",
+    "tags": [],
+    "order": 2,
+    "status": "draft",
+    "priority": "medium",
+    "metadata": {
+      "wordCount": 0,
+      "readingTime": 0
+    },
+    "createdAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    },
+    "updatedAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    }
+  },
+  {
+    "id": "ba-foundations-what-is-business-analysis",
+    "title": "What is Business Analysis",
+    "slug": "what-is-business-analysis",
+    "folderId": "ba-foundations",
+    "folderPath": [
+      "business-analysis-masterclass",
+      "ba-foundations"
+    ],
+    "content": "",
+    "excerpt": "Definition of business analysis, core value proposition, and how BAs bridge business needs with solution delivery across industries.",
+    "tags": [],
+    "order": 1,
+    "status": "draft",
+    "priority": "medium",
+    "metadata": {
+      "wordCount": 0,
+      "readingTime": 0
+    },
+    "createdAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    },
+    "updatedAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    }
+  },
+  {
+    "id": "bd2fd0qLSbtxcWXAv58D",
+    "title": "Planning in Agile vs. Predictive Contexts",
+    "slug": "planning-agile-vs-predictive",
+    "folderId": "kHre62Oej3JgCZzf6BpF",
+    "folderPath": [
+      "business",
+      "business-analysis-masterclass",
+      "ba-planning-and-monitoring"
+    ],
+    "content": "# Planning in Agile vs. Predictive Contexts\n\n## Topics Covered\n\n- How BA planning differs in agile environments\n- Just-in-time planning and progressive elaboration\n- Multilevel planning: portfolio, release, iteration/sprint\n- Scrum planning principles and ceremonies\n- Adapting BA formality to project context and risk level\n- Hybrid approaches: combining predictive rigor with agile flexibility\n\n## Key Sources\n- BABOK Guide V3 Section 11.1 (Agile Perspective)\n- Agile Business Analysis Chapter 6\n- Essential Scrum Chapters 14-15",
+    "excerpt": "# Planning in Agile vs. Predictive Contexts\n\n## Topics Covered\n\n- How BA planning differs in agile environments\n- Just-in-time planning and progressive elaboration\n- Multilevel planning: portfolio, re",
+    "tags": [
+      "agile",
+      "predictive",
+      "planning"
+    ],
+    "order": 0,
+    "status": "draft",
+    "priority": "high",
+    "createdAt": {
+      "_seconds": 1771151328,
+      "_nanoseconds": 545000000
+    },
+    "updatedAt": {
+      "_seconds": 1771151328,
+      "_nanoseconds": 545000000
+    },
+    "metadata": {
+      "wordCount": 77,
+      "readingTime": 1,
+      "lastModifiedBy": "ai-agent",
+      "version": 1
+    }
+  },
+  {
+    "id": "business-process-analysis-as-is-process-documentation",
+    "title": "AS-IS Process Documentation",
+    "slug": "as-is-process-documentation",
+    "folderId": "business-process-analysis",
+    "folderPath": [
+      "business-analysis-masterclass",
+      "business-process-analysis"
+    ],
+    "content": "",
+    "excerpt": "Documenting current state processes with BPMN, identifying process owners, inputs, outputs, pain points, bottlenecks, and inefficiencies.",
+    "tags": [],
+    "order": 2,
+    "status": "draft",
+    "priority": "medium",
+    "metadata": {
+      "wordCount": 0,
+      "readingTime": 0
+    },
+    "createdAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    },
+    "updatedAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    }
+  },
+  {
+    "id": "business-process-analysis-process-discovery-techniques",
+    "title": "Process Discovery Techniques",
+    "slug": "process-discovery-techniques",
+    "folderId": "business-process-analysis",
+    "folderPath": [
+      "business-analysis-masterclass",
+      "business-process-analysis"
+    ],
+    "content": "",
+    "excerpt": "Methods to uncover current processes: interviews, workshops, observation, process mining tools, and documenting as-performed vs as-documented.",
+    "tags": [],
+    "order": 1,
+    "status": "draft",
+    "priority": "medium",
+    "metadata": {
+      "wordCount": 0,
+      "readingTime": 0
+    },
+    "createdAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    },
+    "updatedAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    }
+  },
+  {
+    "id": "business-process-analysis-process-improvement-frameworks-lean-six-sigma-dmaic",
+    "title": "Process Improvement Frameworks (Lean, Six Sigma, DMAIC)",
+    "slug": "process-improvement-frameworks-lean-six-sigma-dmaic",
+    "folderId": "business-process-analysis",
+    "folderPath": [
+      "business-analysis-masterclass",
+      "business-process-analysis"
+    ],
+    "content": "",
+    "excerpt": "Lean principles, Six Sigma methodology, DMAIC cycle (Define, Measure, Analyze, Improve, Control) for data-driven process improvement.",
+    "tags": [],
+    "order": 5,
+    "status": "draft",
+    "priority": "medium",
+    "metadata": {
+      "wordCount": 0,
+      "readingTime": 0
+    },
+    "createdAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    },
+    "updatedAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    }
+  },
+  {
+    "id": "business-process-analysis-process-metrics-and-kpis",
+    "title": "Process Metrics and KPIs",
+    "slug": "process-metrics-and-kpis",
+    "folderId": "business-process-analysis",
+    "folderPath": [
+      "business-analysis-masterclass",
+      "business-process-analysis"
+    ],
+    "content": "",
+    "excerpt": "Defining process performance indicators: cycle time, throughput, error rates, cost per transaction, and using metrics to track improvement.",
+    "tags": [],
+    "order": 7,
+    "status": "draft",
+    "priority": "medium",
+    "metadata": {
+      "wordCount": 0,
+      "readingTime": 0
+    },
+    "createdAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    },
+    "updatedAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    }
+  },
+  {
+    "id": "business-process-analysis-to-be-process-design",
+    "title": "TO-BE Process Design",
+    "slug": "to-be-process-design",
+    "folderId": "business-process-analysis",
+    "folderPath": [
+      "business-analysis-masterclass",
+      "business-process-analysis"
+    ],
+    "content": "",
+    "excerpt": "Designing future state processes: eliminating waste, automating steps, simplifying handoffs, and ensuring TO-BE addresses AS-IS pain points.",
+    "tags": [],
+    "order": 3,
+    "status": "draft",
+    "priority": "medium",
+    "metadata": {
+      "wordCount": 0,
+      "readingTime": 0
+    },
+    "createdAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    },
+    "updatedAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    }
+  },
+  {
+    "id": "business-process-analysis-value-stream-mapping-lean",
+    "title": "Value Stream Mapping (Lean)",
+    "slug": "value-stream-mapping-lean",
+    "folderId": "business-process-analysis",
+    "folderPath": [
+      "business-analysis-masterclass",
+      "business-process-analysis"
+    ],
+    "content": "",
+    "excerpt": "Value stream mapping to visualize material and information flow, identify waste (7 wastes of Lean), and optimize for customer value delivery.",
+    "tags": [],
+    "order": 4,
+    "status": "draft",
+    "priority": "medium",
+    "metadata": {
+      "wordCount": 0,
+      "readingTime": 0
+    },
+    "createdAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    },
+    "updatedAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    }
+  },
+  {
+    "id": "business-process-analysis-workflow-automation-analysis-rpa",
+    "title": "Workflow Automation Analysis (RPA)",
+    "slug": "workflow-automation-analysis-rpa",
+    "folderId": "business-process-analysis",
+    "folderPath": [
+      "business-analysis-masterclass",
+      "business-process-analysis"
+    ],
+    "content": "",
+    "excerpt": "Identifying processes suitable for Robotic Process Automation (RPA), rule-based tasks, cost-benefit analysis, and automation requirements.",
+    "tags": [],
+    "order": 6,
+    "status": "draft",
+    "priority": "medium",
+    "metadata": {
+      "wordCount": 0,
+      "readingTime": 0
+    },
+    "createdAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    },
+    "updatedAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    }
+  },
+  {
+    "id": "cQxLZqpCuLfaR9LwCPzd",
+    "title": "Certifications Guide",
+    "slug": "certifications-guide",
+    "folderId": "9XS1q4biY4IPpBivEnvk",
+    "folderPath": [
+      "business",
+      "business-analysis-masterclass",
+      "mastery-and-professional-development"
+    ],
+    "content": "# Certifications Guide (CBAP, PMI-PBA, AAC)\n\n## Topics Covered\n\n- CBAP (Certified Business Analysis Professional): IIBA's flagship certification\n- CCBA (Certification of Capability in Business Analysis): mid-level IIBA certification\n- PMI-PBA (PMI Professional in Business Analysis): PMI's BA certification\n- AAC (Agile Analysis Certification): IIBA's agile-focused certification\n- Exam preparation strategies: study plans, practice questions, study groups\n- Certification maintenance and continuing education: CDUs and PDUs\n\n## Key Sources\n- Seven Steps to Mastering BA Chapter 7\n- BABOK Guide V3 Appendix\n- BA for Practitioners (PMI) Introduction",
+    "excerpt": "# Certifications Guide (CBAP, PMI-PBA, AAC)\n\n## Topics Covered\n\n- CBAP (Certified Business Analysis Professional): IIBA's flagship certification\n- CCBA (Certification of Capability in Business Analysi",
+    "tags": [
+      "certifications",
+      "cbap",
+      "pmi-pba",
+      "aac",
+      "career"
+    ],
+    "order": 0,
+    "status": "draft",
+    "priority": "high",
+    "createdAt": {
+      "_seconds": 1771151413,
+      "_nanoseconds": 633000000
+    },
+    "updatedAt": {
+      "_seconds": 1771151413,
+      "_nanoseconds": 633000000
+    },
+    "metadata": {
+      "wordCount": 88,
+      "readingTime": 1,
+      "lastModifiedBy": "ai-agent",
+      "version": 1
+    }
+  },
+  {
+    "id": "data-analysis-for-bas-data-analysis-techniques-descriptive-vs-predictive",
+    "title": "Data Analysis Techniques (Descriptive vs Predictive)",
+    "slug": "data-analysis-techniques-descriptive-vs-predictive",
+    "folderId": "data-analysis-for-bas",
+    "folderPath": [
+      "business-analysis-masterclass",
+      "data-analysis-for-bas"
+    ],
+    "content": "",
+    "excerpt": "Descriptive analytics (what happened), diagnostic (why), predictive (what will happen), prescriptive (what to do), and BA role in data-driven decisions.",
+    "tags": [],
+    "order": 5,
+    "status": "draft",
+    "priority": "medium",
+    "metadata": {
+      "wordCount": 0,
+      "readingTime": 0
+    },
+    "createdAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    },
+    "updatedAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    }
+  },
+  {
+    "id": "data-analysis-for-bas-data-literacy-for-business-analysts",
+    "title": "Data Literacy for Business Analysts",
+    "slug": "data-literacy-for-business-analysts",
+    "folderId": "data-analysis-for-bas",
+    "folderPath": [
+      "business-analysis-masterclass",
+      "data-analysis-for-bas"
+    ],
+    "content": "",
+    "excerpt": "Understanding data types, data structures (relational, NoSQL), data warehouses vs data lakes, and interpreting data to inform requirements.",
+    "tags": [],
+    "order": 1,
+    "status": "draft",
+    "priority": "medium",
+    "metadata": {
+      "wordCount": 0,
+      "readingTime": 0
+    },
+    "createdAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    },
+    "updatedAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    }
+  },
+  {
+    "id": "data-analysis-for-bas-data-privacy-and-compliance-gdpr-ccpa",
+    "title": "Data Privacy and Compliance (GDPR, CCPA)",
+    "slug": "data-privacy-and-compliance-gdpr-ccpa",
+    "folderId": "data-analysis-for-bas",
+    "folderPath": [
+      "business-analysis-masterclass",
+      "data-analysis-for-bas"
+    ],
+    "content": "",
+    "excerpt": "Data privacy requirements: GDPR (EU), CCPA (California), consent management, data retention, right to deletion, and compliance impact on requirements.",
+    "tags": [],
+    "order": 6,
+    "status": "draft",
+    "priority": "medium",
+    "metadata": {
+      "wordCount": 0,
+      "readingTime": 0
+    },
+    "createdAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    },
+    "updatedAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    }
+  },
+  {
+    "id": "data-analysis-for-bas-data-quality-requirements",
+    "title": "Data Quality Requirements",
+    "slug": "data-quality-requirements",
+    "folderId": "data-analysis-for-bas",
+    "folderPath": [
+      "business-analysis-masterclass",
+      "data-analysis-for-bas"
+    ],
+    "content": "",
+    "excerpt": "Defining data quality dimensions: accuracy, completeness, consistency, timeliness, validity, and specifying data quality acceptance criteria.",
+    "tags": [],
+    "order": 3,
+    "status": "draft",
+    "priority": "medium",
+    "metadata": {
+      "wordCount": 0,
+      "readingTime": 0
+    },
+    "createdAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    },
+    "updatedAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    }
+  },
+  {
+    "id": "data-analysis-for-bas-reporting-and-dashboard-requirements",
+    "title": "Reporting and Dashboard Requirements",
+    "slug": "reporting-and-dashboard-requirements",
+    "folderId": "data-analysis-for-bas",
+    "folderPath": [
+      "business-analysis-masterclass",
+      "data-analysis-for-bas"
+    ],
+    "content": "",
+    "excerpt": "Eliciting reporting needs, defining KPIs and metrics, dashboard design principles, data visualization best practices, and report delivery frequency.",
+    "tags": [],
+    "order": 4,
+    "status": "draft",
+    "priority": "medium",
+    "metadata": {
+      "wordCount": 0,
+      "readingTime": 0
+    },
+    "createdAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    },
+    "updatedAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    }
+  },
+  {
+    "id": "data-analysis-for-bas-sql-fundamentals-for-bas",
+    "title": "SQL Fundamentals for BAs",
+    "slug": "sql-fundamentals-for-bas",
+    "folderId": "data-analysis-for-bas",
+    "folderPath": [
+      "business-analysis-masterclass",
+      "data-analysis-for-bas"
+    ],
+    "content": "",
+    "excerpt": "Basic SQL queries (SELECT, WHERE, JOIN, GROUP BY) to query databases, validate data, and understand data relationships for requirements analysis.",
+    "tags": [],
+    "order": 2,
+    "status": "draft",
+    "priority": "medium",
+    "metadata": {
+      "wordCount": 0,
+      "readingTime": 0
+    },
+    "createdAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    },
+    "updatedAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    }
+  },
+  {
+    "id": "duFxcLfgtl1A8dCzVqn5",
+    "title": "Continuous Improvement Practices",
+    "slug": "continuous-improvement-practices",
+    "folderId": "9XS1q4biY4IPpBivEnvk",
+    "folderPath": [
+      "business",
+      "business-analysis-masterclass",
+      "mastery-and-professional-development"
+    ],
+    "content": "# Continuous Improvement Practices\n\n## Topics Covered\n\n- Retrospectives and lessons learned: structured reflection\n- Personal development planning: setting and tracking goals\n- Staying current with industry trends: continuous learning strategies\n- Building a learning habit: deliberate practice for BAs\n- The future of business analysis: emerging trends and technologies\n- BA as an agile center of excellence: organizational leadership role\n\n## Key Sources\n- Seven Steps to Mastering BA Chapter 7\n- Agile Business Analysis Chapter 10\n- Essential Scrum Chapters 22-23",
+    "excerpt": "# Continuous Improvement Practices\n\n## Topics Covered\n\n- Retrospectives and lessons learned: structured reflection\n- Personal development planning: setting and tracking goals\n- Staying current with in",
+    "tags": [
+      "improvement",
+      "learning",
+      "growth"
+    ],
+    "order": 0,
+    "status": "draft",
+    "priority": "high",
+    "createdAt": {
+      "_seconds": 1771151412,
+      "_nanoseconds": 453000000
+    },
+    "updatedAt": {
+      "_seconds": 1771151412,
+      "_nanoseconds": 453000000
+    },
+    "metadata": {
+      "wordCount": 83,
+      "readingTime": 1,
+      "lastModifiedBy": "ai-agent",
+      "version": 1
+    }
+  },
+  {
+    "id": "dyhzr1mh4Jm1GzM9Wc7r",
+    "title": "Defining the Change Strategy",
+    "slug": "defining-change-strategy",
+    "folderId": "h2MJ519pVjfjPhb3lEck",
+    "folderPath": [
+      "business",
+      "business-analysis-masterclass",
+      "strategy-analysis"
+    ],
+    "content": "# Defining the Change Strategy\n\n## Topics Covered\n\n- Developing the change strategy: from current to future state\n- Solution approach options: build, buy, modify, or do nothing\n- Transition planning: phased rollout and migration strategies\n- Organizational readiness assessment: is the organization ready?\n- Dependencies and sequencing: what must happen first\n- Stakeholder alignment on the change approach\n\n## Key Sources\n- BABOK Guide V3 Section 6.4\n- BA for Practitioners (PMI) Chapter 2\n- Seven Steps to Mastering BA Chapter 3",
+    "excerpt": "# Defining the Change Strategy\n\n## Topics Covered\n\n- Developing the change strategy: from current to future state\n- Solution approach options: build, buy, modify, or do nothing\n- Transition planning: ",
+    "tags": [
+      "strategy",
+      "change",
+      "transition"
+    ],
+    "order": 0,
+    "status": "draft",
+    "priority": "high",
+    "createdAt": {
+      "_seconds": 1771151361,
+      "_nanoseconds": 810000000
+    },
+    "updatedAt": {
+      "_seconds": 1771151361,
+      "_nanoseconds": 810000000
+    },
+    "metadata": {
+      "wordCount": 83,
+      "readingTime": 1,
+      "lastModifiedBy": "ai-agent",
+      "version": 1
+    }
+  },
+  {
+    "id": "ekxZJ8WIaAxqoRibJeWn",
+    "title": "Business Case Development",
+    "slug": "business-case-development",
+    "folderId": "h2MJ519pVjfjPhb3lEck",
+    "folderPath": [
+      "business",
+      "business-analysis-masterclass",
+      "strategy-analysis"
+    ],
+    "content": "# Business Case Development\n\n## Topics Covered\n\n- Business case components and structure: problem, analysis, recommendation\n- Financial analysis techniques: ROI, NPV, payback period (BABOK 10.20)\n- Cost-benefit analysis: quantifying tangible and intangible benefits\n- Balanced scorecard: multi-perspective performance measurement (BABOK 10.3)\n- Business model canvas: visualizing the business model (BABOK 10.8)\n- Presenting the business case to stakeholders and decision makers\n\n## Key Sources\n- BABOK Guide V3 Section 10.7\n- BA for Practitioners (PMI) Chapter 2\n- Seven Steps to Mastering BA Chapter 3\n- Software Requirements Essentials Chapter 2",
+    "excerpt": "# Business Case Development\n\n## Topics Covered\n\n- Business case components and structure: problem, analysis, recommendation\n- Financial analysis techniques: ROI, NPV, payback period (BABOK 10.20)\n- Co",
+    "tags": [
+      "business-case",
+      "financial",
+      "justification"
+    ],
+    "order": 0,
+    "status": "draft",
+    "priority": "high",
+    "createdAt": {
+      "_seconds": 1771151363,
+      "_nanoseconds": 481000000
+    },
+    "updatedAt": {
+      "_seconds": 1771151363,
+      "_nanoseconds": 481000000
+    },
+    "metadata": {
+      "wordCount": 92,
+      "readingTime": 1,
+      "lastModifiedBy": "ai-agent",
+      "version": 1
+    }
+  },
+  {
+    "id": "elicitation-techniques-brainstorming-and-idea-generation",
+    "title": "Brainstorming and Idea Generation",
+    "slug": "brainstorming-and-idea-generation",
+    "folderId": "elicitation-techniques",
+    "folderPath": [
+      "business-analysis-masterclass",
+      "elicitation-techniques"
+    ],
+    "content": "",
+    "excerpt": "Facilitated brainstorming sessions, encouraging creative thinking, suspending judgment, and generating innovative solution ideas.",
+    "tags": [],
+    "order": 7,
+    "status": "draft",
+    "priority": "medium",
+    "metadata": {
+      "wordCount": 0,
+      "readingTime": 0
+    },
+    "createdAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    },
+    "updatedAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    }
+  },
+  {
+    "id": "elicitation-techniques-document-analysis",
+    "title": "Document Analysis",
+    "slug": "document-analysis",
+    "folderId": "elicitation-techniques",
+    "folderPath": [
+      "business-analysis-masterclass",
+      "elicitation-techniques"
+    ],
+    "content": "",
+    "excerpt": "Reviewing existing documentation (procedures, reports, forms, contracts) to understand current processes and extract implicit requirements.",
+    "tags": [],
+    "order": 5,
+    "status": "draft",
+    "priority": "medium",
+    "metadata": {
+      "wordCount": 0,
+      "readingTime": 0
+    },
+    "createdAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    },
+    "updatedAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    }
+  },
+  {
+    "id": "elicitation-techniques-elicitation-planning",
+    "title": "Elicitation Planning",
+    "slug": "elicitation-planning",
+    "folderId": "elicitation-techniques",
+    "folderPath": [
+      "business-analysis-masterclass",
+      "elicitation-techniques"
+    ],
+    "content": "",
+    "excerpt": "Preparing for elicitation: selecting techniques, scheduling sessions, preparing questions, identifying participants, and setting objectives.",
+    "tags": [],
+    "order": 1,
+    "status": "draft",
+    "priority": "medium",
+    "metadata": {
+      "wordCount": 0,
+      "readingTime": 0
+    },
+    "createdAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    },
+    "updatedAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    }
+  },
+  {
+    "id": "elicitation-techniques-focus-groups",
+    "title": "Focus Groups",
+    "slug": "focus-groups",
+    "folderId": "elicitation-techniques",
+    "folderPath": [
+      "business-analysis-masterclass",
+      "elicitation-techniques"
+    ],
+    "content": "",
+    "excerpt": "Conducting focus groups with representative user segments to gather qualitative insights, preferences, and uncover hidden needs.",
+    "tags": [],
+    "order": 9,
+    "status": "draft",
+    "priority": "medium",
+    "metadata": {
+      "wordCount": 0,
+      "readingTime": 0
+    },
+    "createdAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    },
+    "updatedAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    }
+  },
+  {
+    "id": "elicitation-techniques-interface-analysis",
+    "title": "Interface Analysis",
+    "slug": "interface-analysis",
+    "folderId": "elicitation-techniques",
+    "folderPath": [
+      "business-analysis-masterclass",
+      "elicitation-techniques"
+    ],
+    "content": "",
+    "excerpt": "Analyzing system interfaces, integration points, and data exchanges between applications to define interface requirements.",
+    "tags": [],
+    "order": 10,
+    "status": "draft",
+    "priority": "medium",
+    "metadata": {
+      "wordCount": 0,
+      "readingTime": 0
+    },
+    "createdAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    },
+    "updatedAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    }
+  },
+  {
+    "id": "elicitation-techniques-interview-techniques",
+    "title": "Interview Techniques",
+    "slug": "interview-techniques",
+    "folderId": "elicitation-techniques",
+    "folderPath": [
+      "business-analysis-masterclass",
+      "elicitation-techniques"
+    ],
+    "content": "",
+    "excerpt": "Conducting effective one-on-one interviews: open vs closed questions, active listening, probing for details, avoiding leading questions.",
+    "tags": [],
+    "order": 2,
+    "status": "draft",
+    "priority": "medium",
+    "metadata": {
+      "wordCount": 0,
+      "readingTime": 0
+    },
+    "createdAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    },
+    "updatedAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    }
+  },
+  {
+    "id": "elicitation-techniques-observation-and-job-shadowing",
+    "title": "Observation and Job Shadowing",
+    "slug": "observation-and-job-shadowing",
+    "folderId": "elicitation-techniques",
+    "folderPath": [
+      "business-analysis-masterclass",
+      "elicitation-techniques"
+    ],
+    "content": "",
+    "excerpt": "Observing users in their work environment to discover unstated needs, pain points, and workflow inefficiencies not captured in interviews.",
+    "tags": [],
+    "order": 4,
+    "status": "draft",
+    "priority": "medium",
+    "metadata": {
+      "wordCount": 0,
+      "readingTime": 0
+    },
+    "createdAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    },
+    "updatedAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    }
+  },
+  {
+    "id": "elicitation-techniques-prototyping-for-requirements-discovery",
+    "title": "Prototyping for Requirements Discovery",
+    "slug": "prototyping-for-requirements-discovery",
+    "folderId": "elicitation-techniques",
+    "folderPath": [
+      "business-analysis-masterclass",
+      "elicitation-techniques"
+    ],
+    "content": "",
+    "excerpt": "Using low-fidelity prototypes, mockups, and proof-of-concepts to elicit feedback, clarify requirements, and validate understanding early.",
+    "tags": [],
+    "order": 8,
+    "status": "draft",
+    "priority": "medium",
+    "metadata": {
+      "wordCount": 0,
+      "readingTime": 0
+    },
+    "createdAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    },
+    "updatedAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    }
+  },
+  {
+    "id": "elicitation-techniques-requirements-workshops-jad-focus-groups",
+    "title": "Requirements Workshops (JAD, Focus Groups)",
+    "slug": "requirements-workshops-jad-focus-groups",
+    "folderId": "elicitation-techniques",
+    "folderPath": [
+      "business-analysis-masterclass",
+      "elicitation-techniques"
+    ],
+    "content": "",
+    "excerpt": "Joint Application Design (JAD) sessions, facilitated workshops to gather requirements collaboratively, and achieving group consensus.",
+    "tags": [],
+    "order": 3,
+    "status": "draft",
+    "priority": "medium",
+    "metadata": {
+      "wordCount": 0,
+      "readingTime": 0
+    },
+    "createdAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    },
+    "updatedAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    }
+  },
+  {
+    "id": "elicitation-techniques-surveys-and-questionnaires",
+    "title": "Surveys and Questionnaires",
+    "slug": "surveys-and-questionnaires",
+    "folderId": "elicitation-techniques",
+    "folderPath": [
+      "business-analysis-masterclass",
+      "elicitation-techniques"
+    ],
+    "content": "",
+    "excerpt": "Designing effective surveys for large stakeholder groups, question types, response scales, and analyzing quantitative feedback.",
+    "tags": [],
+    "order": 6,
+    "status": "draft",
+    "priority": "medium",
+    "metadata": {
+      "wordCount": 0,
+      "readingTime": 0
+    },
+    "createdAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    },
+    "updatedAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    }
+  },
+  {
+    "id": "gFgIbKZOptrmrd5MjKjN",
+    "title": "Baselining and Change Control",
+    "slug": "baselining-change-control",
+    "folderId": "MFV5l6ITm2MRS2VwCNnX",
+    "folderPath": [
+      "business",
+      "business-analysis-masterclass",
+      "requirements-lifecycle-management"
+    ],
+    "content": "# Baselining and Change Control\n\n## Topics Covered\n\n- What is a requirements baseline and why it matters\n- When and how to baseline: timing and process\n- Change control processes: request, assess, decide, implement\n- Assessing requirements changes through impact analysis\n- Approving requirements: authority and sign-off\n- Change control boards and decision authority structures\n- Requirements monitoring and controlling (PMI perspective)\n\n## Key Sources\n- BABOK Guide V3 Sections 5.4-5.5\n- Requirements Management Practice Guide Chapter 7\n- Software Requirements Essentials Chapter 7",
+    "excerpt": "# Baselining and Change Control\n\n## Topics Covered\n\n- What is a requirements baseline and why it matters\n- When and how to baseline: timing and process\n- Change control processes: request, assess, dec",
+    "tags": [
+      "baseline",
+      "change-control",
+      "governance"
+    ],
+    "order": 0,
+    "status": "draft",
+    "priority": "high",
+    "createdAt": {
+      "_seconds": 1771151348,
+      "_nanoseconds": 422000000
+    },
+    "updatedAt": {
+      "_seconds": 1771151348,
+      "_nanoseconds": 422000000
+    },
+    "metadata": {
+      "wordCount": 85,
+      "readingTime": 1,
+      "lastModifiedBy": "ai-agent",
+      "version": 1
+    }
+  },
+  {
+    "id": "gR1TeiB9bNrVDnVXwhrx",
+    "title": "BA Community and Knowledge Sharing",
+    "slug": "ba-community-knowledge-sharing",
+    "folderId": "9XS1q4biY4IPpBivEnvk",
+    "folderPath": [
+      "business",
+      "business-analysis-masterclass",
+      "mastery-and-professional-development"
+    ],
+    "content": "# BA Community and Knowledge Sharing\n\n## Topics Covered\n\n- Professional BA communities: IIBA chapters, PMI communities of practice\n- Conferences and events: BA World, Building Business Capability\n- BA blogs, podcasts, and publications: staying connected\n- Mentoring and being mentored: accelerating professional growth\n- Contributing to the BA body of knowledge: writing, speaking, teaching\n- Building your professional network: online and offline strategies\n\n## Key Sources\n- Seven Steps to Mastering BA Chapter 7\n- Agile Business Analysis Chapter 10",
+    "excerpt": "# BA Community and Knowledge Sharing\n\n## Topics Covered\n\n- Professional BA communities: IIBA chapters, PMI communities of practice\n- Conferences and events: BA World, Building Business Capability\n- BA",
+    "tags": [
+      "community",
+      "networking",
+      "knowledge-sharing"
+    ],
+    "order": 0,
+    "status": "draft",
+    "priority": "high",
+    "createdAt": {
+      "_seconds": 1771151414,
+      "_nanoseconds": 814000000
+    },
+    "updatedAt": {
+      "_seconds": 1771151414,
+      "_nanoseconds": 814000000
+    },
+    "metadata": {
+      "wordCount": 81,
+      "readingTime": 1,
+      "lastModifiedBy": "ai-agent",
+      "version": 1
+    }
+  },
+  {
+    "id": "gUjFfg3WXLJkZ7s1pwUl",
+    "title": "Data and Process Modeling",
+    "slug": "data-process-modeling",
+    "folderId": "TLRg7xbRj5YLTb9n5COf",
+    "folderPath": [
+      "business",
+      "business-analysis-masterclass",
+      "requirements-analysis-design"
+    ],
+    "content": "# Data and Process Modeling\n\n## Topics Covered\n\n- Entity relationship diagrams (ERD): modeling data structures\n- Data dictionaries and data flow diagrams: defining data elements\n- Data modeling fundamentals: entities, attributes, relationships\n- Process modeling and BPMN basics: visualizing workflows\n- Process analysis techniques: as-is and to-be process maps\n- State modeling and state-transition diagrams (BABOK 10.44)\n- Sequence diagrams: modeling interactions over time (BABOK 10.42)\n- When to use which model: a decision framework\n\n## Key Sources\n- BABOK Guide V3 Sections 10.12-10.15, 10.34-10.35\n- Software Requirements Essentials Chapters 3-4\n- Seven Steps to Mastering BA Chapter 6",
+    "excerpt": "# Data and Process Modeling\n\n## Topics Covered\n\n- Entity relationship diagrams (ERD): modeling data structures\n- Data dictionaries and data flow diagrams: defining data elements\n- Data modeling fundam",
+    "tags": [
+      "modeling",
+      "data",
+      "process",
+      "diagrams"
+    ],
+    "order": 0,
+    "status": "draft",
+    "priority": "high",
+    "createdAt": {
+      "_seconds": 1771151372,
+      "_nanoseconds": 114000000
+    },
+    "updatedAt": {
+      "_seconds": 1771151372,
+      "_nanoseconds": 114000000
+    },
+    "metadata": {
+      "wordCount": 100,
+      "readingTime": 1,
+      "lastModifiedBy": "ai-agent",
+      "version": 1
+    }
+  },
+  {
+    "id": "i2kRcg6fETwkc55aymii",
+    "title": "Effective Stakeholder Collaboration",
+    "slug": "effective-stakeholder-collaboration",
+    "folderId": "JBgfvhGXtSW76JgaQTb4",
+    "folderPath": [
+      "business",
+      "business-analysis-masterclass",
+      "elicitation-and-collaboration"
+    ],
+    "content": "# Effective Stakeholder Collaboration\n\n## Topics Covered\n\n- Communicating BA information effectively to diverse audiences\n- Managing stakeholder collaboration throughout the project lifecycle\n- Active listening and questioning techniques for deeper understanding\n- Building shared understanding across business and technical teams\n- Presentation skills for BAs: communicating complex information simply\n- Visual communication and information radiators\n\n## Key Sources\n- BABOK Guide V3 Sections 4.4-4.5\n- Seven Steps to Mastering BA Chapter 2\n- BA for Practitioners (PMI) Chapter 3",
+    "excerpt": "# Effective Stakeholder Collaboration\n\n## Topics Covered\n\n- Communicating BA information effectively to diverse audiences\n- Managing stakeholder collaboration throughout the project lifecycle\n- Active",
+    "tags": [
+      "collaboration",
+      "communication",
+      "stakeholders"
+    ],
+    "order": 0,
+    "status": "draft",
+    "priority": "high",
+    "createdAt": {
+      "_seconds": 1771151336,
+      "_nanoseconds": 200000000
+    },
+    "updatedAt": {
+      "_seconds": 1771151336,
+      "_nanoseconds": 200000000
+    },
+    "metadata": {
+      "wordCount": 80,
+      "readingTime": 1,
+      "lastModifiedBy": "ai-agent",
+      "version": 1
+    }
+  },
+  {
+    "id": "jQjzL0VNa3tt9LiHSeaU",
+    "title": "Value Delivery and Benefits Realization",
+    "slug": "value-delivery-benefits-realization",
+    "folderId": "g7dC45FqgBuzvAAEfEgd",
+    "folderPath": [
+      "business",
+      "business-analysis-masterclass",
+      "solution-evaluation"
+    ],
+    "content": "# Value Delivery and Benefits Realization\n\n## Topics Covered\n\n- Benefits realization planning: ensuring expected value is achieved\n- Tracking value delivery over time: measurement cadence\n- Organizational transition and solution evaluation (PMI domain 5)\n- Post-implementation review: lessons learned after go-live\n- Sustaining achieved benefits: preventing value erosion\n- Connecting solution outcomes to business objectives\n\n## Key Sources\n- BABOK Guide V3 Section 8.5\n- BA for Practitioners (PMI) Chapters 2 and 5\n- Seven Steps to Mastering BA Chapter 3",
+    "excerpt": "# Value Delivery and Benefits Realization\n\n## Topics Covered\n\n- Benefits realization planning: ensuring expected value is achieved\n- Tracking value delivery over time: measurement cadence\n- Organizati",
+    "tags": [
+      "value",
+      "benefits",
+      "realization"
+    ],
+    "order": 0,
+    "status": "draft",
+    "priority": "high",
+    "createdAt": {
+      "_seconds": 1771151385,
+      "_nanoseconds": 36000000
+    },
+    "updatedAt": {
+      "_seconds": 1771151385,
+      "_nanoseconds": 36000000
+    },
+    "metadata": {
+      "wordCount": 82,
+      "readingTime": 1,
+      "lastModifiedBy": "ai-agent",
+      "version": 1
+    }
+  },
+  {
+    "id": "kIwUmu5RIjLb67TYM1qb",
+    "title": "Cross-Functional Collaboration Mastery",
+    "slug": "cross-functional-collaboration-mastery",
+    "folderId": "9XS1q4biY4IPpBivEnvk",
+    "folderPath": [
+      "business",
+      "business-analysis-masterclass",
+      "mastery-and-professional-development"
+    ],
+    "content": "# Cross-Functional Collaboration Mastery\n\n## Topics Covered\n\n- Working effectively with IT teams: bridging the business-technology gap\n- Collaborating with project managers: complementary roles\n- Engaging executive sponsors: managing up with credibility\n- Cross-functional team dynamics: navigating organizational complexity\n- Influence without authority: leading through expertise and trust\n- Building positive relationships across the organization\n\n## Key Sources\n- Seven Steps to Mastering BA Chapters 2, 5, and 7\n- BABOK Guide V3 Section 9.3\n- Agile Business Analysis Chapter 3",
+    "excerpt": "# Cross-Functional Collaboration Mastery\n\n## Topics Covered\n\n- Working effectively with IT teams: bridging the business-technology gap\n- Collaborating with project managers: complementary roles\n- Enga",
+    "tags": [
+      "collaboration",
+      "cross-functional",
+      "leadership"
+    ],
+    "order": 0,
+    "status": "draft",
+    "priority": "high",
+    "createdAt": {
+      "_seconds": 1771151411,
+      "_nanoseconds": 188000000
+    },
+    "updatedAt": {
+      "_seconds": 1771151411,
+      "_nanoseconds": 188000000
+    },
+    "metadata": {
+      "wordCount": 81,
+      "readingTime": 1,
+      "lastModifiedBy": "ai-agent",
+      "version": 1
+    }
+  },
+  {
+    "id": "knAIqnMroDUcmRhdQglJ",
+    "title": "Product Backlog Management and Refinement",
+    "slug": "backlog-management-refinement",
+    "folderId": "GpsuNFLV3cA6Qmj8U2Vd",
+    "folderPath": [
+      "business",
+      "business-analysis-masterclass",
+      "agile-business-analysis"
+    ],
+    "content": "# Product Backlog Management and Refinement\n\n## Topics Covered\n\n- Product backlog structure and management: ordered list of everything needed\n- Backlog grooming/refinement sessions: preparing items for upcoming sprints\n- Prioritization in the backlog context: value, risk, dependencies\n- Epic decomposition and story splitting: breaking down large items\n- Definition of Ready: when is a backlog item ready for sprint planning\n- Managing backlog health over time: pruning, re-prioritizing, archiving\n\n## Key Sources\n- Essential Scrum Chapter 6\n- Agile Business Analysis Chapter 7\n- BABOK Guide V3 Section 10.2 (Backlog Management)",
+    "excerpt": "# Product Backlog Management and Refinement\n\n## Topics Covered\n\n- Product backlog structure and management: ordered list of everything needed\n- Backlog grooming/refinement sessions: preparing items fo",
+    "tags": [
+      "backlog",
+      "refinement",
+      "grooming"
+    ],
+    "order": 0,
+    "status": "draft",
+    "priority": "high",
+    "createdAt": {
+      "_seconds": 1771151393,
+      "_nanoseconds": 606000000
+    },
+    "updatedAt": {
+      "_seconds": 1771151393,
+      "_nanoseconds": 606000000
+    },
+    "metadata": {
+      "wordCount": 92,
+      "readingTime": 1,
+      "lastModifiedBy": "ai-agent",
+      "version": 1
+    }
+  },
+  {
+    "id": "lxJCpOZeIJMH6l4vTK2f",
+    "title": "Risk Assessment and Constraints",
+    "slug": "risk-assessment-constraints",
+    "folderId": "h2MJ519pVjfjPhb3lEck",
+    "folderPath": [
+      "business",
+      "business-analysis-masterclass",
+      "strategy-analysis"
+    ],
+    "content": "# Risk Assessment and Constraints\n\n## Topics Covered\n\n- Risk analysis and management techniques (BABOK 10.38)\n- Identifying constraints and assumptions that limit solutions\n- Risk tolerance and mitigation strategies\n- SWOT analysis: strengths, weaknesses, opportunities, threats (BABOK 10.46)\n- Needs assessment techniques from the PMI framework\n- Balancing risk with opportunity in solution design\n\n## Key Sources\n- BABOK Guide V3 Section 6.3\n- BA for Practitioners (PMI) Chapter 2\n- Requirements Management Practice Guide Chapter 3",
+    "excerpt": "# Risk Assessment and Constraints\n\n## Topics Covered\n\n- Risk analysis and management techniques (BABOK 10.38)\n- Identifying constraints and assumptions that limit solutions\n- Risk tolerance and mitiga",
+    "tags": [
+      "risk",
+      "constraints",
+      "assessment"
+    ],
+    "order": 0,
+    "status": "draft",
+    "priority": "high",
+    "createdAt": {
+      "_seconds": 1771151359,
+      "_nanoseconds": 391000000
+    },
+    "updatedAt": {
+      "_seconds": 1771151359,
+      "_nanoseconds": 391000000
+    },
+    "metadata": {
+      "wordCount": 78,
+      "readingTime": 1,
+      "lastModifiedBy": "ai-agent",
+      "version": 1
+    }
+  },
+  {
+    "id": "m1g1JOCWkFeGTatORxF8",
+    "title": "BA Technique Selection Guide",
+    "slug": "ba-technique-selection-guide",
+    "folderId": "1hGCsRTD3gXXT63P4syl",
+    "folderPath": [
+      "business",
+      "business-analysis-masterclass",
+      "tools-and-techniques-reference"
+    ],
+    "content": "# BA Technique Selection Guide\n\n## Topics Covered\n\n- Complete technique catalog organized by purpose: elicitation, analysis, modeling, evaluation\n- Technique-to-knowledge-area mapping: which techniques for which KA\n- Selecting techniques based on project context: size, methodology, domain\n- Technique complexity and learning curve: effort to adopt\n- Combining techniques for maximum effectiveness: complementary pairings\n- Quick-reference matrix: situation to recommended techniques\n\n## Key Sources\n- BABOK Guide V3 Chapter 10 (all 50 techniques)\n- Seven Steps to Mastering BA Chapter 6\n- Software Requirements Essentials Chapters 3-6",
+    "excerpt": "# BA Technique Selection Guide\n\n## Topics Covered\n\n- Complete technique catalog organized by purpose: elicitation, analysis, modeling, evaluation\n- Technique-to-knowledge-area mapping: which technique",
+    "tags": [
+      "techniques",
+      "selection",
+      "guide",
+      "reference"
+    ],
+    "order": 0,
+    "status": "draft",
+    "priority": "high",
+    "createdAt": {
+      "_seconds": 1771151405,
+      "_nanoseconds": 685000000
+    },
+    "updatedAt": {
+      "_seconds": 1771151405,
+      "_nanoseconds": 685000000
+    },
+    "metadata": {
+      "wordCount": 87,
+      "readingTime": 1,
+      "lastModifiedBy": "ai-agent",
+      "version": 1
+    }
+  },
+  {
+    "id": "mCuWdi5n0qo7EmWPfocw",
+    "title": "Measuring Solution Performance",
+    "slug": "measuring-solution-performance",
+    "folderId": "g7dC45FqgBuzvAAEfEgd",
+    "folderPath": [
+      "business",
+      "business-analysis-masterclass",
+      "solution-evaluation"
+    ],
+    "content": "# Measuring Solution Performance\n\n## Topics Covered\n\n- Defining solution performance measures: what to measure and why\n- Metrics and KPIs for solution evaluation (BABOK 10.28)\n- Benchmarking and market analysis: comparing against industry standards (BABOK 10.4)\n- Solution evaluation success factors from the PMI framework\n- Establishing measurement baselines before implementation\n- Quantitative vs. qualitative performance measures\n\n## Key Sources\n- BABOK Guide V3 Section 8.1\n- BA for Practitioners (PMI) Chapter 5\n- Requirements Management Practice Guide Chapter 8",
+    "excerpt": "# Measuring Solution Performance\n\n## Topics Covered\n\n- Defining solution performance measures: what to measure and why\n- Metrics and KPIs for solution evaluation (BABOK 10.28)\n- Benchmarking and marke",
+    "tags": [
+      "measurement",
+      "performance",
+      "metrics"
+    ],
+    "order": 0,
+    "status": "draft",
+    "priority": "high",
+    "createdAt": {
+      "_seconds": 1771151377,
+      "_nanoseconds": 305000000
+    },
+    "updatedAt": {
+      "_seconds": 1771151377,
+      "_nanoseconds": 305000000
+    },
+    "metadata": {
+      "wordCount": 81,
+      "readingTime": 1,
+      "lastModifiedBy": "ai-agent",
+      "version": 1
+    }
+  },
+  {
+    "id": "nAh7WbIgIGWsbEZrBjuE",
+    "title": "Verifying and Validating Requirements",
+    "slug": "verifying-validating-requirements",
+    "folderId": "TLRg7xbRj5YLTb9n5COf",
+    "folderPath": [
+      "business",
+      "business-analysis-masterclass",
+      "requirements-analysis-design"
+    ],
+    "content": "# Verifying and Validating Requirements\n\n## Topics Covered\n\n- Verification: Are requirements well-formed? (correctness, completeness, consistency)\n- Validation: Do requirements deliver value? (alignment with business need)\n- Requirements reviews and inspections: structured quality checks (BABOK 10.37)\n- Acceptance test-driven development: writing tests before code\n- Requirements analysis techniques from the PMI framework\n- Common requirements defects and how to prevent them\n- Requirements quality checklists\n\n## Key Sources\n- BABOK Guide V3 Sections 7.2-7.3\n- Software Requirements Essentials Chapter 6\n- Requirements Management Practice Guide Chapter 6",
+    "excerpt": "# Verifying and Validating Requirements\n\n## Topics Covered\n\n- Verification: Are requirements well-formed? (correctness, completeness, consistency)\n- Validation: Do requirements deliver value? (alignme",
+    "tags": [
+      "verification",
+      "validation",
+      "quality"
+    ],
+    "order": 0,
+    "status": "draft",
+    "priority": "high",
+    "createdAt": {
+      "_seconds": 1771151375,
+      "_nanoseconds": 699000000
+    },
+    "updatedAt": {
+      "_seconds": 1771151375,
+      "_nanoseconds": 699000000
+    },
+    "metadata": {
+      "wordCount": 87,
+      "readingTime": 1,
+      "lastModifiedBy": "ai-agent",
+      "version": 1
+    }
+  },
+  {
+    "id": "nC8grRU6Oju0njKRhEvU",
+    "title": "Planning the BA Approach",
+    "slug": "planning-the-ba-approach",
+    "folderId": "kHre62Oej3JgCZzf6BpF",
+    "folderPath": [
+      "business",
+      "business-analysis-masterclass",
+      "ba-planning-and-monitoring"
+    ],
+    "content": "# Planning the BA Approach\n\n## Topics Covered\n\n- Choosing predictive, adaptive, or hybrid approaches for BA work\n- Planning BA activities, deliverables, and timelines\n- Formality vs. agility: scaling the approach to the initiative size and risk\n- BA work plan components: scope, deliverables, schedule, resources\n- Requirements management planning success factors (PMI)\n- Tailoring the BA approach based on organizational context\n\n## Key Sources\n- BABOK Guide V3 Section 3.1\n- BA for Practitioners (PMI) Chapter 3\n- Requirements Management Practice Guide Chapter 4",
+    "excerpt": "# Planning the BA Approach\n\n## Topics Covered\n\n- Choosing predictive, adaptive, or hybrid approaches for BA work\n- Planning BA activities, deliverables, and timelines\n- Formality vs. agility: scaling ",
+    "tags": [
+      "planning",
+      "approach",
+      "methodology"
+    ],
+    "order": 0,
+    "status": "draft",
+    "priority": "high",
+    "createdAt": {
+      "_seconds": 1771151319,
+      "_nanoseconds": 109000000
+    },
+    "updatedAt": {
+      "_seconds": 1771151319,
+      "_nanoseconds": 109000000
+    },
+    "metadata": {
+      "wordCount": 86,
+      "readingTime": 1,
+      "lastModifiedBy": "ai-agent",
+      "version": 1
+    }
+  },
+  {
+    "id": "pHR5x2GwRmSZmPZN0vWe",
+    "title": "Traceability",
+    "slug": "traceability",
+    "folderId": "MFV5l6ITm2MRS2VwCNnX",
+    "folderPath": [
+      "business",
+      "business-analysis-masterclass",
+      "requirements-lifecycle-management"
+    ],
+    "content": "# Traceability\n\n## Topics Covered\n\n- What is requirements traceability and why it matters for project success\n- Traceability matrix construction: rows, columns, and relationship types\n- Forward and backward traceability: from need to implementation and back\n- Derive, satisfy, and verify relationships between requirements\n- Traceability in agile contexts: lightweight approaches\n- Tools for managing traceability: spreadsheets to specialized tools\n\n## Key Sources\n- BABOK Guide V3 Section 5.1\n- Requirements Management Practice Guide Chapter 7\n- Software Requirements Essentials Chapter 7\n- Seven Steps to Mastering BA Chapter 6",
+    "excerpt": "# Traceability\n\n## Topics Covered\n\n- What is requirements traceability and why it matters for project success\n- Traceability matrix construction: rows, columns, and relationship types\n- Forward and ba",
+    "tags": [
+      "traceability",
+      "matrix",
+      "relationships"
+    ],
+    "order": 0,
+    "status": "draft",
+    "priority": "high",
+    "createdAt": {
+      "_seconds": 1771151346,
+      "_nanoseconds": 86000000
+    },
+    "updatedAt": {
+      "_seconds": 1771151346,
+      "_nanoseconds": 86000000
+    },
+    "metadata": {
+      "wordCount": 91,
+      "readingTime": 1,
+      "lastModifiedBy": "ai-agent",
+      "version": 1
+    }
+  },
+  {
+    "id": "qvIaeX59ziXQgWCg8Q6f",
+    "title": "Functional vs. Non-Functional Requirements",
+    "slug": "functional-vs-nonfunctional-requirements",
+    "folderId": "TLRg7xbRj5YLTb9n5COf",
+    "folderPath": [
+      "business",
+      "business-analysis-masterclass",
+      "requirements-analysis-design"
+    ],
+    "content": "# Functional vs. Non-Functional Requirements\n\n## Topics Covered\n\n- Functional requirements: what the system must do\n- Non-functional (quality attribute) requirements: how well it must perform\n- Performance, security, usability, reliability, scalability categories\n- Planguage notation for quantifying quality attributes\n- Balancing functional and non-functional requirements\n- Non-functional requirements analysis techniques (BABOK 10.30)\n\n## Key Sources\n- BABOK Guide V3 Section 10.30\n- Software Requirements Essentials Chapters 3-5\n- Requirements Management Practice Guide Chapter 6",
+    "excerpt": "# Functional vs. Non-Functional Requirements\n\n## Topics Covered\n\n- Functional requirements: what the system must do\n- Non-functional (quality attribute) requirements: how well it must perform\n- Perfor",
+    "tags": [
+      "functional",
+      "nonfunctional",
+      "quality-attributes"
+    ],
+    "order": 0,
+    "status": "draft",
+    "priority": "high",
+    "createdAt": {
+      "_seconds": 1771151367,
+      "_nanoseconds": 752000000
+    },
+    "updatedAt": {
+      "_seconds": 1771151367,
+      "_nanoseconds": 752000000
+    },
+    "metadata": {
+      "wordCount": 75,
+      "readingTime": 1,
+      "lastModifiedBy": "ai-agent",
+      "version": 1
+    }
+  },
+  {
+    "id": "requirements-analysis-context-diagrams-and-scope-models",
+    "title": "Context Diagrams and Scope Models",
+    "slug": "context-diagrams-and-scope-models",
+    "folderId": "requirements-analysis",
+    "folderPath": [
+      "business-analysis-masterclass",
+      "requirements-analysis"
+    ],
+    "content": "",
+    "excerpt": "Defining system boundaries, external entities, data flows, and visualizing what's in-scope vs out-of-scope for the solution.",
+    "tags": [],
+    "order": 6,
+    "status": "draft",
+    "priority": "medium",
+    "metadata": {
+      "wordCount": 0,
+      "readingTime": 0
+    },
+    "createdAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    },
+    "updatedAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    }
+  },
+  {
+    "id": "requirements-analysis-decision-tables-and-trees",
+    "title": "Decision Tables and Trees",
+    "slug": "decision-tables-and-trees",
+    "folderId": "requirements-analysis",
+    "folderPath": [
+      "business-analysis-masterclass",
+      "requirements-analysis"
+    ],
+    "content": "",
+    "excerpt": "Modeling complex business rules, conditions, and actions using decision tables and decision trees for clarity and completeness.",
+    "tags": [],
+    "order": 8,
+    "status": "draft",
+    "priority": "medium",
+    "metadata": {
+      "wordCount": 0,
+      "readingTime": 0
+    },
+    "createdAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    },
+    "updatedAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    }
+  },
+  {
+    "id": "requirements-analysis-gap-analysis-as-is-vs-to-be",
+    "title": "Gap Analysis (AS-IS vs TO-BE)",
+    "slug": "gap-analysis-as-is-vs-to-be",
+    "folderId": "requirements-analysis",
+    "folderPath": [
+      "business-analysis-masterclass",
+      "requirements-analysis"
+    ],
+    "content": "",
+    "excerpt": "Documenting current state, defining desired future state, identifying gaps, and prioritizing improvement opportunities for solution design.",
+    "tags": [],
+    "order": 2,
+    "status": "draft",
+    "priority": "medium",
+    "metadata": {
+      "wordCount": 0,
+      "readingTime": 0
+    },
+    "createdAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    },
+    "updatedAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    }
+  },
+  {
+    "id": "requirements-analysis-moscow-prioritization",
+    "title": "MoSCoW Prioritization",
+    "slug": "moscow-prioritization",
+    "folderId": "requirements-analysis",
+    "folderPath": [
+      "business-analysis-masterclass",
+      "requirements-analysis"
+    ],
+    "content": "",
+    "excerpt": "Must have, Should have, Could have, Won't have prioritization framework for managing scope, stakeholder expectations, and release planning.",
+    "tags": [],
+    "order": 4,
+    "status": "draft",
+    "priority": "medium",
+    "metadata": {
+      "wordCount": 0,
+      "readingTime": 0
+    },
+    "createdAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    },
+    "updatedAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    }
+  },
+  {
+    "id": "requirements-analysis-requirements-analysis-overview",
+    "title": "Requirements Analysis Overview",
+    "slug": "requirements-analysis-overview",
+    "folderId": "requirements-analysis",
+    "folderPath": [
+      "business-analysis-masterclass",
+      "requirements-analysis"
+    ],
+    "content": "",
+    "excerpt": "Purpose of requirements analysis, transforming stakeholder needs into structured requirements, and identifying gaps, conflicts, and dependencies.",
+    "tags": [],
+    "order": 1,
+    "status": "draft",
+    "priority": "medium",
+    "metadata": {
+      "wordCount": 0,
+      "readingTime": 0
+    },
+    "createdAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    },
+    "updatedAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    }
+  },
+  {
+    "id": "requirements-analysis-requirements-decomposition",
+    "title": "Requirements Decomposition",
+    "slug": "requirements-decomposition",
+    "folderId": "requirements-analysis",
+    "folderPath": [
+      "business-analysis-masterclass",
+      "requirements-analysis"
+    ],
+    "content": "",
+    "excerpt": "Breaking down high-level requirements into detailed sub-requirements, functional decomposition, and managing appropriate granularity levels.",
+    "tags": [],
+    "order": 3,
+    "status": "draft",
+    "priority": "medium",
+    "metadata": {
+      "wordCount": 0,
+      "readingTime": 0
+    },
+    "createdAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    },
+    "updatedAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    }
+  },
+  {
+    "id": "requirements-analysis-swot-analysis-for-requirements",
+    "title": "SWOT Analysis for Requirements",
+    "slug": "swot-analysis-for-requirements",
+    "folderId": "requirements-analysis",
+    "folderPath": [
+      "business-analysis-masterclass",
+      "requirements-analysis"
+    ],
+    "content": "",
+    "excerpt": "Using Strengths, Weaknesses, Opportunities, Threats analysis to evaluate solution options and inform business case development.",
+    "tags": [],
+    "order": 7,
+    "status": "draft",
+    "priority": "medium",
+    "metadata": {
+      "wordCount": 0,
+      "readingTime": 0
+    },
+    "createdAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    },
+    "updatedAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    }
+  },
+  {
+    "id": "requirements-analysis-user-story-mapping-jeff-patton",
+    "title": "User Story Mapping (Jeff Patton)",
+    "slug": "user-story-mapping-jeff-patton",
+    "folderId": "requirements-analysis",
+    "folderPath": [
+      "business-analysis-masterclass",
+      "requirements-analysis"
+    ],
+    "content": "",
+    "excerpt": "Creating user story maps to visualize user journeys, prioritize features by value, plan releases, and identify MVP scope in agile projects.",
+    "tags": [],
+    "order": 5,
+    "status": "draft",
+    "priority": "medium",
+    "metadata": {
+      "wordCount": 0,
+      "readingTime": 0
+    },
+    "createdAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    },
+    "updatedAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    }
+  },
+  {
+    "id": "requirements-fundamentals-characteristics-of-good-requirements-ieee-29148",
+    "title": "Characteristics of Good Requirements (IEEE 29148)",
+    "slug": "characteristics-of-good-requirements-ieee-29148",
+    "folderId": "requirements-fundamentals",
+    "folderPath": [
+      "business-analysis-masterclass",
+      "requirements-fundamentals"
+    ],
+    "content": "",
+    "excerpt": "Clear, concise, testable, feasible, unambiguous, verifiable, and traceable. How to write requirements that avoid misinterpretation.",
+    "tags": [],
+    "order": 6,
+    "status": "draft",
+    "priority": "medium",
+    "metadata": {
+      "wordCount": 0,
+      "readingTime": 0
+    },
+    "createdAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    },
+    "updatedAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    }
+  },
+  {
+    "id": "requirements-fundamentals-common-requirements-pitfalls",
+    "title": "Common Requirements Pitfalls",
+    "slug": "common-requirements-pitfalls",
+    "folderId": "requirements-fundamentals",
+    "folderPath": [
+      "business-analysis-masterclass",
+      "requirements-fundamentals"
+    ],
+    "content": "",
+    "excerpt": "Avoiding scope creep, gold plating, ambiguous language, missing non-functionals, inadequate stakeholder validation, and unrealistic constraints.",
+    "tags": [],
+    "order": 9,
+    "status": "draft",
+    "priority": "medium",
+    "metadata": {
+      "wordCount": 0,
+      "readingTime": 0
+    },
+    "createdAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    },
+    "updatedAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    }
+  },
+  {
+    "id": "requirements-fundamentals-functional-vs-non-functional-requirements",
+    "title": "Functional vs Non-Functional Requirements",
+    "slug": "functional-vs-non-functional-requirements",
+    "folderId": "requirements-fundamentals",
+    "folderPath": [
+      "business-analysis-masterclass",
+      "requirements-fundamentals"
+    ],
+    "content": "",
+    "excerpt": "Functional requirements (what the system does) vs non-functional (how well it performs), with examples of performance, security, usability.",
+    "tags": [],
+    "order": 3,
+    "status": "draft",
+    "priority": "medium",
+    "metadata": {
+      "wordCount": 0,
+      "readingTime": 0
+    },
+    "createdAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    },
+    "updatedAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    }
+  },
+  {
+    "id": "requirements-fundamentals-requirements-documentation-formats-brd-frd-srs-user-stories",
+    "title": "Requirements Documentation Formats (BRD, FRD, SRS, User Stories)",
+    "slug": "requirements-documentation-formats-brd-frd-srs-user-stories",
+    "folderId": "requirements-fundamentals",
+    "folderPath": [
+      "business-analysis-masterclass",
+      "requirements-fundamentals"
+    ],
+    "content": "",
+    "excerpt": "When to use Business Requirements Documents, Functional Requirements Documents, Software Requirements Specs, or User Stories.",
+    "tags": [],
+    "order": 7,
+    "status": "draft",
+    "priority": "medium",
+    "metadata": {
+      "wordCount": 0,
+      "readingTime": 0
+    },
+    "createdAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    },
+    "updatedAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    }
+  },
+  {
+    "id": "requirements-fundamentals-requirements-levels-and-abstraction",
+    "title": "Requirements Levels and Abstraction",
+    "slug": "requirements-levels-and-abstraction",
+    "folderId": "requirements-fundamentals",
+    "folderPath": [
+      "business-analysis-masterclass",
+      "requirements-fundamentals"
+    ],
+    "content": "",
+    "excerpt": "Moving from high-level business goals to detailed solution specifications, managing appropriate level of detail for different audiences.",
+    "tags": [],
+    "order": 4,
+    "status": "draft",
+    "priority": "medium",
+    "metadata": {
+      "wordCount": 0,
+      "readingTime": 0
+    },
+    "createdAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    },
+    "updatedAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    }
+  },
+  {
+    "id": "requirements-fundamentals-requirements-lifecycle",
+    "title": "Requirements Lifecycle",
+    "slug": "requirements-lifecycle",
+    "folderId": "requirements-fundamentals",
+    "folderPath": [
+      "business-analysis-masterclass",
+      "requirements-fundamentals"
+    ],
+    "content": "",
+    "excerpt": "Lifecycle stages: elicitation, analysis, specification, validation, management, and how requirements evolve throughout the project.",
+    "tags": [],
+    "order": 5,
+    "status": "draft",
+    "priority": "medium",
+    "metadata": {
+      "wordCount": 0,
+      "readingTime": 0
+    },
+    "createdAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    },
+    "updatedAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    }
+  },
+  {
+    "id": "requirements-fundamentals-requirements-traceability-matrix",
+    "title": "Requirements Traceability Matrix",
+    "slug": "requirements-traceability-matrix",
+    "folderId": "requirements-fundamentals",
+    "folderPath": [
+      "business-analysis-masterclass",
+      "requirements-fundamentals"
+    ],
+    "content": "",
+    "excerpt": "Linking requirements to business objectives, design elements, test cases, and implementation. Ensuring complete coverage and managing change impact.",
+    "tags": [],
+    "order": 8,
+    "status": "draft",
+    "priority": "medium",
+    "metadata": {
+      "wordCount": 0,
+      "readingTime": 0
+    },
+    "createdAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    },
+    "updatedAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    }
+  },
+  {
+    "id": "requirements-fundamentals-types-of-requirements-business-stakeholder-solution-transition",
+    "title": "Types of Requirements (Business, Stakeholder, Solution, Transition)",
+    "slug": "types-of-requirements-business-stakeholder-solution-transition",
+    "folderId": "requirements-fundamentals",
+    "folderPath": [
+      "business-analysis-masterclass",
+      "requirements-fundamentals"
+    ],
+    "content": "",
+    "excerpt": "Four requirement levels in BABOK: business requirements (why), stakeholder (who/what), solution (how), and transition (implementation).",
+    "tags": [],
+    "order": 2,
+    "status": "draft",
+    "priority": "medium",
+    "metadata": {
+      "wordCount": 0,
+      "readingTime": 0
+    },
+    "createdAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    },
+    "updatedAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    }
+  },
+  {
+    "id": "requirements-fundamentals-what-are-requirements",
+    "title": "What Are Requirements",
+    "slug": "what-are-requirements",
+    "folderId": "requirements-fundamentals",
+    "folderPath": [
+      "business-analysis-masterclass",
+      "requirements-fundamentals"
+    ],
+    "content": "",
+    "excerpt": "Definition of requirements, purpose in solution delivery, and the difference between needs, wants, and validated requirements.",
+    "tags": [],
+    "order": 1,
+    "status": "draft",
+    "priority": "medium",
+    "metadata": {
+      "wordCount": 0,
+      "readingTime": 0
+    },
+    "createdAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    },
+    "updatedAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    }
+  },
+  {
+    "id": "requirements-management-change-control-acceptance-testing-and-uat-planning",
+    "title": "Acceptance Testing and UAT Planning",
+    "slug": "acceptance-testing-and-uat-planning",
+    "folderId": "requirements-management-change-control",
+    "folderPath": [
+      "business-analysis-masterclass",
+      "requirements-management-change-control"
+    ],
+    "content": "",
+    "excerpt": "Planning User Acceptance Testing: test scenarios from requirements, UAT environment setup, tester coordination, defect triage, go-live criteria.",
+    "tags": [],
+    "order": 8,
+    "status": "draft",
+    "priority": "medium",
+    "metadata": {
+      "wordCount": 0,
+      "readingTime": 0
+    },
+    "createdAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    },
+    "updatedAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    }
+  },
+  {
+    "id": "requirements-management-change-control-change-request-process",
+    "title": "Change Request Process",
+    "slug": "change-request-process",
+    "folderId": "requirements-management-change-control",
+    "folderPath": [
+      "business-analysis-masterclass",
+      "requirements-management-change-control"
+    ],
+    "content": "",
+    "excerpt": "Formal change control: change request forms, impact analysis (scope, cost, schedule), CCB approval, and communicating approved changes.",
+    "tags": [],
+    "order": 3,
+    "status": "draft",
+    "priority": "medium",
+    "metadata": {
+      "wordCount": 0,
+      "readingTime": 0
+    },
+    "createdAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    },
+    "updatedAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    }
+  },
+  {
+    "id": "requirements-management-change-control-measuring-ba-effectiveness",
+    "title": "Measuring BA Effectiveness",
+    "slug": "measuring-ba-effectiveness",
+    "folderId": "requirements-management-change-control",
+    "folderPath": [
+      "business-analysis-masterclass",
+      "requirements-management-change-control"
+    ],
+    "content": "",
+    "excerpt": "KPIs for BA performance: requirements stability, stakeholder satisfaction, defect rates traced to requirements, time-to-market impact.",
+    "tags": [],
+    "order": 9,
+    "status": "draft",
+    "priority": "medium",
+    "metadata": {
+      "wordCount": 0,
+      "readingTime": 0
+    },
+    "createdAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    },
+    "updatedAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    }
+  },
+  {
+    "id": "requirements-management-change-control-metrics-for-requirements-quality",
+    "title": "Metrics for Requirements Quality",
+    "slug": "metrics-for-requirements-quality",
+    "folderId": "requirements-management-change-control",
+    "folderPath": [
+      "business-analysis-masterclass",
+      "requirements-management-change-control"
+    ],
+    "content": "",
+    "excerpt": "Measuring requirements quality: defect density, volatility, traceability coverage, review effectiveness, and using metrics to improve BA processes.",
+    "tags": [],
+    "order": 6,
+    "status": "draft",
+    "priority": "medium",
+    "metadata": {
+      "wordCount": 0,
+      "readingTime": 0
+    },
+    "createdAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    },
+    "updatedAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    }
+  },
+  {
+    "id": "requirements-management-change-control-requirements-management-overview",
+    "title": "Requirements Management Overview",
+    "slug": "requirements-management-overview",
+    "folderId": "requirements-management-change-control",
+    "folderPath": [
+      "business-analysis-masterclass",
+      "requirements-management-change-control"
+    ],
+    "content": "",
+    "excerpt": "Ongoing requirements management activities: maintaining traceability, handling changes, version control, and ensuring requirements remain current.",
+    "tags": [],
+    "order": 1,
+    "status": "draft",
+    "priority": "medium",
+    "metadata": {
+      "wordCount": 0,
+      "readingTime": 0
+    },
+    "createdAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    },
+    "updatedAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    }
+  },
+  {
+    "id": "requirements-management-change-control-requirements-management-tools-jira-azure-devops-doors",
+    "title": "Requirements Management Tools (Jira, Azure DevOps, DOORS)",
+    "slug": "requirements-management-tools-jira-azure-devops-doors",
+    "folderId": "requirements-management-change-control",
+    "folderPath": [
+      "business-analysis-masterclass",
+      "requirements-management-change-control"
+    ],
+    "content": "",
+    "excerpt": "Tool features for requirements lifecycle: Jira for agile, Azure DevOps for ALM, IBM DOORS for complex traceability, and tool selection criteria.",
+    "tags": [],
+    "order": 5,
+    "status": "draft",
+    "priority": "medium",
+    "metadata": {
+      "wordCount": 0,
+      "readingTime": 0
+    },
+    "createdAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    },
+    "updatedAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    }
+  },
+  {
+    "id": "requirements-management-change-control-requirements-traceability-management",
+    "title": "Requirements Traceability Management",
+    "slug": "requirements-traceability-management",
+    "folderId": "requirements-management-change-control",
+    "folderPath": [
+      "business-analysis-masterclass",
+      "requirements-management-change-control"
+    ],
+    "content": "",
+    "excerpt": "Maintaining bi-directional traceability from business needs through design, development, testing, and deployment for impact analysis and coverage.",
+    "tags": [],
+    "order": 4,
+    "status": "draft",
+    "priority": "medium",
+    "metadata": {
+      "wordCount": 0,
+      "readingTime": 0
+    },
+    "createdAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    },
+    "updatedAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    }
+  },
+  {
+    "id": "requirements-management-change-control-requirements-validation-techniques",
+    "title": "Requirements Validation Techniques",
+    "slug": "requirements-validation-techniques",
+    "folderId": "requirements-management-change-control",
+    "folderPath": [
+      "business-analysis-masterclass",
+      "requirements-management-change-control"
+    ],
+    "content": "",
+    "excerpt": "Validating requirements correctness: reviews, walkthroughs, inspections, prototyping, and ensuring requirements meet stakeholder needs before build.",
+    "tags": [],
+    "order": 7,
+    "status": "draft",
+    "priority": "medium",
+    "metadata": {
+      "wordCount": 0,
+      "readingTime": 0
+    },
+    "createdAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    },
+    "updatedAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    }
+  },
+  {
+    "id": "requirements-management-change-control-requirements-versioning-and-baselining",
+    "title": "Requirements Versioning and Baselining",
+    "slug": "requirements-versioning-and-baselining",
+    "folderId": "requirements-management-change-control",
+    "folderPath": [
+      "business-analysis-masterclass",
+      "requirements-management-change-control"
+    ],
+    "content": "",
+    "excerpt": "Establishing requirement baselines, versioning strategy, tracking changes between versions, and managing approved vs proposed requirements.",
+    "tags": [],
+    "order": 2,
+    "status": "draft",
+    "priority": "medium",
+    "metadata": {
+      "wordCount": 0,
+      "readingTime": 0
+    },
+    "createdAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    },
+    "updatedAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    }
+  },
+  {
+    "id": "requirements-modeling-visualization-data-modeling-basics-erd",
+    "title": "Data Modeling Basics (ERD)",
+    "slug": "data-modeling-basics-erd",
+    "folderId": "requirements-modeling-visualization",
+    "folderPath": [
+      "business-analysis-masterclass",
+      "requirements-modeling-visualization"
+    ],
+    "content": "",
+    "excerpt": "Entity Relationship Diagrams (ERD) to model data entities, attributes, relationships (one-to-many, many-to-many), and cardinality.",
+    "tags": [],
+    "order": 5,
+    "status": "draft",
+    "priority": "medium",
+    "metadata": {
+      "wordCount": 0,
+      "readingTime": 0
+    },
+    "createdAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    },
+    "updatedAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    }
+  },
+  {
+    "id": "requirements-modeling-visualization-introduction-to-requirements-modeling",
+    "title": "Introduction to Requirements Modeling",
+    "slug": "introduction-to-requirements-modeling",
+    "folderId": "requirements-modeling-visualization",
+    "folderPath": [
+      "business-analysis-masterclass",
+      "requirements-modeling-visualization"
+    ],
+    "content": "",
+    "excerpt": "Purpose of visual models, when to use diagrams vs text, selecting appropriate modeling techniques, and maintaining model consistency.",
+    "tags": [],
+    "order": 1,
+    "status": "draft",
+    "priority": "medium",
+    "metadata": {
+      "wordCount": 0,
+      "readingTime": 0
+    },
+    "createdAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    },
+    "updatedAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    }
+  },
+  {
+    "id": "requirements-modeling-visualization-process-modeling-with-bpmn",
+    "title": "Process Modeling with BPMN",
+    "slug": "process-modeling-with-bpmn",
+    "folderId": "requirements-modeling-visualization",
+    "folderPath": [
+      "business-analysis-masterclass",
+      "requirements-modeling-visualization"
+    ],
+    "content": "",
+    "excerpt": "Business Process Model and Notation (BPMN) for documenting workflows, swimlanes, gateways, events, and standardized process visualization.",
+    "tags": [],
+    "order": 2,
+    "status": "draft",
+    "priority": "medium",
+    "metadata": {
+      "wordCount": 0,
+      "readingTime": 0
+    },
+    "createdAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    },
+    "updatedAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    }
+  },
+  {
+    "id": "requirements-modeling-visualization-sequence-diagrams",
+    "title": "Sequence Diagrams",
+    "slug": "sequence-diagrams",
+    "folderId": "requirements-modeling-visualization",
+    "folderPath": [
+      "business-analysis-masterclass",
+      "requirements-modeling-visualization"
+    ],
+    "content": "",
+    "excerpt": "UML sequence diagrams to model interactions between system components, API calls, message flows, and timing of operations.",
+    "tags": [],
+    "order": 7,
+    "status": "draft",
+    "priority": "medium",
+    "metadata": {
+      "wordCount": 0,
+      "readingTime": 0
+    },
+    "createdAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    },
+    "updatedAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    }
+  },
+  {
+    "id": "requirements-modeling-visualization-state-diagrams",
+    "title": "State Diagrams",
+    "slug": "state-diagrams",
+    "folderId": "requirements-modeling-visualization",
+    "folderPath": [
+      "business-analysis-masterclass",
+      "requirements-modeling-visualization"
+    ],
+    "content": "",
+    "excerpt": "State machine diagrams to model object lifecycles, status transitions, triggers, and valid state changes for entities like orders or tickets.",
+    "tags": [],
+    "order": 6,
+    "status": "draft",
+    "priority": "medium",
+    "metadata": {
+      "wordCount": 0,
+      "readingTime": 0
+    },
+    "createdAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    },
+    "updatedAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    }
+  },
+  {
+    "id": "requirements-modeling-visualization-use-case-modeling-uml",
+    "title": "Use Case Modeling (UML)",
+    "slug": "use-case-modeling-uml",
+    "folderId": "requirements-modeling-visualization",
+    "folderPath": [
+      "business-analysis-masterclass",
+      "requirements-modeling-visualization"
+    ],
+    "content": "",
+    "excerpt": "UML use case diagrams and descriptions: actors, use cases, relationships, and documenting system behavior from user perspective.",
+    "tags": [],
+    "order": 3,
+    "status": "draft",
+    "priority": "medium",
+    "metadata": {
+      "wordCount": 0,
+      "readingTime": 0
+    },
+    "createdAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    },
+    "updatedAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    }
+  },
+  {
+    "id": "requirements-modeling-visualization-user-story-writing-invest-criteria",
+    "title": "User Story Writing (INVEST Criteria)",
+    "slug": "user-story-writing-invest-criteria",
+    "folderId": "requirements-modeling-visualization",
+    "folderPath": [
+      "business-analysis-masterclass",
+      "requirements-modeling-visualization"
+    ],
+    "content": "",
+    "excerpt": "Writing effective user stories: Independent, Negotiable, Valuable, Estimable, Small, Testable. Format: As a [role], I want [feature] so that [benefit].",
+    "tags": [],
+    "order": 4,
+    "status": "draft",
+    "priority": "medium",
+    "metadata": {
+      "wordCount": 0,
+      "readingTime": 0
+    },
+    "createdAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    },
+    "updatedAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    }
+  },
+  {
+    "id": "requirements-modeling-visualization-wireframing-and-mockups",
+    "title": "Wireframing and Mockups",
+    "slug": "wireframing-and-mockups",
+    "folderId": "requirements-modeling-visualization",
+    "folderPath": [
+      "business-analysis-masterclass",
+      "requirements-modeling-visualization"
+    ],
+    "content": "",
+    "excerpt": "Creating low-fidelity wireframes and high-fidelity mockups to visualize UI requirements, layouts, navigation, and user interactions.",
+    "tags": [],
+    "order": 8,
+    "status": "draft",
+    "priority": "medium",
+    "metadata": {
+      "wordCount": 0,
+      "readingTime": 0
+    },
+    "createdAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    },
+    "updatedAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    }
+  },
+  {
+    "id": "rrXuqNB1lDCnpo7dgfH2",
+    "title": "Requirements Reuse and Patterns",
+    "slug": "requirements-reuse-patterns",
+    "folderId": "MFV5l6ITm2MRS2VwCNnX",
+    "folderPath": [
+      "business",
+      "business-analysis-masterclass",
+      "requirements-lifecycle-management"
+    ],
+    "content": "# Requirements Reuse and Patterns\n\n## Topics Covered\n\n- Identifying reusable requirements across projects\n- Requirements patterns and templates: building organizational assets\n- Building organizational requirements repositories\n- Project and phase closure: capturing reusable artifacts\n- Knowledge transfer between projects and teams\n- Lessons learned for future requirements work\n\n## Key Sources\n- BABOK Guide V3 Section 5.2\n- Requirements Management Practice Guide Chapter 9\n- Software Requirements Essentials Chapter 5",
+    "excerpt": "# Requirements Reuse and Patterns\n\n## Topics Covered\n\n- Identifying reusable requirements across projects\n- Requirements patterns and templates: building organizational assets\n- Building organizationa",
+    "tags": [
+      "reuse",
+      "patterns",
+      "efficiency"
+    ],
+    "order": 0,
+    "status": "draft",
+    "priority": "high",
+    "createdAt": {
+      "_seconds": 1771151353,
+      "_nanoseconds": 872000000
+    },
+    "updatedAt": {
+      "_seconds": 1771151353,
+      "_nanoseconds": 872000000
+    },
+    "metadata": {
+      "wordCount": 71,
+      "readingTime": 1,
+      "lastModifiedBy": "ai-agent",
+      "version": 1
+    }
+  },
+  {
+    "id": "stakeholder-engagement-building-trust-and-credibility",
+    "title": "Building Trust and Credibility",
+    "slug": "building-trust-and-credibility",
+    "folderId": "stakeholder-engagement",
+    "folderPath": [
+      "business-analysis-masterclass",
+      "stakeholder-engagement"
+    ],
+    "content": "",
+    "excerpt": "Establishing expertise, delivering on commitments, transparent communication, acknowledging limitations, and earning stakeholder confidence over time.",
+    "tags": [],
+    "order": 9,
+    "status": "draft",
+    "priority": "medium",
+    "metadata": {
+      "wordCount": 0,
+      "readingTime": 0
+    },
+    "createdAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    },
+    "updatedAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    }
+  },
+  {
+    "id": "stakeholder-engagement-communication-planning-for-bas",
+    "title": "Communication Planning for BAs",
+    "slug": "communication-planning-for-bas",
+    "folderId": "stakeholder-engagement",
+    "folderPath": [
+      "business-analysis-masterclass",
+      "stakeholder-engagement"
+    ],
+    "content": "",
+    "excerpt": "Creating communication plans: frequency, channels, message types, and adapting communication style for technical vs business stakeholders.",
+    "tags": [],
+    "order": 4,
+    "status": "draft",
+    "priority": "medium",
+    "metadata": {
+      "wordCount": 0,
+      "readingTime": 0
+    },
+    "createdAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    },
+    "updatedAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    }
+  },
+  {
+    "id": "stakeholder-engagement-conflict-resolution-for-bas",
+    "title": "Conflict Resolution for BAs",
+    "slug": "conflict-resolution-for-bas",
+    "folderId": "stakeholder-engagement",
+    "folderPath": [
+      "business-analysis-masterclass",
+      "stakeholder-engagement"
+    ],
+    "content": "",
+    "excerpt": "Conflict resolution techniques: active listening, finding win-win solutions, mediation, escalation paths, and maintaining neutral facilitation.",
+    "tags": [],
+    "order": 6,
+    "status": "draft",
+    "priority": "medium",
+    "metadata": {
+      "wordCount": 0,
+      "readingTime": 0
+    },
+    "createdAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    },
+    "updatedAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    }
+  },
+  {
+    "id": "stakeholder-engagement-facilitation-techniques",
+    "title": "Facilitation Techniques",
+    "slug": "facilitation-techniques",
+    "folderId": "stakeholder-engagement",
+    "folderPath": [
+      "business-analysis-masterclass",
+      "stakeholder-engagement"
+    ],
+    "content": "",
+    "excerpt": "Running effective meetings and workshops: setting agendas, timekeeping, encouraging participation, managing dominant voices, capturing decisions.",
+    "tags": [],
+    "order": 8,
+    "status": "draft",
+    "priority": "medium",
+    "metadata": {
+      "wordCount": 0,
+      "readingTime": 0
+    },
+    "createdAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    },
+    "updatedAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    }
+  },
+  {
+    "id": "stakeholder-engagement-managing-difficult-stakeholders",
+    "title": "Managing Difficult Stakeholders",
+    "slug": "managing-difficult-stakeholders",
+    "folderId": "stakeholder-engagement",
+    "folderPath": [
+      "business-analysis-masterclass",
+      "stakeholder-engagement"
+    ],
+    "content": "",
+    "excerpt": "Strategies for dealing with unresponsive, overly demanding, or hostile stakeholders. Building rapport and finding common ground.",
+    "tags": [],
+    "order": 5,
+    "status": "draft",
+    "priority": "medium",
+    "metadata": {
+      "wordCount": 0,
+      "readingTime": 0
+    },
+    "createdAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    },
+    "updatedAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    }
+  },
+  {
+    "id": "stakeholder-engagement-navigating-organizational-politics",
+    "title": "Navigating Organizational Politics",
+    "slug": "navigating-organizational-politics",
+    "folderId": "stakeholder-engagement",
+    "folderPath": [
+      "business-analysis-masterclass",
+      "stakeholder-engagement"
+    ],
+    "content": "",
+    "excerpt": "Understanding power dynamics, informal networks, building alliances, managing competing agendas, and maintaining professional integrity.",
+    "tags": [],
+    "order": 7,
+    "status": "draft",
+    "priority": "medium",
+    "metadata": {
+      "wordCount": 0,
+      "readingTime": 0
+    },
+    "createdAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    },
+    "updatedAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    }
+  },
+  {
+    "id": "stakeholder-engagement-raci-matrix-for-requirements",
+    "title": "RACI Matrix for Requirements",
+    "slug": "raci-matrix-for-requirements",
+    "folderId": "stakeholder-engagement",
+    "folderPath": [
+      "business-analysis-masterclass",
+      "stakeholder-engagement"
+    ],
+    "content": "",
+    "excerpt": "Defining Responsible, Accountable, Consulted, and Informed roles for requirements activities, avoiding confusion and ensuring clear ownership.",
+    "tags": [],
+    "order": 3,
+    "status": "draft",
+    "priority": "medium",
+    "metadata": {
+      "wordCount": 0,
+      "readingTime": 0
+    },
+    "createdAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    },
+    "updatedAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    }
+  },
+  {
+    "id": "stakeholder-engagement-stakeholder-analysis-framework-powerinterest-grid",
+    "title": "Stakeholder Analysis Framework (Power/Interest Grid)",
+    "slug": "stakeholder-analysis-framework-powerinterest-grid",
+    "folderId": "stakeholder-engagement",
+    "folderPath": [
+      "business-analysis-masterclass",
+      "stakeholder-engagement"
+    ],
+    "content": "",
+    "excerpt": "Power/Interest matrix to categorize stakeholders (manage closely, keep satisfied, keep informed, monitor), and tailoring engagement strategies.",
+    "tags": [],
+    "order": 2,
+    "status": "draft",
+    "priority": "medium",
+    "metadata": {
+      "wordCount": 0,
+      "readingTime": 0
+    },
+    "createdAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    },
+    "updatedAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    }
+  },
+  {
+    "id": "stakeholder-engagement-stakeholder-identification-techniques",
+    "title": "Stakeholder Identification Techniques",
+    "slug": "stakeholder-identification-techniques",
+    "folderId": "stakeholder-engagement",
+    "folderPath": [
+      "business-analysis-masterclass",
+      "stakeholder-engagement"
+    ],
+    "content": "",
+    "excerpt": "Methods to identify all stakeholders: org charts, brainstorming, onion diagrams, and ensuring no critical stakeholders are overlooked.",
+    "tags": [],
+    "order": 1,
+    "status": "draft",
+    "priority": "medium",
+    "metadata": {
+      "wordCount": 0,
+      "readingTime": 0
+    },
+    "createdAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    },
+    "updatedAt": {
+      "_seconds": 1771255366,
+      "_nanoseconds": 134000000
+    }
+  },
+  {
+    "id": "sy6S0yG93YvrtJwVHDqk",
+    "title": "Elicitation Fundamentals",
+    "slug": "elicitation-fundamentals",
+    "folderId": "JBgfvhGXtSW76JgaQTb4",
+    "folderPath": [
+      "business",
+      "business-analysis-masterclass",
+      "elicitation-and-collaboration"
+    ],
+    "content": "# Elicitation Fundamentals\n\n## Topics Covered\n\n- Preparing for elicitation: defining objectives, scope, logistics, and participants\n- Conducting elicitation sessions effectively\n- Confirming and documenting elicitation results\n- Elicitation success factors: environment, trust, preparation\n- Common elicitation pitfalls and how to avoid them\n- The three phases: prepare, conduct, confirm\n\n## Key Sources\n- BABOK Guide V3 Sections 4.1-4.3\n- Requirements Management Practice Guide Chapter 5\n- Software Requirements Essentials Chapter 3",
+    "excerpt": "# Elicitation Fundamentals\n\n## Topics Covered\n\n- Preparing for elicitation: defining objectives, scope, logistics, and participants\n- Conducting elicitation sessions effectively\n- Confirming and docum",
+    "tags": [
+      "elicitation",
+      "preparation",
+      "fundamentals"
+    ],
+    "order": 0,
+    "status": "draft",
+    "priority": "high",
+    "createdAt": {
+      "_seconds": 1771151331,
+      "_nanoseconds": 23000000
+    },
+    "updatedAt": {
+      "_seconds": 1771151331,
+      "_nanoseconds": 23000000
+    },
+    "metadata": {
+      "wordCount": 72,
+      "readingTime": 1,
+      "lastModifiedBy": "ai-agent",
+      "version": 1
+    }
+  },
+  {
+    "id": "tYHWaH80mdYPwAAkTdUK",
+    "title": "Requirements Classification Schema",
+    "slug": "requirements-classification-schema",
+    "folderId": "7wBVsIeXGQW5caxaixWy",
+    "folderPath": [
+      "business",
+      "business-analysis-masterclass",
+      "foundations-of-business-analysis"
+    ],
+    "content": "# Requirements Classification Schema\n\n## Topics Covered\n\n- Business requirements: high-level goals and objectives of the organization\n- Stakeholder requirements: needs of specific stakeholder groups\n- Solution requirements: functional and non-functional capabilities\n- Transition requirements: capabilities needed to move from current to future state\n- How requirements relate to designs: the specification continuum\n- Requirements vs. constraints vs. assumptions: critical distinctions\n\n## Key Sources\n- BABOK Guide V3 Section 2.3\n- Seven Steps to Mastering BA Chapter 6\n- Software Requirements Essentials Chapter 1",
+    "excerpt": "# Requirements Classification Schema\n\n## Topics Covered\n\n- Business requirements: high-level goals and objectives of the organization\n- Stakeholder requirements: needs of specific stakeholder groups\n-",
+    "tags": [
+      "requirements",
+      "classification",
+      "fundamentals"
+    ],
+    "order": 0,
+    "status": "draft",
+    "priority": "high",
+    "createdAt": {
+      "_seconds": 1771151310,
+      "_nanoseconds": 491000000
+    },
+    "updatedAt": {
+      "_seconds": 1771151310,
+      "_nanoseconds": 491000000
+    },
+    "metadata": {
+      "wordCount": 84,
+      "readingTime": 1,
+      "lastModifiedBy": "ai-agent",
+      "version": 1
+    }
+  },
+  {
+    "id": "wsWYbyWCGNwWpfErbAOs",
+    "title": "Understanding Current State",
+    "slug": "understanding-current-state",
+    "folderId": "h2MJ519pVjfjPhb3lEck",
+    "folderPath": [
+      "business",
+      "business-analysis-masterclass",
+      "strategy-analysis"
+    ],
+    "content": "# Understanding Current State\n\n## Topics Covered\n\n- Analyzing the current state of the enterprise systematically\n- Business capability analysis: what the organization can do today (BABOK 10.6)\n- Organizational modeling: understanding structure and relationships (BABOK 10.32)\n- Process analysis of current operations: mapping as-is processes (BABOK 10.34)\n- Identifying pain points and improvement opportunities\n- Root cause analysis: getting to the real problem (BABOK 10.40)\n\n## Key Sources\n- BABOK Guide V3 Section 6.1\n- BA for Practitioners (PMI) Chapter 2\n- Seven Steps to Mastering BA Chapter 4",
+    "excerpt": "# Understanding Current State\n\n## Topics Covered\n\n- Analyzing the current state of the enterprise systematically\n- Business capability analysis: what the organization can do today (BABOK 10.6)\n- Organ",
+    "tags": [
+      "current-state",
+      "analysis",
+      "assessment"
+    ],
+    "order": 0,
+    "status": "draft",
+    "priority": "high",
+    "createdAt": {
+      "_seconds": 1771151355,
+      "_nanoseconds": 409000000
+    },
+    "updatedAt": {
+      "_seconds": 1771151355,
+      "_nanoseconds": 409000000
+    },
+    "metadata": {
+      "wordCount": 90,
+      "readingTime": 1,
+      "lastModifiedBy": "ai-agent",
+      "version": 1
+    }
+  },
+  {
+    "id": "x072tnli1zoPAfTUWedJ",
+    "title": "Agile Estimation and Planning",
+    "slug": "agile-estimation-planning",
+    "folderId": "GpsuNFLV3cA6Qmj8U2Vd",
+    "folderPath": [
+      "business",
+      "business-analysis-masterclass",
+      "agile-business-analysis"
+    ],
+    "content": "# Agile Estimation and Planning\n\n## Topics Covered\n\n- Story points and relative estimation: why relative sizing works\n- Planning poker and other estimation techniques\n- Velocity tracking and forecasting: using past performance to predict\n- Sprint planning process: selecting and committing to sprint goals\n- Release planning with velocity: when will features be delivered\n- Sprint execution, review, and retrospectives: the sprint lifecycle\n- The BA's role in agile planning cycles: supporting the team\n\n## Key Sources\n- Essential Scrum Chapters 7 and 14-19\n- Agile Business Analysis Chapter 6",
+    "excerpt": "# Agile Estimation and Planning\n\n## Topics Covered\n\n- Story points and relative estimation: why relative sizing works\n- Planning poker and other estimation techniques\n- Velocity tracking and forecasti",
+    "tags": [
+      "estimation",
+      "planning",
+      "velocity"
+    ],
+    "order": 0,
+    "status": "draft",
+    "priority": "high",
+    "createdAt": {
+      "_seconds": 1771151397,
+      "_nanoseconds": 74000000
+    },
+    "updatedAt": {
+      "_seconds": 1771151397,
+      "_nanoseconds": 74000000
+    },
+    "metadata": {
+      "wordCount": 91,
+      "readingTime": 1,
+      "lastModifiedBy": "ai-agent",
+      "version": 1
+    }
+  },
+  {
+    "id": "xDGyJPVIimhGenfEFW2m",
+    "title": "Elicitation Techniques Catalog",
+    "slug": "elicitation-techniques-catalog",
+    "folderId": "JBgfvhGXtSW76JgaQTb4",
+    "folderPath": [
+      "business",
+      "business-analysis-masterclass",
+      "elicitation-and-collaboration"
+    ],
+    "content": "# Elicitation Techniques Catalog\n\n## Topics Covered\n\n- Interviews: structured, unstructured, and contextual approaches\n- Workshops and facilitated sessions: design and facilitation skills\n- Focus groups: when and how to use them effectively\n- Observation: active (participatory) and passive techniques\n- Surveys and questionnaires: design principles and analysis\n- Document analysis: mining existing artifacts for requirements\n- Brainstorming and collaborative games: creative elicitation\n- Prototyping as an elicitation technique\n- Interface analysis: understanding system boundaries\n- Technique selection guide: matching technique to situation\n\n## Key Sources\n- BABOK Guide V3 Chapter 10 (multiple techniques)\n- Seven Steps to Mastering BA Chapter 4\n- Software Requirements Essentials Chapter 3\n- Requirements Management Practice Guide Section 5.3",
+    "excerpt": "# Elicitation Techniques Catalog\n\n## Topics Covered\n\n- Interviews: structured, unstructured, and contextual approaches\n- Workshops and facilitated sessions: design and facilitation skills\n- Focus grou",
+    "tags": [
+      "techniques",
+      "elicitation",
+      "catalog"
+    ],
+    "order": 0,
+    "status": "draft",
+    "priority": "high",
+    "createdAt": {
+      "_seconds": 1771151333,
+      "_nanoseconds": 837000000
+    },
+    "updatedAt": {
+      "_seconds": 1771151333,
+      "_nanoseconds": 837000000
+    },
+    "metadata": {
+      "wordCount": 115,
+      "readingTime": 1,
+      "lastModifiedBy": "ai-agent",
+      "version": 1
+    }
+  },
+  {
+    "id": "xpW2vUuLMrFY8WQYx2kA",
+    "title": "Defining Future State and Business Need",
+    "slug": "defining-future-state-business-need",
+    "folderId": "h2MJ519pVjfjPhb3lEck",
+    "folderPath": [
+      "business",
+      "business-analysis-masterclass",
+      "strategy-analysis"
+    ],
+    "content": "# Defining Future State and Business Need\n\n## Topics Covered\n\n- Defining the desired future state: vision and objectives\n- Situation statements: the PMI approach to framing problems and opportunities\n- Problem and opportunity framing: structuring the business need\n- Business objectives and success criteria: measurable outcomes\n- Gap analysis between current and future states\n- Solution scope definition: bounding what will change\n\n## Key Sources\n- BABOK Guide V3 Section 6.2\n- BA for Practitioners (PMI) Chapter 2\n- Seven Steps to Mastering BA Chapter 3",
+    "excerpt": "# Defining Future State and Business Need\n\n## Topics Covered\n\n- Defining the desired future state: vision and objectives\n- Situation statements: the PMI approach to framing problems and opportunities\n",
+    "tags": [
+      "future-state",
+      "vision",
+      "business-need"
+    ],
+    "order": 0,
+    "status": "draft",
+    "priority": "high",
+    "createdAt": {
+      "_seconds": 1771151357,
+      "_nanoseconds": 547000000
+    },
+    "updatedAt": {
+      "_seconds": 1771151357,
+      "_nanoseconds": 547000000
+    },
+    "metadata": {
+      "wordCount": 87,
+      "readingTime": 1,
+      "lastModifiedBy": "ai-agent",
+      "version": 1
+    }
+  },
+  {
+    "id": "yi6JfneAjzCy8dL3CPHM",
+    "title": "Documentation Tools and Templates",
+    "slug": "documentation-tools-templates",
+    "folderId": "1hGCsRTD3gXXT63P4syl",
+    "folderPath": [
+      "business",
+      "business-analysis-masterclass",
+      "tools-and-techniques-reference"
+    ],
+    "content": "# Documentation Tools and Templates\n\n## Topics Covered\n\n- SRS templates and standards: IEEE 830 and modern alternatives\n- Requirements document structures: organizing for readability\n- Agile documentation artifacts: user stories, acceptance criteria, definition of done\n- Information radiators and visual management: big visible charts\n- Choosing the right documentation level: balancing detail with agility\n- Document management and collaboration tools: wiki, Confluence, SharePoint\n\n## Key Sources\n- Software Requirements Essentials Chapter 5\n- Agile Business Analysis Chapter 5\n- Seven Steps to Mastering BA Chapter 6",
+    "excerpt": "# Documentation Tools and Templates\n\n## Topics Covered\n\n- SRS templates and standards: IEEE 830 and modern alternatives\n- Requirements document structures: organizing for readability\n- Agile documenta",
+    "tags": [
+      "documentation",
+      "templates",
+      "tools"
+    ],
+    "order": 0,
+    "status": "draft",
+    "priority": "high",
+    "createdAt": {
+      "_seconds": 1771151400,
+      "_nanoseconds": 630000000
+    },
+    "updatedAt": {
+      "_seconds": 1771151400,
+      "_nanoseconds": 630000000
+    },
+    "metadata": {
+      "wordCount": 87,
+      "readingTime": 1,
+      "lastModifiedBy": "ai-agent",
+      "version": 1
+    }
+  },
+  {
+    "id": "zXhAu9RHRh9IJ6sgZ1v7",
+    "title": "Specifying and Modeling Requirements",
+    "slug": "specifying-modeling-requirements",
+    "folderId": "TLRg7xbRj5YLTb9n5COf",
+    "folderPath": [
+      "business",
+      "business-analysis-masterclass",
+      "requirements-analysis-design"
+    ],
+    "content": "# Specifying and Modeling Requirements\n\n## Topics Covered\n\n- Requirements specification best practices: clarity, precision, testability\n- Writing clear, testable, atomic requirements\n- Requirements attributes: priority, status, rationale, source, complexity\n- SRS structure and templates: IEEE 830 and modern alternatives\n- Hierarchical requirements organization: features to detailed requirements\n- Business rules analysis: identifying, documenting, and managing business rules (BABOK 10.9)\n- Solution refinement domain from the PMI framework\n\n## Key Sources\n- BABOK Guide V3 Section 7.1\n- Software Requirements Essentials Chapters 4-5\n- BA for Practitioners (PMI) Chapter 4",
+    "excerpt": "# Specifying and Modeling Requirements\n\n## Topics Covered\n\n- Requirements specification best practices: clarity, precision, testability\n- Writing clear, testable, atomic requirements\n- Requirements at",
+    "tags": [
+      "specification",
+      "modeling",
+      "analysis"
+    ],
+    "order": 0,
+    "status": "draft",
+    "priority": "high",
+    "createdAt": {
+      "_seconds": 1771151365,
+      "_nanoseconds": 710000000
+    },
+    "updatedAt": {
+      "_seconds": 1771151365,
+      "_nanoseconds": 710000000
+    },
+    "metadata": {
+      "wordCount": 90,
+      "readingTime": 1,
+      "lastModifiedBy": "ai-agent",
+      "version": 1
+    }
+  }
+]

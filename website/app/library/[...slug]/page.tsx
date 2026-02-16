@@ -44,16 +44,7 @@ export default async function LibrarySlugPage({ params }: PageProps) {
                   className="block p-6 bg-white border border-gray-200 rounded-lg hover:shadow-md transition-shadow"
                 >
                   <h3 className="text-xl font-semibold mb-2">{article.title}</h3>
-                  <p className="text-gray-600 text-sm mb-3">{article.excerpt}</p>
-                  {article.tags.length > 0 && (
-                    <div className="flex gap-2">
-                      {article.tags.slice(0, 3).map((tag) => (
-                        <span key={tag} className="px-2 py-1 bg-gray-100 text-xs rounded">
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-                  )}
+                  <p className="text-gray-600 text-sm mb-3">{article.description}</p>
                 </Link>
               ))}
             </div>

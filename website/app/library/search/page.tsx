@@ -48,7 +48,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
                   className="block p-6 bg-white border border-gray-200 rounded-lg hover:shadow-md transition-shadow"
                 >
                   <h3 className="text-xl font-semibold mb-2">{result.title}</h3>
-                  <p className="text-gray-600 text-sm">{result.excerpt}</p>
+                  <p className="text-gray-600 text-sm">{result.description}</p>
                   {result.folderPath.length > 0 && (
                     <p className="text-xs text-gray-500 mt-2">{result.folderPath.join(" > ")}</p>
                   )}
