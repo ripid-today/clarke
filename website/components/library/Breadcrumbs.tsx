@@ -13,17 +13,17 @@ interface BreadcrumbsProps {
 export function Breadcrumbs({ items }: BreadcrumbsProps) {
   return (
     <nav className="flex items-center gap-2 text-sm text-gray-600 mb-6 overflow-x-auto">
-      <Link href="/library" className="flex items-center hover:text-gray-900">
+      <Link href="/library" className="flex items-center text-claude-primary hover:underline transition-colors duration-150">
         <Home size={16} />
       </Link>
 
       {items.map((item, index) => (
         <div key={item.href} className="flex items-center gap-2">
-          <ChevronRight size={16} className="text-gray-400" />
+          <ChevronRight size={16} className="text-claude-secondary" />
           {index === items.length - 1 ? (
             <span className="font-medium text-gray-900">{item.name}</span>
           ) : (
-            <Link href={item.href} className="hover:text-gray-900">
+            <Link href={item.href} className="text-claude-primary hover:underline transition-colors duration-150">
               {item.name}
             </Link>
           )}

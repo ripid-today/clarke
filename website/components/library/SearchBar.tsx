@@ -19,7 +19,7 @@ export function SearchBar() {
     <form onSubmit={handleSubmit} className="relative">
       <div className="relative">
         <Search
-          className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+          className="absolute left-3 top-1/2 transform -translate-y-1/2 text-claude-secondary"
           size={18}
         />
         <input
@@ -27,13 +27,13 @@ export function SearchBar() {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Search knowledge..."
-          className="w-full pl-10 pr-10 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full pl-10 pr-10 py-2 border border-claude-secondary rounded-lg focus:outline-2 focus:outline-claude-primary transition-colors duration-150"
         />
         {query && (
           <button
             type="button"
             onClick={() => setQuery("")}
-            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-claude-secondary hover:text-claude-primary transition-colors duration-150"
           >
             <X size={18} />
           </button>

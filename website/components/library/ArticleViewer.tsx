@@ -23,35 +23,25 @@ export function ArticleViewer({ article }: ArticleViewerProps) {
   };
 
   return (
-    <article className="max-w-3xl mx-auto px-4 py-8">
-      <div className="flex justify-between items-start mb-6">
-        <h1 className="text-4xl font-bold">{article.title}</h1>
+    <article className="max-w-3xl mx-auto px-4 md:px-6 py-6 md:py-8">
+      <div className="flex flex-col md:flex-row justify-between items-start gap-4 mb-6">
+        <h1 className="text-2xl md:text-4xl font-bold leading-tight">{article.title}</h1>
         <button
           onClick={handleDownload}
-          className="flex items-center gap-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors"
+          className="w-full md:w-auto flex items-center justify-center gap-2 px-4 py-3 md:py-2 bg-cloud-dancer hover:bg-[#E5E2DC] rounded-lg transition-colors duration-200"
         >
           <Download size={18} />
           <span className="text-sm">Download</span>
         </button>
       </div>
 
-      {article.tags.length > 0 && (
-        <div className="flex gap-2 mb-6 flex-wrap">
-          {article.tags.map((tag) => (
-            <span key={tag} className="px-3 py-1 bg-gray-100 text-sm rounded-full">
-              {tag}
-            </span>
-          ))}
-        </div>
-      )}
-
-      <div className="prose prose-lg max-w-none">
+      <div className="prose prose-lg max-w-none font-mono">
         <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeHighlight]}>
           {article.content}
         </ReactMarkdown>
       </div>
 
-      <div className="mt-8 pt-6 border-t border-gray-200 text-sm text-gray-500">
+      <div className="mt-8 pt-6 border-t border-claude-secondary text-sm text-claude-secondary">
         <p>Last updated: {new Date(article.updatedAt.seconds * 1000).toLocaleDateString()}</p>
         {article.metadata?.readingTime && <p>{article.metadata.readingTime} min read</p>}
       </div>

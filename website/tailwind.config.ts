@@ -9,7 +9,31 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
+        "claude-primary": "#C15F3C",
+        "claude-secondary": "#B1ADA1",
         "cloud-dancer": "#F0EEE9",
+      },
+      fontFamily: {
+        sans: [
+          "-apple-system",
+          "BlinkMacSystemFont",
+          '"Segoe UI"',
+          "Roboto",
+          "Helvetica",
+          "Arial",
+          "sans-serif",
+        ],
+        mono: [
+          "ui-monospace",
+          "SFMono-Regular",
+          '"SF Mono"',
+          "Menlo",
+          "Monaco",
+          "Consolas",
+          '"Liberation Mono"',
+          '"Courier New"',
+          "monospace",
+        ],
       },
       typography: {
         DEFAULT: {

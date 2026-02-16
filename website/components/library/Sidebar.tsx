@@ -34,22 +34,22 @@ export function Sidebar({ folders, currentPath = [] }: SidebarProps) {
           {children.length > 0 && (
             <button
               onClick={() => toggleFolder(folder.id)}
-              className="p-1 hover:bg-gray-100 rounded"
+              className="p-1 hover:bg-cloud-dancer rounded transition-colors duration-150"
             >
-              {isExpanded ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
+              {isExpanded ? <ChevronDown size={16} className="text-claude-primary" /> : <ChevronRight size={16} className="text-claude-primary" />}
             </button>
           )}
           <Link
             href={`/library/${folder.slug}`}
-            className={`flex-1 flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-100 transition-colors ${
-              isActive ? "bg-gray-100 font-medium" : ""
+            className={`flex-1 flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-cloud-dancer transition-colors duration-150 ${
+              isActive ? "bg-cloud-dancer font-medium text-claude-primary" : ""
             }`}
             style={{ paddingLeft: `${children.length > 0 ? 0 : 12 + level * 16}px` }}
           >
-            <Folder size={16} />
+            <Folder size={16} className={isActive ? "text-claude-primary" : ""} />
             <span className="flex-1 text-left text-sm">{folder.name}</span>
             {folder.articleCount > 0 && (
-              <span className="text-xs text-gray-500">{folder.articleCount}</span>
+              <span className="text-xs text-claude-secondary">{folder.articleCount}</span>
             )}
           </Link>
         </div>
@@ -66,9 +66,9 @@ export function Sidebar({ folders, currentPath = [] }: SidebarProps) {
   const rootFolders = folders.filter((f) => f.parentId === null);
 
   return (
-    <aside className="w-64 bg-white border-r border-gray-200 h-screen sticky top-0 overflow-y-auto p-4">
+    <aside className="w-64 bg-white border-r border-claude-secondary h-screen sticky top-0 overflow-y-auto p-4">
       <Link href="/library">
-        <h2 className="text-lg font-semibold mb-4 cursor-pointer hover:text-blue-600">
+        <h2 className="text-lg font-semibold mb-4 cursor-pointer hover:text-claude-primary transition-colors duration-150">
           Clarke&apos;s Library
         </h2>
       </Link>
