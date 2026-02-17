@@ -9,7 +9,7 @@ interface FeaturedFoldersProps {
 export function FeaturedFolders({ folders }: FeaturedFoldersProps) {
   if (folders.length === 0) {
     return (
-      <div className="p-6 text-center text-gray-500">
+      <div className="p-6 text-center text-claude-secondary">
         <p>No featured folders available yet.</p>
         <p className="text-sm mt-2">Check back soon as we add more content!</p>
       </div>
@@ -29,8 +29,8 @@ export function FeaturedFolders({ folders }: FeaturedFoldersProps) {
               <Folder size={24} className="text-claude-primary" />
             </div>
             <div className="flex-1">
-              <h3 className="text-lg font-semibold mb-2">{folder.name}</h3>
-              <p className="text-sm text-gray-600 mb-3">{folder.description}</p>
+              <h3 className="text-xl font-semibold leading-normal mb-2">{folder.name}</h3>
+              <p className="text-[15px] text-claude-secondary mb-3">{folder.description}</p>
               <span className="text-xs text-claude-secondary">
                 {folder.articleCount} {folder.articleCount === 1 ? "article" : "articles"}
               </span>

@@ -12,7 +12,7 @@ interface BreadcrumbsProps {
 
 export function Breadcrumbs({ items }: BreadcrumbsProps) {
   return (
-    <nav className="flex items-center gap-2 text-sm text-gray-600 mb-6 overflow-x-auto">
+    <nav className="flex items-center gap-2 text-[15px] text-claude-secondary mb-6 overflow-x-auto">
       <Link href="/library" className="flex items-center text-claude-primary hover:underline transition-colors duration-150">
         <Home size={16} />
       </Link>
@@ -21,7 +21,7 @@ export function Breadcrumbs({ items }: BreadcrumbsProps) {
         <div key={item.href} className="flex items-center gap-2">
           <ChevronRight size={16} className="text-claude-secondary" />
           {index === items.length - 1 ? (
-            <span className="font-medium text-gray-900">{item.name}</span>
+            <span className="font-medium text-black">{item.name}</span>
           ) : (
             <Link href={item.href} className="text-claude-primary hover:underline transition-colors duration-150">
               {item.name}

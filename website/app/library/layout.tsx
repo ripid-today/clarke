@@ -1,7 +1,6 @@
 import { getFolders } from "@/lib/firebase/firestore";
 import { Sidebar } from "@/components/library/Sidebar";
-import { SearchBar } from "@/components/library/SearchBar";
-import { Menu } from "lucide-react";
+import { MobileNav } from "@/components/library/MobileNav";
 import type { Folder } from "@/types/library";
 
 export default async function LibraryLayout({
@@ -26,15 +25,8 @@ export default async function LibraryLayout({
       </div>
 
       {/* Mobile Header */}
-      <div className="md:hidden fixed top-0 left-0 right-0 bg-white border-b border-gray-200 z-30 p-4">
-        <div className="flex items-center gap-4">
-          <button className="p-2 hover:bg-gray-100 rounded-lg">
-            <Menu size={24} />
-          </button>
-          <div className="flex-1">
-            <SearchBar />
-          </div>
-        </div>
+      <div className="md:hidden">
+        <MobileNav folders={folders} />
       </div>
 
       {/* Main Content */}
