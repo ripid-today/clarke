@@ -2,7 +2,10 @@ import { notFound } from "next/navigation";
 import { getFolders, getArticles, getArticleBySlug } from "@/lib/firebase/firestore";
 import { ArticleViewer } from "@/components/library/ArticleViewer";
 import { Breadcrumbs } from "@/components/library/Breadcrumbs";
+import { DownloadButton } from "@/components/library/DownloadButton";
 import Link from "next/link";
+
+export const dynamic = 'force-dynamic';
 
 interface PageProps {
   params: Promise<{
@@ -69,9 +72,13 @@ export default async function LibrarySlugPage({ params }: PageProps) {
             />
 
             <h1 className="text-3xl md:text-4xl font-semibold leading-snug mb-4">{folder.name}</h1>
-            <p className="text-[17px] leading-relaxed text-claude-secondary mb-8">{folder.description}</p>
+            <p className="text-[17px] leading-relaxed text-claude-secondary mb-4">{folder.description}</p>
 
             {articles.length > 0 ? (
+              <>
+              <div className="mb-8">
+                <DownloadButton mode="module" folderId={folder.id} folderName={folder.name} folderDescription={folder.description} folderSlug={folder.slug} />
+              </div>
               <div className="grid gap-4">
                 {articles.map((article) => (
                   <Link
@@ -84,7 +91,12 @@ export default async function LibrarySlugPage({ params }: PageProps) {
                   </Link>
                 ))}
               </div>
+              </>
             ) : childFolders.length > 0 ? (
+              <>
+              <div className="mb-8">
+                <DownloadButton mode="masterclass" folderId={folder.id} folderName={folder.name} folderDescription={folder.description} folderSlug={folder.slug} />
+              </div>
               <div className="grid gap-4">
                 {childFolders.sort((a, b) => a.order - b.order).map((child) => (
                   <Link
@@ -102,6 +114,7 @@ export default async function LibrarySlugPage({ params }: PageProps) {
                   </Link>
                 ))}
               </div>
+              </>
             ) : (
               <div className="text-center py-12 text-claude-secondary">
                 <p>No content in this folder yet.</p>

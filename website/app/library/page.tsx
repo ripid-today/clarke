@@ -2,6 +2,8 @@ import { getFeaturedFolders, getFolderArticleCount } from "@/lib/firebase/firest
 import { FeaturedFolders } from "@/components/library/FeaturedFolders";
 import type { Folder } from "@/types/library";
 
+export const dynamic = 'force-dynamic';
+
 export default async function LibraryPage() {
   let featuredFolders: Folder[] = [];
   try {

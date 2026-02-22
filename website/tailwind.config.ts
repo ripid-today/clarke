@@ -10,7 +10,7 @@ const config: Config = {
     extend: {
       colors: {
         "claude-primary": "#C15F3C",
-        "claude-secondary": "#B1ADA1",
+        "claude-secondary": "#655C54",
         "cloud-dancer": "#F0EEE9",
       },
       fontFamily: {
@@ -34,10 +34,19 @@ const config: Config = {
           '"Courier New"',
           "monospace",
         ],
+        serif: [
+          "ui-serif",
+          "Georgia",
+          "Cambria",
+          '"Times New Roman"',
+          "Times",
+          "serif",
+        ],
       },
       typography: {
         DEFAULT: {
           css: {
+            fontFamily: 'ui-serif, Georgia, Cambria, "Times New Roman", Times, serif',
             color: "#000000",
             maxWidth: "768px",
             a: {

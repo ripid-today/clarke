@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { Menu, X } from 'lucide-react';
+import { ClarkeLogo } from './ClarkeLogo';
 import { Sidebar } from './Sidebar';
 import { SearchBar } from './SearchBar';
 import type { Folder } from '@/types/library';
@@ -16,7 +17,7 @@ export function MobileNav({ folders }: MobileNavProps) {
   return (
     <>
       {/* Fixed top bar */}
-      <div className="fixed top-0 left-0 right-0 bg-white border-b border-claude-secondary z-30 p-4">
+      <div className="fixed top-0 left-0 right-0 bg-white border-b border-claude-secondary z-30 p-4 font-sans">
         <div className="flex items-center gap-4">
           <button
             onClick={() => setIsOpen(true)}
@@ -25,6 +26,7 @@ export function MobileNav({ folders }: MobileNavProps) {
           >
             <Menu size={24} />
           </button>
+          <ClarkeLogo size={20} className="text-claude-primary" />
           <div className="flex-1">
             <SearchBar />
           </div>
@@ -42,7 +44,7 @@ export function MobileNav({ folders }: MobileNavProps) {
 
       {/* Slide-in sidebar panel */}
       <div
-        className={`fixed left-0 top-0 h-full w-72 z-50 bg-white border-r border-claude-secondary transform transition-transform duration-300 ease-in-out ${
+        className={`fixed left-0 top-0 h-full w-72 z-50 bg-white border-r border-claude-secondary font-sans transform transition-transform duration-300 ease-in-out ${
           isOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >

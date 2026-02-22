@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { ChevronRight, ChevronDown, Folder } from "lucide-react";
+import { ClarkeLogo } from "./ClarkeLogo";
 import type { Folder as FolderType } from "@/types/library";
 
 interface SidebarProps {
@@ -66,9 +67,10 @@ export function Sidebar({ folders, currentPath = [] }: SidebarProps) {
   const rootFolders = folders.filter((f) => f.parentId === null);
 
   return (
-    <aside className="w-64 bg-white border-r border-claude-secondary h-screen sticky top-0 overflow-y-auto p-4">
-      <Link href="/library">
-        <h2 className="text-lg font-semibold mb-4 cursor-pointer hover:text-claude-primary transition-colors duration-150">
+    <aside className="w-64 bg-white border-r border-claude-secondary h-screen sticky top-0 overflow-y-auto p-4 font-sans">
+      <Link href="/library" className="flex items-center gap-2 mb-4 hover:text-claude-primary transition-colors duration-150">
+        <ClarkeLogo size={22} className="text-claude-primary" />
+        <h2 className="text-lg font-semibold cursor-pointer">
           Clarke&apos;s Library
         </h2>
       </Link>
