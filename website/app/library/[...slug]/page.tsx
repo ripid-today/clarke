@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { getFolders, getArticles, getArticleBySlug } from "@/lib/firebase/firestore";
 import { ArticleViewer } from "@/components/library/ArticleViewer";
 import { Breadcrumbs } from "@/components/library/Breadcrumbs";
+import { ArticleNavigation } from "@/components/library/ArticleNavigation";
 import { DownloadButton } from "@/components/library/DownloadButton";
 import Link from "next/link";
 
@@ -41,6 +42,7 @@ export default async function LibrarySlugPage({ params }: PageProps) {
                 ]}
               />
               <ArticleViewer article={article} />
+              <ArticleNavigation article={article} subChapter={folder} allFolders={folders} />
             </div>
           );
         }

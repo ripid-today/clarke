@@ -123,7 +123,7 @@ export function DownloadButton(props: DownloadButtonProps) {
     props.mode === "article"
       ? "Download"
       : props.mode === "module"
-        ? "Download Module"
+        ? "Download Chapter"
         : "Download All";
 
   return (
