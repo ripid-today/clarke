@@ -1,8 +1,0 @@
-{
-  "buildCommand": "cd website && bun run build",
-  "devCommand": "cd website && bun run dev",
-  "installCommand": "cd website && bun install",
-  "framework": "nextjs",
-  "outputDirectory": "website/.next",
-  "regions": ["iad1"]
-}
