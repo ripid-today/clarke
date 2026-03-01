@@ -36,6 +36,12 @@ export interface Article {
   priority: string;
   createdAt: FirestoreTimestamp;
   updatedAt: FirestoreTimestamp;
+  // Daily News optional fields (backward compatible)
+  publishedAt?: FirestoreTimestamp;
+  category?: "vietnam" | "world";
+  sourceUrl?: string;
+  sourceName?: string;
+  isUpdated?: boolean;
   metadata?: {
     wordCount?: number;
     readingTime?: number;

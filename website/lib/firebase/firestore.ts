@@ -1,4 +1,5 @@
 import { adminDb } from "./admin";
+import { Timestamp } from "firebase-admin/firestore";
 import type { Folder, Article, SearchResult } from "@/types/library";
 
 // Convert Firestore Admin Timestamp instances to plain serializable objects
@@ -81,6 +82,50 @@ export async function getFeaturedFolders(): Promise<Folder[]> {
     .get();
 
   return snapshot.docs.map(doc => serializeDoc<Folder>(doc));
+}
+
+export async function getDailyNewsArticles(
+  folderId: string,
+  category?: "vietnam" | "world",
+  cursor?: string,
+  limit = 20
+): Promise<{ articles: Article[]; hasMore: boolean; nextCursor?: string }> {
+  let query: FirebaseFirestore.Query = adminDb
+    .collection("articles")
+    .where("folderId", "==", folderId)
+    .orderBy("publishedAt", "desc");
+
+  if (category) {
+    query = adminDb
+      .collection("articles")
+      .where("folderId", "==", folderId)
+      .where("category", "==", category)
+      .orderBy("publishedAt", "desc");
+  }
+
+  if (cursor) {
+    const cursorSeconds = parseInt(Buffer.from(cursor, "base64").toString("utf8"), 10);
+    const cursorTimestamp = new Timestamp(cursorSeconds, 0);
+    query = query.startAfter(cursorTimestamp);
+  }
+
+  const snapshot = await query.limit(limit + 1).get();
+  const docs = snapshot.docs;
+  const hasMore = docs.length > limit;
+  const pageDocs = hasMore ? docs.slice(0, limit) : docs;
+  const articles = pageDocs.map(doc => serializeDoc<Article>(doc));
+
+  let nextCursor: string | undefined;
+  if (hasMore) {
+    const lastDoc = pageDocs[pageDocs.length - 1];
+    const lastPublishedAt = lastDoc.data().publishedAt;
+    if (lastPublishedAt) {
+      const seconds = (lastPublishedAt as { _seconds?: number; seconds?: number })._seconds ?? lastPublishedAt.seconds;
+      nextCursor = Buffer.from(String(seconds)).toString("base64");
+    }
+  }
+
+  return { articles, hasMore, nextCursor };
 }
 
 export async function getFolderArticleCount(folderId: string): Promise<number> {

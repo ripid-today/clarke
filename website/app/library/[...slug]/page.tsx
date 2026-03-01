@@ -4,6 +4,7 @@ import { ArticleViewer } from "@/components/library/ArticleViewer";
 import { Breadcrumbs } from "@/components/library/Breadcrumbs";
 import { ArticleNavigation } from "@/components/library/ArticleNavigation";
 import { DownloadButton } from "@/components/library/DownloadButton";
+import { NewsReadTracker } from "@/components/library/news/NewsReadTracker";
 import Link from "next/link";
 
 export const dynamic = 'force-dynamic';
@@ -42,6 +43,7 @@ export default async function LibrarySlugPage({ params }: PageProps) {
                 ]}
               />
               <ArticleViewer article={article} />
+              <NewsReadTracker articleId={article.id} isUpdated={article.isUpdated} />
               <ArticleNavigation article={article} subChapter={folder} allFolders={folders} />
             </div>
           );
