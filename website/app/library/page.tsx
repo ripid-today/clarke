@@ -1,22 +1,13 @@
-import { getFeaturedFolders, getFolderArticleCount } from "@/lib/firebase/firestore";
+import { getFeaturedFolders } from "@/lib/firebase/firestore";
 import { FeaturedFolders } from "@/components/library/FeaturedFolders";
 import type { Folder } from "@/types/library";
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 300;
 
 export default async function LibraryPage() {
   let featuredFolders: Folder[] = [];
   try {
     featuredFolders = await getFeaturedFolders();
-
-    // Fetch live article counts for each featured folder
-    const foldersWithCounts = await Promise.all(
-      featuredFolders.map(async (folder) => ({
-        ...folder,
-        articleCount: await getFolderArticleCount(folder.id)
-      }))
-    );
-    featuredFolders = foldersWithCounts;
   } catch (error) {
     console.error("Error fetching featured folders:", error);
     // Continue with empty array

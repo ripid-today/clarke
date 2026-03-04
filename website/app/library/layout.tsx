@@ -3,7 +3,7 @@ import { Sidebar } from "@/components/library/Sidebar";
 import { MobileNav } from "@/components/library/MobileNav";
 import type { Folder } from "@/types/library";
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 300;
 
 export default async function LibraryLayout({
   children,

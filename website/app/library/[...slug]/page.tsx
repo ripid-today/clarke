@@ -7,7 +7,7 @@ import { DownloadButton } from "@/components/library/DownloadButton";
 import { NewsReadTracker } from "@/components/library/news/NewsReadTracker";
 import Link from "next/link";
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 300;
 
 interface PageProps {
   params: Promise<{

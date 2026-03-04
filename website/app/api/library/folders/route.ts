@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getFolders } from "@/lib/firebase/firestore";
 import { adminDb } from "@/lib/firebase/admin";
 import { Timestamp } from "firebase-admin/firestore";
+import { revalidateTag } from "next/cache";
 
 // Mark as dynamic route (don't pre-render at build time)
 export const dynamic = 'force-dynamic';
@@ -94,6 +95,8 @@ export async function POST(request: NextRequest) {
       updatedAt: Timestamp.now(),
       metadata: {},
     });
+
+    revalidateTag("folders");
 
     return NextResponse.json({ success: true, folderId: folderRef.id });
   } catch (error) {

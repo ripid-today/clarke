@@ -1,5 +1,6 @@
 import { adminDb } from "./admin";
 import { Timestamp } from "firebase-admin/firestore";
+import { unstable_cache } from "next/cache";
 import type { Folder, Article, SearchResult } from "@/types/library";
 
 // Convert Firestore Admin Timestamp instances to plain serializable objects
@@ -18,15 +19,19 @@ function serializeDoc<T>(doc: FirebaseFirestore.DocumentSnapshot): T {
   return serialized as T;
 }
 
-export async function getFolders(parentId?: string): Promise<Folder[]> {
-  const ref = adminDb.collection("folders");
-  const query = parentId
-    ? ref.where("parentId", "==", parentId).orderBy("order")
-    : ref.orderBy("order");
+export const getFolders = unstable_cache(
+  async (parentId?: string): Promise<Folder[]> => {
+    const ref = adminDb.collection("folders");
+    const query = parentId
+      ? ref.where("parentId", "==", parentId).orderBy("order")
+      : ref.orderBy("order");
 
-  const snapshot = await query.get();
-  return snapshot.docs.map(doc => serializeDoc<Folder>(doc));
-}
+    const snapshot = await query.get();
+    return snapshot.docs.map(doc => serializeDoc<Folder>(doc));
+  },
+  ["get-folders"],
+  { revalidate: 300, tags: ["folders"] }
+);
 
 export async function getArticles(folderId: string): Promise<Article[]> {
   const snapshot = await adminDb
@@ -74,15 +79,19 @@ export async function searchArticles(searchQuery: string, folderId?: string): Pr
     .slice(0, 20);
 }
 
-export async function getFeaturedFolders(): Promise<Folder[]> {
-  const snapshot = await adminDb
-    .collection("folders")
-    .where("featured", "==", true)
-    .orderBy("order")
-    .get();
+export const getFeaturedFolders = unstable_cache(
+  async (): Promise<Folder[]> => {
+    const snapshot = await adminDb
+      .collection("folders")
+      .where("featured", "==", true)
+      .orderBy("order")
+      .get();
 
-  return snapshot.docs.map(doc => serializeDoc<Folder>(doc));
-}
+    return snapshot.docs.map(doc => serializeDoc<Folder>(doc));
+  },
+  ["get-featured-folders"],
+  { revalidate: 300, tags: ["folders"] }
+);
 
 export async function getDailyNewsArticles(
   folderId: string,
