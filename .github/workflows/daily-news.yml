@@ -16,16 +16,12 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: "20"
-          cache: "npm"
-          cache-dependency-path: website/package-lock.json
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
 
       - name: Install dependencies
         working-directory: website
-        run: npm ci
+        run: bun install
 
       - name: Run news ingest script
         working-directory: website
@@ -34,4 +30,4 @@ jobs:
           LIBRARY_API_KEY: ${{ secrets.LIBRARY_API_KEY }}
           DAILY_NEWS_INGEST_URL: ${{ secrets.DAILY_NEWS_INGEST_URL }}
           DAILY_NEWS_FOLDER_ID: ${{ secrets.DAILY_NEWS_FOLDER_ID }}
-        run: npx tsx scripts/ingest-daily-news.ts
+        run: bunx tsx scripts/ingest-daily-news.ts
