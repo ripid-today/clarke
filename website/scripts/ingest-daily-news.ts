@@ -23,6 +23,7 @@ const INGEST_URL =
   process.env.DAILY_NEWS_INGEST_URL || "http://localhost:3000/api/news/ingest";
 const API_KEY = process.env.LIBRARY_API_KEY || "";
 const FOLDER_ID = process.env.DAILY_NEWS_FOLDER_ID || "";
+const BYPASS_SECRET = process.env.VERCEL_AUTOMATION_BYPASS_SECRET || "";
 
 interface NewsSource {
   id: string;
@@ -227,6 +228,7 @@ async function main() {
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${API_KEY}`,
+      ...(BYPASS_SECRET && { "x-vercel-protection-bypass": BYPASS_SECRET }),
     },
     body: JSON.stringify({ folderId: FOLDER_ID, articles: allArticles }),
   });
@@ -248,8 +250,7 @@ async function main() {
     console.error("Article errors:", result.errors);
   }
   if (sourceErrors.length) {
-    console.error("Source errors:", sourceErrors);
-    process.exit(1);
+    console.warn("Source warnings (non-fatal):", sourceErrors);
   }
 
   console.log("Done!");

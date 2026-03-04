@@ -30,4 +30,5 @@ jobs:
           LIBRARY_API_KEY: ${{ secrets.LIBRARY_API_KEY }}
           DAILY_NEWS_INGEST_URL: ${{ secrets.DAILY_NEWS_INGEST_URL }}
           DAILY_NEWS_FOLDER_ID: ${{ secrets.DAILY_NEWS_FOLDER_ID }}
+          VERCEL_AUTOMATION_BYPASS_SECRET: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}
         run: bunx tsx scripts/ingest-daily-news.ts
