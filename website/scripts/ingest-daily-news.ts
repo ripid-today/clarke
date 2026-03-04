@@ -222,13 +222,16 @@ async function main() {
     process.exit(0);
   }
 
+  const ingestUrl = BYPASS_SECRET
+    ? `${INGEST_URL}?x-vercel-protection-bypass=${BYPASS_SECRET}`
+    : INGEST_URL;
+
   console.log(`Posting to ${INGEST_URL}...`);
-  const response = await fetch(INGEST_URL, {
+  const response = await fetch(ingestUrl, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${API_KEY}`,
-      ...(BYPASS_SECRET && { "x-vercel-protection-bypass": BYPASS_SECRET }),
     },
     body: JSON.stringify({ folderId: FOLDER_ID, articles: allArticles }),
   });
