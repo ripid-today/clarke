@@ -25,15 +25,19 @@ export default async function DailyNewsPage({ searchParams }: PageProps) {
   let nextCursor: string | undefined;
 
   if (DAILY_NEWS_FOLDER_ID) {
-    const result = await getDailyNewsArticles(
-      DAILY_NEWS_FOLDER_ID,
-      validCategory,
-      cursor,
-      20
-    );
-    articles = result.articles;
-    hasMore = result.hasMore;
-    nextCursor = result.nextCursor;
+    try {
+      const result = await getDailyNewsArticles(
+        DAILY_NEWS_FOLDER_ID,
+        validCategory,
+        cursor,
+        20
+      );
+      articles = result.articles;
+      hasMore = result.hasMore;
+      nextCursor = result.nextCursor;
+    } catch (err) {
+      console.error("DailyNewsPage: failed to fetch articles", err);
+    }
   }
 
   return (
