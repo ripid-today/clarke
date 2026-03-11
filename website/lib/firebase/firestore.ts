@@ -94,23 +94,15 @@ export const getFeaturedFolders = unstable_cache(
 );
 
 export async function getDailyNewsArticles(
-  folderId: string,
-  category?: "vietnam" | "world",
+  rootFolderId: string,
   cursor?: string,
   limit = 20
 ): Promise<{ articles: Article[]; hasMore: boolean; nextCursor?: string }> {
+  // Use array-contains to query across root folder AND all date subfolders
   let query: FirebaseFirestore.Query = adminDb
     .collection("articles")
-    .where("folderId", "==", folderId)
+    .where("folderPath", "array-contains", rootFolderId)
     .orderBy("publishedAt", "desc");
-
-  if (category) {
-    query = adminDb
-      .collection("articles")
-      .where("folderId", "==", folderId)
-      .where("category", "==", category)
-      .orderBy("publishedAt", "desc");
-  }
 
   if (cursor) {
     const cursorSeconds = parseInt(Buffer.from(cursor, "base64").toString("utf8"), 10);
@@ -135,6 +127,22 @@ export async function getDailyNewsArticles(
   }
 
   return { articles, hasMore, nextCursor };
+}
+
+export async function getRecentArticleTitles(
+  rootFolderId: string,
+  days = 30
+): Promise<{ id: string; title: string }[]> {
+  const cutoff = new Date();
+  cutoff.setDate(cutoff.getDate() - days);
+
+  const snapshot = await adminDb
+    .collection("articles")
+    .where("folderPath", "array-contains", rootFolderId)
+    .where("publishedAt", ">=", Timestamp.fromDate(cutoff))
+    .get();
+
+  return snapshot.docs.map(doc => ({ id: doc.id, title: (doc.data().title as string) || "" }));
 }
 
 export async function getFolderArticleCount(folderId: string): Promise<number> {

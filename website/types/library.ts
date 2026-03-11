@@ -47,6 +47,14 @@ export interface Article {
     readingTime?: number;
     lastModifiedBy?: string;
     version?: number;
+    // v2 aggregated article fields
+    newsDate?: string;
+    topicGroup?: string;
+    sourceCount?: number;
+    sourceUrls?: string[];
+    sourceNames?: string[];
+    isAggregated?: boolean;
+    lastDuplicateCheck?: string;
   };
 }
 

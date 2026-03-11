@@ -1,0 +1,617 @@
+/**
+ * brief-daily-news.ts — Standalone implementation script
+ *
+ * Aggregates yesterday's RSS news (GMT+7) into 5-15 topic-grouped,
+ * 1000+ word English investment briefing articles in Firestore.
+ *
+ * Usage:
+ *   ts-node .claude/skills/brief-daily-news/scripts/brief-daily-news.ts
+ *
+ * Required env vars:
+ *   ANTHROPIC_API_KEY
+ *   FIREBASE_ADMIN_PROJECT_ID
+ *   FIREBASE_ADMIN_CLIENT_EMAIL
+ *   FIREBASE_ADMIN_PRIVATE_KEY  (include \n literals or use base64)
+ *   DAILY_NEWS_FOLDER_ID
+ */
+
+import * as admin from "firebase-admin";
+import { Timestamp, FieldValue } from "firebase-admin/firestore";
+import Anthropic from "@anthropic-ai/sdk";
+import Parser from "rss-parser";
+
+// ─── Types ────────────────────────────────────────────────────────────────────
+
+interface NewsSource {
+  id: string;
+  name: string;
+  rssUrl: string;
+  category: "vietnam" | "world";
+}
+
+interface RawNewsItem {
+  index: number;
+  title: string;
+  link: string;
+  summary: string;
+  sourceName: string;
+  sourceId: string;
+  category: "vietnam" | "world";
+  publishedAt: Date;
+}
+
+interface TopicGroup {
+  topicTitle: string;
+  topicId: string;
+  indices: number[];
+}
+
+interface AggregatedArticle {
+  title: string;
+  slug: string;
+  content: string;
+  description: string;
+  topicGroup: string;
+  sourceCount: number;
+  sourceUrls: string[];
+  sourceNames: string[];
+  publishedAt: Date;
+}
+
+export interface RunConfig {
+  anthropicApiKey?: string;
+  firebaseProjectId?: string;
+  firebaseClientEmail?: string;
+  firebasePrivateKey?: string;
+  dailyNewsFolderId?: string;
+  /** Override date range (defaults to yesterday GMT+7) */
+  overrideDateStr?: string;
+  dryRun?: boolean;
+}
+
+// ─── Firebase init ─────────────────────────────────────────────────────────────
+
+function initFirebase(config: RunConfig): FirebaseFirestore.Firestore {
+  if (admin.apps.length > 0) return admin.firestore();
+
+  const projectId = config.firebaseProjectId || process.env.FIREBASE_ADMIN_PROJECT_ID;
+  const clientEmail = config.firebaseClientEmail || process.env.FIREBASE_ADMIN_CLIENT_EMAIL;
+  const privateKey = (config.firebasePrivateKey || process.env.FIREBASE_ADMIN_PRIVATE_KEY || "")
+    .replace(/\\n/g, "\n");
+
+  if (!projectId || !clientEmail || !privateKey) {
+    throw new Error("Missing Firebase Admin credentials (FIREBASE_ADMIN_PROJECT_ID, FIREBASE_ADMIN_CLIENT_EMAIL, FIREBASE_ADMIN_PRIVATE_KEY)");
+  }
+
+  admin.initializeApp({
+    credential: admin.credential.cert({ projectId, clientEmail, privateKey }),
+  });
+
+  return admin.firestore();
+}
+
+// ─── Clients ──────────────────────────────────────────────────────────────────
+
+const rssParser = new Parser({
+  customFields: { item: [["content:encoded", "contentEncoded"]] },
+  headers: {
+    "User-Agent": "Mozilla/5.0 (compatible; Clarke-NewsBot/2.0; +https://clarkes-library.vercel.app)",
+  },
+  timeout: 15000,
+});
+
+// ─── Date helpers ─────────────────────────────────────────────────────────────
+
+function getYesterdayRangeGMT7(overrideDateStr?: string): {
+  start: Date;
+  end: Date;
+  dateStr: string;
+} {
+  if (overrideDateStr) {
+    // Parse YYYY-MM-DD as GMT+7 midnight
+    const gmt7Offset = 7 * 60 * 60 * 1000;
+    const [y, m, d] = overrideDateStr.split("-").map(Number);
+    const startGMT7 = Date.UTC(y, m - 1, d, 0, 0, 0, 0);
+    const start = new Date(startGMT7 - gmt7Offset);
+    const end = new Date(start.getTime() + 24 * 60 * 60 * 1000 - 1);
+    return { start, end, dateStr: overrideDateStr };
+  }
+
+  const now = new Date();
+  const gmt7Offset = 7 * 60 * 60 * 1000;
+  const nowGMT7 = new Date(now.getTime() + gmt7Offset);
+  const yesterdayGMT7 = new Date(nowGMT7);
+  yesterdayGMT7.setUTCDate(yesterdayGMT7.getUTCDate() - 1);
+  yesterdayGMT7.setUTCHours(0, 0, 0, 0);
+
+  const start = new Date(yesterdayGMT7.getTime() - gmt7Offset);
+  const end = new Date(start.getTime() + 24 * 60 * 60 * 1000 - 1);
+
+  const yr = yesterdayGMT7.getUTCFullYear();
+  const mo = String(yesterdayGMT7.getUTCMonth() + 1).padStart(2, "0");
+  const dy = String(yesterdayGMT7.getUTCDate()).padStart(2, "0");
+  return { start, end, dateStr: `${yr}-${mo}-${dy}` };
+}
+
+function toSlug(text: string): string {
+  return text
+    .toLowerCase()
+    .replace(/[^a-z0-9\s-]/g, "")
+    .replace(/\s+/g, "-")
+    .replace(/-+/g, "-")
+    .substring(0, 80);
+}
+
+// ─── Phase 1: Fetch ────────────────────────────────────────────────────────────
+
+async function fetchAllSources(
+  sources: NewsSource[],
+  range: { start: Date; end: Date }
+): Promise<RawNewsItem[]> {
+  const items: RawNewsItem[] = [];
+  let index = 0;
+
+  for (const source of sources) {
+    try {
+      const feed = await rssParser.parseURL(source.rssUrl);
+      let count = 0;
+      for (const item of feed.items || []) {
+        const pubDate = item.pubDate ? new Date(item.pubDate) : null;
+        if (!pubDate || pubDate < range.start || pubDate > range.end) continue;
+
+        const rawContent =
+          (item as { contentEncoded?: string }).contentEncoded ||
+          item.content ||
+          item.summary ||
+          "";
+        const summary = (rawContent || item.summary || item.title || "")
+          .replace(/<[^>]+>/g, "")
+          .trim()
+          .substring(0, 1000);
+
+        items.push({
+          index,
+          title: item.title || "Untitled",
+          link: item.link || "",
+          summary,
+          sourceName: source.name,
+          sourceId: source.id,
+          category: source.category,
+          publishedAt: pubDate,
+        });
+        index++;
+        count++;
+      }
+      console.log(`  [${source.category.toUpperCase()}] ${source.name}: ${count} items`);
+    } catch (err) {
+      console.error(`  SKIP ${source.name}: ${err instanceof Error ? err.message : String(err)}`);
+    }
+  }
+
+  return items;
+}
+
+// ─── Phase 2: Topic grouping ──────────────────────────────────────────────────
+
+async function aggregateTopics(
+  items: RawNewsItem[],
+  anthropic: Anthropic
+): Promise<TopicGroup[]> {
+  const compactItems = items.map(item => ({
+    i: item.index,
+    t: item.title,
+    s: item.summary.substring(0, 200),
+    src: item.sourceName,
+  }));
+
+  const prompt = `You are a news editor. Given these news items from yesterday, identify distinct news events/topics.
+Group related items together (same underlying event = same group).
+Return ONLY valid JSON with this exact shape: {"topics":[{"topicTitle":"...","topicId":"kebab-case-id","indices":[0,1,2]}]}
+Aim for 5–15 distinct groups. Merge items about the same underlying event.
+Items not in any meaningful group can be omitted.
+NEWS ITEMS:
+${JSON.stringify(compactItems)}`;
+
+  const response = await anthropic.messages.create({
+    model: "claude-haiku-4-5-20251001",
+    max_tokens: 4096,
+    messages: [{ role: "user", content: prompt }],
+  });
+
+  const text = response.content[0].type === "text" ? response.content[0].text : "";
+  const jsonMatch = text.match(/\{[\s\S]*\}/);
+  if (!jsonMatch) throw new Error("No JSON found in topic grouping response");
+  const parsed = JSON.parse(jsonMatch[0]) as { topics: TopicGroup[] };
+  return parsed.topics;
+}
+
+// ─── Phase 3: Article writing ─────────────────────────────────────────────────
+
+async function writeArticle(
+  group: TopicGroup,
+  items: RawNewsItem[],
+  dateStr: string,
+  anthropic: Anthropic
+): Promise<AggregatedArticle> {
+  const groupItems = group.indices.filter(i => i < items.length).map(i => items[i]);
+
+  const sourceItems = groupItems.map(item => ({
+    title: item.title,
+    source: item.sourceName,
+    url: item.link,
+    content: item.summary,
+    publishedAt: item.publishedAt.toISOString(),
+  }));
+
+  const prompt = `Write a 1000+ word English investment briefing article about this news topic for Vietnam-based investors tracking gold, silver, VN stocks, USD/VND, and macro trends.
+
+TOPIC: ${group.topicTitle}
+
+Use this exact structure (include all headers):
+
+## Lead
+[150 words: What happened — the most important development and immediate market impact]
+
+## Background
+[200 words: Why this matters — historical context, prior developments, relevant macro conditions]
+
+## Key Developments
+[350 words: Detailed breakdown — what was announced, by whom, with specific data and numbers]
+
+## Investment Implications for Vietnam
+[200 words: Specific impact analysis for Vietnam-based investors — gold/silver prices, VN-Index, USD/VND, FDI, interest rates]
+
+## Key Data Points
+- [Metric]: [Value] (vs [prior period] if available)
+
+## Sources
+- [Source Name]: [Article title] — [URL]
+
+SOURCE ITEMS:
+${JSON.stringify(sourceItems)}`;
+
+  const response = await anthropic.messages.create({
+    model: "claude-haiku-4-5-20251001",
+    max_tokens: 2000,
+    messages: [{ role: "user", content: prompt }],
+  });
+
+  const content = response.content[0].type === "text" ? response.content[0].text : "";
+  const description = content
+    .replace(/^##[^\n]*\n/m, "")
+    .replace(/[#*`\[\]]/g, "")
+    .trim()
+    .substring(0, 200);
+
+  const slug = `${toSlug(group.topicTitle)}-${dateStr}`;
+  const sourceUrls = groupItems.map(i => i.link).filter(Boolean);
+  const sourceNames = [...new Set(groupItems.map(i => i.sourceName))];
+
+  return {
+    title: group.topicTitle,
+    slug,
+    content,
+    description,
+    topicGroup: group.topicId,
+    sourceCount: groupItems.length,
+    sourceUrls,
+    sourceNames,
+    publishedAt: groupItems[0]?.publishedAt || new Date(),
+  };
+}
+
+// ─── Phase 4: Dedup ───────────────────────────────────────────────────────────
+
+async function getRecentArticleTitles(
+  db: FirebaseFirestore.Firestore,
+  rootFolderId: string,
+  days = 30
+): Promise<{ id: string; title: string }[]> {
+  const cutoff = new Date();
+  cutoff.setDate(cutoff.getDate() - days);
+
+  const snapshot = await db
+    .collection("articles")
+    .where("folderPath", "array-contains", rootFolderId)
+    .where("publishedAt", ">=", Timestamp.fromDate(cutoff))
+    .get();
+
+  return snapshot.docs.map(doc => ({ id: doc.id, title: doc.data().title || "" }));
+}
+
+async function checkDuplicate(
+  title: string,
+  existingTitles: { id: string; title: string }[],
+  anthropic: Anthropic
+): Promise<string | null> {
+  if (existingTitles.length === 0) return null;
+
+  const prompt = `Is the new article about the same event as any existing article?
+Reply with ONLY the matching article document ID if it is a duplicate, or "null" if it is a genuinely new event. Reply with one word only.
+
+New article: "${title}"
+
+Existing articles:
+${existingTitles.map(a => `${a.id}: ${a.title}`).join("\n")}`;
+
+  const response = await anthropic.messages.create({
+    model: "claude-haiku-4-5-20251001",
+    max_tokens: 100,
+    messages: [{ role: "user", content: prompt }],
+  });
+
+  const text = (response.content[0].type === "text" ? response.content[0].text : "").trim();
+  return text === "null" || text === "" ? null : text;
+}
+
+// ─── Phase 5: Date subfolder ──────────────────────────────────────────────────
+
+async function getOrCreateDateFolder(
+  db: FirebaseFirestore.Firestore,
+  dateStr: string,
+  parentFolderId: string,
+  parentPath: string[]
+): Promise<string> {
+  const existing = await db
+    .collection("folders")
+    .where("parentId", "==", parentFolderId)
+    .where("slug", "==", dateStr)
+    .limit(1)
+    .get();
+
+  if (!existing.empty) return existing.docs[0].id;
+
+  const folderRef = db.collection("folders").doc();
+  const path = [...parentPath, folderRef.id];
+  await folderRef.set({
+    id: folderRef.id,
+    name: dateStr,
+    slug: dateStr,
+    parentId: parentFolderId,
+    description: `Daily news briefing for ${dateStr}`,
+    path,
+    order: 0,
+    featured: false,
+    articleCount: 0,
+    createdAt: Timestamp.now(),
+    updatedAt: Timestamp.now(),
+  });
+
+  console.log(`  Created date subfolder: ${dateStr} (${folderRef.id})`);
+  return folderRef.id;
+}
+
+// ─── Phase 6: Ingest ──────────────────────────────────────────────────────────
+
+async function ingestArticle(
+  db: FirebaseFirestore.Firestore,
+  article: AggregatedArticle,
+  folderId: string,
+  folderPath: string[],
+  rootFolderId: string,
+  dateStr: string,
+  duplicateId: string | null,
+  dryRun: boolean
+): Promise<"created" | "updated" | "skipped"> {
+  const wordCount = article.content.split(/\s+/).length;
+  const readingTime = Math.ceil(wordCount / 200);
+  const now = Timestamp.now();
+
+  const metadata = {
+    wordCount,
+    readingTime,
+    lastModifiedBy: "brief-daily-news-v2",
+    version: 1,
+    newsDate: dateStr,
+    topicGroup: article.topicGroup,
+    sourceCount: article.sourceCount,
+    sourceUrls: article.sourceUrls,
+    sourceNames: article.sourceNames,
+    isAggregated: true,
+    lastDuplicateCheck: new Date().toISOString(),
+  };
+
+  if (dryRun) {
+    console.log(`  [DRY RUN] Would ${duplicateId ? "update" : "create"}: "${article.title}"`);
+    return duplicateId ? "updated" : "created";
+  }
+
+  if (duplicateId) {
+    await db.collection("articles").doc(duplicateId).update({
+      title: article.title,
+      content: article.content,
+      description: article.description,
+      updatedAt: now,
+      "metadata.wordCount": wordCount,
+      "metadata.readingTime": readingTime,
+      "metadata.lastModifiedBy": "brief-daily-news-v2",
+      "metadata.version": FieldValue.increment(1),
+      "metadata.sourceCount": article.sourceCount,
+      "metadata.sourceUrls": article.sourceUrls,
+      "metadata.sourceNames": article.sourceNames,
+      "metadata.lastDuplicateCheck": new Date().toISOString(),
+    });
+    return "updated";
+  }
+
+  const articleRef = db.collection("articles").doc();
+  await articleRef.set({
+    id: articleRef.id,
+    title: article.title,
+    slug: article.slug,
+    folderId,
+    folderPath,
+    content: article.content,
+    description: article.description,
+    order: 0,
+    status: "published",
+    priority: "medium",
+    publishedAt: Timestamp.fromDate(article.publishedAt),
+    createdAt: now,
+    updatedAt: now,
+    metadata,
+  });
+
+  await db.collection("folders").doc(folderId).update({
+    articleCount: FieldValue.increment(1),
+  });
+  await db.collection("folders").doc(rootFolderId).update({
+    articleCount: FieldValue.increment(1),
+  });
+
+  return "created";
+}
+
+// ─── Main export ──────────────────────────────────────────────────────────────
+
+export async function runBriefDailyNews(config: RunConfig = {}): Promise<{
+  created: number;
+  updated: number;
+  skipped: number;
+  topicCount: number;
+  errors: string[];
+}> {
+  const rootFolderId = config.dailyNewsFolderId || process.env.DAILY_NEWS_FOLDER_ID;
+  if (!rootFolderId) throw new Error("DAILY_NEWS_FOLDER_ID not set");
+
+  const apiKey = config.anthropicApiKey || process.env.ANTHROPIC_API_KEY;
+  if (!apiKey) throw new Error("ANTHROPIC_API_KEY not set");
+
+  const db = initFirebase(config);
+  const anthropic = new Anthropic({ apiKey });
+  const { start, end, dateStr } = getYesterdayRangeGMT7(config.overrideDateStr);
+
+  console.log(`\n=== Brief Daily News v2 — ${dateStr} ===`);
+  console.log(`Range: ${start.toISOString()} → ${end.toISOString()}`);
+  if (config.dryRun) console.log("DRY RUN MODE — no Firestore writes");
+
+  // Load news sources (relative to project root)
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const sources: NewsSource[] = require("../../../../website/config/news-sources.json");
+
+  // Get root folder path
+  const rootDoc = await db.collection("folders").doc(rootFolderId).get();
+  if (!rootDoc.exists) throw new Error(`Root folder not found: ${rootFolderId}`);
+  const rootPath: string[] = rootDoc.data()!.path || [];
+
+  // Phase 1: Fetch
+  console.log(`\n[Phase 1] Fetching ${sources.length} RSS sources...`);
+  const rawItems = await fetchAllSources(sources, { start, end });
+  console.log(`Total raw items: ${rawItems.length}`);
+
+  if (rawItems.length === 0) {
+    console.log("No items for yesterday. Exiting.");
+    return { created: 0, updated: 0, skipped: 0, topicCount: 0, errors: [] };
+  }
+
+  // Phase 2: Topic grouping
+  console.log(`\n[Phase 2] Grouping ${rawItems.length} items into topics...`);
+  let topicGroups: TopicGroup[] = [];
+  try {
+    topicGroups = await aggregateTopics(rawItems, anthropic);
+    console.log(`  → ${topicGroups.length} topic groups identified`);
+  } catch (err) {
+    const msg = `Topic grouping failed: ${err instanceof Error ? err.message : String(err)}`;
+    console.error(msg);
+    return { created: 0, updated: 0, skipped: 0, topicCount: 0, errors: [msg] };
+  }
+
+  // Phase 3: Write articles
+  console.log(`\n[Phase 3] Writing ${topicGroups.length} articles...`);
+  const aggregatedArticles: AggregatedArticle[] = [];
+  const writeErrors: string[] = [];
+
+  for (const group of topicGroups) {
+    try {
+      console.log(`  Writing: "${group.topicTitle}" (${group.indices.length} items)`);
+      const article = await writeArticle(group, rawItems, dateStr, anthropic);
+      console.log(`    → ${article.content.split(/\s+/).length} words`);
+      aggregatedArticles.push(article);
+    } catch (err) {
+      const msg = `"${group.topicTitle}": ${err instanceof Error ? err.message : String(err)}`;
+      console.error(`  ERROR: ${msg}`);
+      writeErrors.push(msg);
+    }
+  }
+
+  // Phase 4: Dedup check
+  console.log(`\n[Phase 4] Checking for duplicates...`);
+  const existingTitles = await getRecentArticleTitles(db, rootFolderId, 30);
+  console.log(`  ${existingTitles.length} existing articles in last 30 days`);
+
+  const duplicateMap = new Map<string, string | null>();
+  for (const article of aggregatedArticles) {
+    try {
+      const dupId = await checkDuplicate(article.title, existingTitles, anthropic);
+      duplicateMap.set(article.slug, dupId);
+      if (dupId) console.log(`  DUPLICATE: "${article.title}" → update ${dupId}`);
+    } catch (err) {
+      console.error(`  Dedup check failed for "${article.title}":`, err);
+      duplicateMap.set(article.slug, null);
+    }
+  }
+
+  // Phase 5: Date subfolder
+  console.log(`\n[Phase 5] Getting/creating date subfolder: ${dateStr}`);
+  const dateFolderId = config.dryRun
+    ? "dry-run-folder-id"
+    : await getOrCreateDateFolder(db, dateStr, rootFolderId, rootPath);
+  const dateFolderPath = [...rootPath, dateFolderId];
+  console.log(`  Date folder ID: ${dateFolderId}`);
+
+  // Phase 6: Ingest
+  console.log(`\n[Phase 6] Ingesting ${aggregatedArticles.length} articles...`);
+  let created = 0;
+  let updated = 0;
+  let skipped = 0;
+  const ingestErrors: string[] = [];
+
+  for (const article of aggregatedArticles) {
+    try {
+      const dupId = duplicateMap.get(article.slug) ?? null;
+      const result = await ingestArticle(
+        db,
+        article,
+        dateFolderId,
+        dateFolderPath,
+        rootFolderId,
+        dateStr,
+        dupId,
+        config.dryRun ?? false
+      );
+      if (result === "created") created++;
+      else if (result === "updated") updated++;
+      else skipped++;
+      console.log(`  ${result.toUpperCase()}: "${article.title}"`);
+    } catch (err) {
+      const msg = `"${article.slug}": ${err instanceof Error ? err.message : String(err)}`;
+      console.error(`  ERROR: ${msg}`);
+      ingestErrors.push(msg);
+      skipped++;
+    }
+  }
+
+  const allErrors = [...writeErrors, ...ingestErrors];
+  console.log(`\n=== Done ===`);
+  console.log(`Created: ${created}, Updated: ${updated}, Skipped: ${skipped}, Topics: ${topicGroups.length}`);
+  if (allErrors.length > 0) console.error("Errors:", allErrors);
+
+  return { created, updated, skipped, topicCount: topicGroups.length, errors: allErrors };
+}
+
+// ─── CLI entry point ──────────────────────────────────────────────────────────
+
+if (require.main === module) {
+  runBriefDailyNews({
+    dryRun: process.argv.includes("--dry-run"),
+    overrideDateStr: process.argv.find(a => /^\d{4}-\d{2}-\d{2}$/.test(a)),
+  })
+    .then(result => {
+      console.log("\nFinal result:", result);
+      process.exit(result.errors.length > 0 ? 1 : 0);
+    })
+    .catch(err => {
+      console.error("Fatal error:", err);
+      process.exit(1);
+    });
+}
