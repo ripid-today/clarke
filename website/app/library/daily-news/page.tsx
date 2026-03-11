@@ -23,6 +23,7 @@ export default async function DailyNewsPage({ searchParams }: PageProps) {
   let articles: Article[] = [];
   let hasMore = false;
   let nextCursor: string | undefined;
+  let queryError = false;
 
   if (DAILY_NEWS_FOLDER_ID) {
     try {
@@ -37,6 +38,7 @@ export default async function DailyNewsPage({ searchParams }: PageProps) {
       nextCursor = result.nextCursor;
     } catch (err) {
       console.error("DailyNewsPage: failed to fetch articles", err);
+      queryError = true;
     }
   }
 
@@ -55,8 +57,14 @@ export default async function DailyNewsPage({ searchParams }: PageProps) {
 
       {articles.length === 0 ? (
         <div className="text-center py-16 text-claude-secondary">
-          <p className="text-[17px]">No articles available yet.</p>
-          <p className="text-[15px] mt-2">Check back after 9 AM GMT+7.</p>
+          {queryError ? (
+            <p className="text-[17px] text-red-600">Failed to load articles. Please try again later.</p>
+          ) : (
+            <>
+              <p className="text-[17px]">No articles available yet.</p>
+              <p className="text-[15px] mt-2">Check back after 9 AM GMT+7.</p>
+            </>
+          )}
         </div>
       ) : (
         <>
