@@ -98,10 +98,11 @@ export async function getDailyNewsArticles(
   cursor?: string,
   limit = 20
 ): Promise<{ articles: Article[]; hasMore: boolean; nextCursor?: string }> {
-  // Use array-contains to query across root folder AND all date subfolders
+  // Query by folderId — all daily-news articles (both legacy and v2) are stored
+  // with folderId = rootFolderId. Uses the existing folderId + publishedAt DESC index.
   let query: FirebaseFirestore.Query = adminDb
     .collection("articles")
-    .where("folderPath", "array-contains", rootFolderId)
+    .where("folderId", "==", rootFolderId)
     .orderBy("publishedAt", "desc");
 
   if (cursor) {
@@ -138,7 +139,7 @@ export async function getRecentArticleTitles(
 
   const snapshot = await adminDb
     .collection("articles")
-    .where("folderPath", "array-contains", rootFolderId)
+    .where("folderId", "==", rootFolderId)
     .where("publishedAt", ">=", Timestamp.fromDate(cutoff))
     .get();
 

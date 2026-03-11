@@ -249,7 +249,7 @@ async function getRecentArticleTitles(
 
   const snapshot = await adminDb
     .collection("articles")
-    .where("folderPath", "array-contains", rootFolderId)
+    .where("folderId", "==", rootFolderId)
     .where("publishedAt", ">=", Timestamp.fromDate(cutoff))
     .get();
 
@@ -320,9 +320,8 @@ async function getOrCreateDateFolder(
 
 async function ingestArticle(
   article: AggregatedArticle,
-  folderId: string,
-  folderPath: string[],
   rootFolderId: string,
+  rootFolderPath: string[],
   dateStr: string,
   duplicateId: string | null
 ): Promise<"created" | "updated"> {
@@ -348,13 +347,15 @@ async function ingestArticle(
     return "updated";
   }
 
+  // Store directly under rootFolderId so the folderId == rootFolderId query finds them.
+  // Date organisation is tracked via metadata.newsDate.
   const articleRef = adminDb.collection("articles").doc();
   await articleRef.set({
     id: articleRef.id,
     title: article.title,
     slug: article.slug,
-    folderId,
-    folderPath,
+    folderId: rootFolderId,
+    folderPath: rootFolderPath,
     content: article.content,
     description: article.description,
     order: 0,
@@ -378,9 +379,6 @@ async function ingestArticle(
     },
   });
 
-  await adminDb.collection("folders").doc(folderId).update({
-    articleCount: FieldValue.increment(1),
-  });
   await adminDb.collection("folders").doc(rootFolderId).update({
     articleCount: FieldValue.increment(1),
   });
@@ -473,11 +471,9 @@ export const dailyNewsTask = schedules.task({
       }
     }
 
-    // Phase 5: Create date subfolder
+    // Phase 5: Create date subfolder (organisational reference only — articles stored under rootFolderId)
     console.log(`\n[Phase 5] Getting/creating date subfolder: ${dateStr}`);
-    const dateFolderId = await getOrCreateDateFolder(dateStr, rootFolderId, rootPath);
-    const dateFolderPath = [...rootPath, dateFolderId];
-    console.log(`  Date folder ID: ${dateFolderId}`);
+    await getOrCreateDateFolder(dateStr, rootFolderId, rootPath);
 
     // Phase 6: Ingest
     console.log(`\n[Phase 6] Ingesting ${aggregatedArticles.length} articles...`);
@@ -491,9 +487,8 @@ export const dailyNewsTask = schedules.task({
         const dupId = duplicateMap.get(article.slug) ?? null;
         const result = await ingestArticle(
           article,
-          dateFolderId,
-          dateFolderPath,
           rootFolderId,
+          rootPath,
           dateStr,
           dupId
         );
