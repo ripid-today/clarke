@@ -177,15 +177,17 @@ async function writeArticle(
     `[${item.sourceName}] ${item.title}\n${item.summary}`
   ).join("\n\n");
 
-  const prompt = `You are an investment analyst. Write a 1000+ word English article analyzing this news topic for investors.
+  const prompt = `You are an investment analyst writing for Vietnam-based investors.
+
+Output format — use EXACTLY this structure, nothing else:
+TITLE: [a compelling, specific article headline]
+
+[1000+ word article in continuous flowing prose. No headers, bullets, or markdown.]
 
 Rules:
-- Write in English ONLY. Translate any non-English source material to English.
-- Write continuous flowing prose — NO section headers, NO bullet points, NO markdown formatting.
-- Do NOT include citations, source lists, URLs, or key data point tables.
-- Start directly with a strong analytical opening sentence.
+- English ONLY. Translate any non-English source material.
+- Do NOT repeat the title inside the article body.
 - Cover: what happened, why it matters, market and investment implications.
-- Minimum 1000 words.
 
 TOPIC: ${group.topicTitle}
 
@@ -199,20 +201,20 @@ ${sourceText}`;
   });
 
   const content = response.content[0].type === "text" ? response.content[0].text : "";
-  const description = content
-    .replace(/^##[^\n]*\n/m, "")
-    .replace(/[#*`\[\]]/g, "")
-    .trim()
-    .substring(0, 200);
+
+  const titleMatch = content.match(/^TITLE:\s*(.+?)(?:\n|$)/);
+  const parsedTitle = titleMatch ? titleMatch[1].trim() : group.topicTitle;
+  const contentBody = content.replace(/^TITLE:\s*.+?\n\n?/, "").trim();
+  const description = contentBody.replace(/[#*`\[\]]/g, "").trim().substring(0, 200);
 
   const slug = `${toSlug(group.topicTitle)}-${dateStr}`;
   const sourceUrls = groupItems.map(i => i.link).filter(Boolean);
   const sourceNames = [...new Set(groupItems.map(i => i.sourceName))];
 
   return {
-    title: group.topicTitle,
+    title: parsedTitle,
     slug,
-    content,
+    content: contentBody,
     description,
     topicGroup: group.topicId,
     sourceCount: groupItems.length,

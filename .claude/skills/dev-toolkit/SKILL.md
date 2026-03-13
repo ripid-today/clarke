@@ -1,14 +1,54 @@
 ---
 name: dev-toolkit
-description: "Web development toolkit providing codebase analysis, minimal change detection, frontend development (React/Next.js), and backend development (API endpoints) capabilities. Use when analyzing code patterns, identifying minimal changesets, implementing UI components, or building API endpoints and business logic."
+description: "Web development toolkit providing codebase analysis, minimal change detection, frontend development (React/Next.js), and backend development (API endpoints) capabilities. Use when analyzing code patterns, identifying minimal changesets, implementing UI components, or building API endpoints — trigger phrases include 'implement...', 'build a component...', 'fix bug in...', and 'add API endpoint for...'. Use even if the user hasn't specified a framework yet."
 user-invokable: false
 ---
 
 # Dev Toolkit
 
-## Code Analyzer
+Implement features and fixes in the Clarke codebase with minimal, targeted changes. Always check Technical Guidelines before touching code — they contain the patterns, so you don't have to invent them.
 
-Analyze existing codebase to understand patterns and architecture before making changes.
+---
+
+## Step 1: Look Up Technical Guidelines
+
+**ALWAYS consult Technical Guidelines BEFORE analyzing the codebase.** Guidelines contain the canonical patterns; use them directly rather than re-deriving from code.
+
+### Process
+
+1. **Identify change type:**
+   - Frontend changes (UI, design, components) → Read `library/guidelines/frontend-guideline.md`
+   - Backend changes (API, database, Firestore) → Read `library/guidelines/backend-guideline.md`
+   - Deployment/rollback concerns → Read `library/guidelines/deployment-guideline.md`
+
+2. **Look for patterns in guidelines:**
+   - Color values? → Frontend Guideline → Section 1 (Design System → Color Palette)
+   - API format? → Backend Guideline → Section 2 (API Conventions)
+   - Migration script? → Backend Guideline → Section 5 (Migration Patterns)
+   - Deployment checklist? → Deployment Guideline → Section 2 (Pre-Deployment Checklist)
+
+3. **Copy patterns from guidelines** (don't reinvent):
+   - Use exact Tailwind classes from Frontend Guideline
+   - Use API response format template from Backend Guideline
+   - Use migration script template from Backend Guideline
+
+4. **Only analyze codebase if pattern NOT in guidelines**
+
+### Decision Tree
+
+```
+Need to implement feature?
+├─ Is pattern documented in Technical Guidelines?
+│  ├─ YES → Copy pattern from guideline, adapt to specific requirement
+│  └─ NO → Continue to Step 2 below
+└─ Continue with dev work
+```
+
+---
+
+## Step 2: Analyze Existing Code
+
+Understand existing patterns and architecture before writing a single line of new code.
 
 ### Process
 
@@ -32,9 +72,11 @@ Analyze existing codebase to understand patterns and architecture before making 
 - Reusable components/utilities list
 - Tech stack summary
 
-## Minimal Change Detector
+---
 
-Identify the smallest effective changeset to meet requirements.
+## Step 3: Identify Minimal Changeset
+
+Identify the smallest effective set of changes to meet requirements — then implement only that.
 
 ### Process
 
@@ -66,18 +108,15 @@ Identify the smallest effective changeset to meet requirements.
 - Estimated change scope (lines added/modified/removed)
 - Risk assessment
 
-## Frontend Dev
+---
 
-Implement React/Next.js UI components and features.
+## Step 4: Implement (Frontend / Backend)
 
-### Stack
+Write the code using patterns from Steps 1–3. Match existing conventions exactly.
 
-- **Framework**: Next.js (App Router)
-- **Language**: TypeScript
-- **Styling**: Tailwind CSS
-- **Components**: Follow existing component patterns in the project
+### Frontend (React/Next.js)
 
-### Process
+**Stack:** Next.js App Router · TypeScript · Tailwind CSS
 
 1. Check existing components for reuse opportunities
 2. Create/modify components following project conventions
@@ -86,25 +125,15 @@ Implement React/Next.js UI components and features.
 5. Ensure responsive design (mobile-first)
 6. Follow accessibility basics (semantic HTML, aria labels, keyboard navigation)
 
-### Rules
-
+**Rules:**
 - Match existing component file structure and naming
 - Use existing UI primitives before creating new ones
-- Keep components focused - single responsibility
-- Co-locate styles, types, and tests with components when that's the project pattern
+- Keep components focused — single responsibility
 - No inline styles when Tailwind classes exist
 
-## Backend Dev
+### Backend (API Routes)
 
-Implement API endpoints and business logic.
-
-### Stack
-
-- **Framework**: Next.js API Routes (App Router)
-- **Language**: TypeScript
-- **Database**: Follow existing project patterns (Firebase, Prisma, etc.)
-
-### Process
+**Stack:** Next.js API Routes (App Router) · TypeScript · Firebase/Firestore
 
 1. Check existing API routes for patterns and conventions
 2. Create/modify API endpoints following existing structure
@@ -113,11 +142,30 @@ Implement API endpoints and business logic.
 5. Integrate with existing database/service layer
 6. Follow existing authentication/authorization patterns
 
-### Rules
-
+**Rules:**
 - Validate all user input at API boundary
 - Return consistent error response format matching existing patterns
 - Use existing database utilities and service functions
 - Never expose internal errors to clients
-- Follow existing middleware patterns for auth, logging, etc.
-- Keep route handlers thin - delegate to service layer
+- Keep route handlers thin — delegate to service layer
+
+### LLM Integration
+
+When calling an LLM (Haiku, Sonnet, etc.) and the output must have **distinct structured fields** (e.g., title + body, label + content):
+
+- **Always use machine-readable delimiters** — e.g., `TITLE: ...` on its own line, then a blank line, then the body.
+- **Never rely on prose-style instructions** like "start with X" or "no markdown" to enforce structure. Small models (Haiku) routinely ignore style instructions and will prepend headings, bullets, or preamble regardless.
+- **Parse programmatically** after the API call using a regex on the delimiter (e.g., `/^TITLE:\s*(.+?)(?:\n|$)/`), then strip the delimiter line from the body.
+- If the delimiter is absent in the response, fall back to a safe default (e.g., the topic title) rather than crashing.
+
+```typescript
+// Prompt snippet (reliable)
+`TITLE: [a compelling, specific headline]
+
+[1000+ word article body. No headers, bullets, or markdown.]`
+
+// Parse (reliable)
+const titleMatch = content.match(/^TITLE:\s*(.+?)(?:\n|$)/);
+const parsedTitle = titleMatch ? titleMatch[1].trim() : fallback;
+const contentBody = content.replace(/^TITLE:\s*.+?\n\n?/, "").trim();
+```

@@ -33,6 +33,30 @@ export const getFolders = unstable_cache(
   { revalidate: 300, tags: ["folders"] }
 );
 
+export const getFoldersWithRealCounts = unstable_cache(
+  async (): Promise<Folder[]> => {
+    const [foldersSnap, articlesSnap] = await Promise.all([
+      adminDb.collection("folders").orderBy("order").get(),
+      adminDb.collection("articles").select("folderId").get(),
+    ]);
+
+    // Count articles per folderId in memory
+    const counts: Record<string, number> = {};
+    for (const doc of articlesSnap.docs) {
+      const fid = doc.data().folderId as string;
+      if (fid) counts[fid] = (counts[fid] || 0) + 1;
+    }
+
+    return foldersSnap.docs.map(doc => {
+      const folder = serializeDoc<Folder>(doc);
+      folder.articleCount = counts[folder.id] || 0;
+      return folder;
+    });
+  },
+  ["get-folders-with-real-counts"],
+  { revalidate: 60, tags: ["folders"] }
+);
+
 export async function getArticles(folderId: string): Promise<Article[]> {
   const snapshot = await adminDb
     .collection("articles")

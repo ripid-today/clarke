@@ -1,4 +1,4 @@
-import { getFolders } from "@/lib/firebase/firestore";
+import { getFoldersWithRealCounts } from "@/lib/firebase/firestore";
 import { Sidebar } from "@/components/library/Sidebar";
 import { MobileNav } from "@/components/library/MobileNav";
 import type { Folder } from "@/types/library";
@@ -13,7 +13,7 @@ export default async function LibraryLayout({
   // Fetch all folders for sidebar (will be empty initially)
   let folders: Folder[] = [];
   try {
-    folders = await getFolders();
+    folders = await getFoldersWithRealCounts();
   } catch (error) {
     console.error("Error fetching folders:", error);
     // Continue with empty folders array
