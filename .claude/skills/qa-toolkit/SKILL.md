@@ -1,14 +1,36 @@
 ---
 name: qa-toolkit
-description: "Quality assurance toolkit providing test planning, test execution, bug reporting, and requirements validation capabilities. Use when creating test plans, running tests, documenting bugs, or validating that code implementations match their specifications."
+description: "Quality assurance toolkit providing test planning, test execution, bug reporting, and requirements validation capabilities. Use when creating test plans, running tests, documenting bugs, or validating that code implementations match their specifications — trigger phrases include 'create test plan', 'run tests', 'validate implementation', 'report bug', and 'does this match requirements'. Use even if the user only says 'check if this works'."
 user-invokable: false
 ---
 
 # QA Toolkit
 
-## Test Planner
+Validate implementations against requirements and catch issues before they reach production. Start with the deployment checklist — every other step builds on that foundation.
 
-Create comprehensive test plans based on requirements and acceptance criteria.
+---
+
+## Step 1: Run Pre-Deployment Checklist
+
+**ALWAYS reference the Deployment Guideline before creating test plans.** It defines the mandatory categories that every release must pass.
+
+### Deployment Guideline Location
+- `library/guidelines/deployment-guideline.md`
+- Section 2: Pre-Deployment Checklist
+- Section 5: Monitoring & Validation
+
+### Mandatory Test Categories
+1. Code quality: TypeScript compiles, ESLint passes
+2. Cross-browser: Chrome, Firefox, Safari
+3. Mobile responsive: 320px, 768px, 1024px
+4. Lighthouse audit: Performance ≥90, Accessibility ≥90
+5. Database backup verified (if schema changes)
+
+---
+
+## Step 2: Plan Tests
+
+Create a comprehensive test plan based on requirements and acceptance criteria — covering happy path, edge cases, and failure scenarios.
 
 ### Process
 
@@ -31,9 +53,11 @@ Create comprehensive test plans based on requirements and acceptance criteria.
 - Priority order for execution
 - Estimated coverage assessment
 
-## Test Executor
+---
 
-Run unit, integration, and E2E tests and collect results.
+## Step 3: Execute Tests
+
+Run unit, integration, and E2E tests in order and collect results with full failure context.
 
 ### Process
 
@@ -71,9 +95,11 @@ npm run test:e2e
 - Test coverage metrics (if available)
 - Total execution summary
 
-## Bug Reporter
+---
 
-Document issues with clear, actionable reproduction steps.
+## Step 4: Report Bugs
+
+Document issues with clear, actionable reproduction steps so developers can fix without follow-up questions.
 
 ### Report Template
 
@@ -109,9 +135,11 @@ For each issue found, produce:
 - **Major**: Significant functionality broken, workaround may exist
 - **Minor**: Cosmetic issues, edge cases, non-critical behavior
 
-## Requirements Validator
+---
 
-Verify that implementation matches specifications point by point.
+## Step 5: Validate Requirements
+
+Verify that the implementation matches every requirement point by point — produce a validation matrix as evidence.
 
 ### Process
 

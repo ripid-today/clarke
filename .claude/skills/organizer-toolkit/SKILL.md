@@ -1,14 +1,43 @@
 ---
 name: organizer-toolkit
-description: "Knowledge organization toolkit providing taxonomy management, content categorization, metadata tagging, and file operations for Clarke's Knowledge Library. Use when organizing, categorizing, or filing knowledge content, managing library structure, or updating metadata and tags."
+description: "Knowledge organization toolkit providing content categorization, taxonomy management, metadata tagging, and file operations for Clarke's Knowledge Library. Use when organizing, categorizing, or filing knowledge content, managing library structure, or updating metadata and tags — trigger phrases include 'categorize this article', 'organize library content', 'add tags to...', and 'where should X go'. Use even if the user only mentions 'filing' or 'sorting' without specifying a formal organization task."
 user-invokable: false
 ---
 
 # Organizer Toolkit
 
-## Taxonomy Manager
+Structure and categorize knowledge in Clarke's Library with integrity. Every step enforces MECE placement, consistent metadata, and a taxonomy that stays clean as the library grows.
 
-Maintain and evolve the library's category structure.
+---
+
+## Step 1: Categorize Content
+
+Determine optimal placement for new knowledge before creating or moving anything.
+
+### Process
+
+1. Extract topic, keywords, and key concepts from the document
+2. Compare with existing categories using Glob and Grep
+3. Check for related content (potential duplicates or merge candidates)
+4. Assess placement options:
+   - Standalone in existing category (most common)
+   - New subcategory (when topic is distinct enough)
+   - Merge with existing document (when content overlaps significantly)
+   - New top-level category (rare, requires approval)
+5. Select optimal placement and justify
+
+### Output
+
+- Category path (e.g., "Business/Strategy/Competitive-Analysis")
+- Placement strategy (new file, merge, or subcategory)
+- Related documents to link
+- Justification for placement decision
+
+---
+
+## Step 2: Manage Taxonomy
+
+Maintain and evolve the library's category structure — only propose changes when existing categories genuinely don't fit.
 
 ### Process
 
@@ -36,30 +65,9 @@ Clarke's Knowledge Library
 - Max 3 levels of nesting before splitting
 - Each category must have a clear, distinct scope
 
-## Categorizer
+---
 
-Determine optimal placement for knowledge in the library.
-
-### Process
-
-1. Extract topic, keywords, and key concepts from the document
-2. Compare with existing categories using Glob and Grep
-3. Check for related content (potential duplicates or merge candidates)
-4. Assess placement options:
-   - Standalone in existing category (most common)
-   - New subcategory (when topic is distinct enough)
-   - Merge with existing document (when content overlaps significantly)
-   - New top-level category (rare, requires approval)
-5. Select optimal placement and justify
-
-### Output
-
-- Category path (e.g., "Business/Strategy/Competitive-Analysis")
-- Placement strategy (new file, merge, or subcategory)
-- Related documents to link
-- Justification for placement decision
-
-## Metadata Tagger
+## Step 3: Tag Metadata
 
 Create and manage tags, relationships, and metadata for library content.
 
@@ -90,17 +98,11 @@ Source: [book | experience | research | synthesis]
 - Max 10 tags per document
 - Tags should be specific enough to be useful for filtering
 
-## File Operations
+---
 
-Create folders, articles, and organize library structure via API.
+## Step 4: File Operations
 
-### Process
-
-1. Verify category path exists in library (check via GET /api/library/folders)
-2. Generate slug: lowercase, hyphenated, descriptive (e.g., `competitive-analysis`)
-3. Create folder or article via POST /api/library/folders or POST /api/library/articles
-4. Apply metadata tags and keywords
-5. Verify creation was successful via GET response
+For library file operations (creating folders/articles in Firebase), use the `/update-library` skill.
 
 ### Naming Rules
 

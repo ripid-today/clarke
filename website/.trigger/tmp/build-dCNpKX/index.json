@@ -1,0 +1,33 @@
+{
+  "configPath": "C:\\Users\\uyenl\\Clarke\\clarke\\website\\.trigger\\tmp\\build-dCNpKX\\trigger.config.mjs",
+  "customConditions": [
+  ],
+  "queues": [
+  ],
+  "runtime": "node",
+  "runtimeVersion": "22.16.0",
+  "tasks": [
+    {
+      "entryPoint": "C:\\Users\\uyenl\\Clarke\\clarke\\website\\.trigger\\tmp\\build-dCNpKX\\trigger\\daily-news.mjs",
+      "filePath": "trigger/daily-news.ts",
+      "id": "daily-news",
+      "maxDuration": 1800,
+      "retry": {
+        "factor": 2,
+        "maxAttempts": 3,
+        "maxTimeoutInMs": 60000,
+        "minTimeoutInMs": 1000,
+        "randomize": true
+      },
+      "schedule": {
+        "cron": "0 2 * * *",
+        "timezone": "Asia/Bangkok"
+      },
+      "triggerSource": "schedule"
+    }
+  ],
+  "timings": {
+    "trigger/daily-news.ts": 557.8789
+  },
+  "workerEntryPoint": "C:\\Users\\uyenl\\Clarke\\clarke\\website\\.trigger\\tmp\\build-dCNpKX\\node_modules\\trigger.dev\\dist\\esm\\entryPoints\\dev-run-worker.mjs"
+}

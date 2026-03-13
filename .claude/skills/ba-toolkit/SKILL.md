@@ -1,16 +1,20 @@
 ---
 name: ba-toolkit
-description: "Business analysis toolkit providing requirements analysis, question generation, documentation writing, and gap identification. Use when performing any business analysis task including requirements gathering, specification writing, or identifying missing information in project scope."
+description: "Business analysis toolkit providing requirements analysis, gap identification, question generation, and documentation writing. Use when performing any business analysis task — trigger phrases include 'analyze requirements for...', 'write a spec for...', 'what am I missing from...', and 'help me define the scope of...'. Use even if the user frames it as a conversation or question rather than a formal analysis request."
 user-invokable: false
 ---
 
 # BA Toolkit
 
-## Requirements Analyzer
+Extract, analyze, and document requirements with precision. This toolkit turns vague requests into clear, testable specifications by systematically analyzing what's needed, finding gaps, asking the right questions, and writing documentation developers can act on.
 
-Extract and analyze requirement changes from user requests.
+---
 
-### Analyzer Process
+## Step 1: Analyze Requirements
+
+Extract and structure requirements from a user request before doing anything else.
+
+### Process
 
 1. Parse user request to identify requirement type
    (new feature, enhancement, bug fix)
@@ -19,21 +23,47 @@ Extract and analyze requirement changes from user requests.
 4. Identify conflicts or overlaps with current specifications
 5. Assess completeness against standard checklist
 
-### Analyzer Output
+### Output
 
 - Parsed requirements (numbered list)
 - Requirement type classification
 - Conflicts/overlaps identified
 - Completeness assessment (percentage)
 
-## Question Generator
+---
 
-Create specific, actionable clarifying questions when
-confidence is below threshold.
+## Step 2: Identify Gaps
 
-### Generator Process
+Find missing information and ambiguities before asking questions — so every question you ask is targeted and high-impact.
 
-1. Identify specific gaps in understanding
+### Gap Checklist
+
+Check each item and report gaps:
+
+- [ ] User stories clear and complete?
+- [ ] Acceptance criteria defined for each requirement?
+- [ ] Edge cases considered (empty states, max limits)?
+- [ ] Constraints specified (performance, security)?
+- [ ] Dependencies identified (APIs, services, data)?
+- [ ] Success metrics defined (how to measure "done")?
+- [ ] Error handling defined (what happens when things fail)?
+- [ ] Access control specified (who can do what)?
+
+### Output
+
+- List of gaps/ambiguities found
+- Current confidence score with justification
+- Recommended clarifications (prioritized by impact on confidence)
+
+---
+
+## Step 3: Generate Questions
+
+Create specific, actionable clarifying questions when confidence is below threshold.
+
+### Process
+
+1. Identify specific gaps in understanding (from Step 2)
 2. For each gap, formulate a targeted question:
    - Specific and actionable (not open-ended)
    - Provides context for why you're asking
@@ -45,12 +75,13 @@ confidence is below threshold.
 
 - Each question should increase confidence by 5-15%
 - Order from most impactful to least impactful
-- Each option should lead to a meaningfully different
-  execution path
+- Each option should lead to a meaningfully different execution path
 
-## Documentation Writer
+---
 
-Write clear, comprehensive requirements documentation.
+## Step 4: Write Documentation
+
+Write clear, comprehensive requirements documentation developers can act on without follow-up questions.
 
 ### Document Structure
 
@@ -68,27 +99,4 @@ Write clear, comprehensive requirements documentation.
 - Each requirement must be independently testable
 - Include examples where helpful
 - Cross-reference related requirements
-- No ambiguous terms ("fast", "easy") - quantify instead
-
-## Gap Identifier
-
-Find missing information and ambiguities in requirements.
-
-### Gap Checklist
-
-Check each item and report gaps:
-
-- [ ] User stories clear and complete?
-- [ ] Acceptance criteria defined for each requirement?
-- [ ] Edge cases considered (empty states, max limits)?
-- [ ] Constraints specified (performance, security)?
-- [ ] Dependencies identified (APIs, services, data)?
-- [ ] Success metrics defined (how to measure "done")?
-- [ ] Error handling defined (what happens when things fail)?
-- [ ] Access control specified (who can do what)?
-
-### Gap Output
-
-- List of gaps/ambiguities found
-- Current confidence score with justification
-- Recommended clarifications (prioritized)
+- No ambiguous terms ("fast", "easy") — quantify instead

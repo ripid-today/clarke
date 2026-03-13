@@ -13,5 +13,8 @@ coverage/
 .vercel
 .env*.local
 
+# Duplicate skill directory (canonical location: .claude/skills/)
+.agents/
+
 # Executables
 claude.exe
