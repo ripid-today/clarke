@@ -173,44 +173,28 @@ async function writeArticle(
 ): Promise<AggregatedArticle> {
   const groupItems = group.indices.filter(i => i < items.length).map(i => items[i]);
 
-  const sourceItems = groupItems.map(item => ({
-    title: item.title,
-    source: item.sourceName,
-    url: item.link,
-    content: item.summary,
-    publishedAt: item.publishedAt.toISOString(),
-  }));
+  const sourceText = groupItems.map(item =>
+    `[${item.sourceName}] ${item.title}\n${item.summary}`
+  ).join("\n\n");
 
-  const prompt = `Write a 1000+ word English investment briefing article about this news topic for Vietnam-based investors tracking gold, silver, VN stocks, USD/VND, and macro trends.
+  const prompt = `You are an investment analyst. Write a 1000+ word English article analyzing this news topic for investors.
+
+Rules:
+- Write in English ONLY. Translate any non-English source material to English.
+- Write continuous flowing prose — NO section headers, NO bullet points, NO markdown formatting.
+- Do NOT include citations, source lists, URLs, or key data point tables.
+- Start directly with a strong analytical opening sentence.
+- Cover: what happened, why it matters, market and investment implications.
+- Minimum 1000 words.
 
 TOPIC: ${group.topicTitle}
 
-Use this exact structure (include all headers):
-
-## Lead
-[150 words: What happened — the most important development and immediate market impact]
-
-## Background
-[200 words: Why this matters — historical context, prior developments, relevant macro conditions]
-
-## Key Developments
-[350 words: Detailed breakdown — what was announced, by whom, with specific data and numbers]
-
-## Investment Implications for Vietnam
-[200 words: Specific impact analysis for Vietnam-based investors — gold/silver prices, VN-Index, USD/VND, FDI, interest rates]
-
-## Key Data Points
-- [Metric]: [Value] (vs [prior period] if available)
-
-## Sources
-- [Source Name]: [Article title] — [URL]
-
 SOURCE ITEMS:
-${JSON.stringify(sourceItems)}`;
+${sourceText}`;
 
   const response = await anthropic.messages.create({
     model: "claude-haiku-4-5-20251001",
-    max_tokens: 2000,
+    max_tokens: 4096,
     messages: [{ role: "user", content: prompt }],
   });
 
@@ -331,7 +315,6 @@ async function ingestArticle(
 
   if (duplicateId) {
     await adminDb.collection("articles").doc(duplicateId).update({
-      title: article.title,
       content: article.content,
       description: article.description,
       updatedAt: now,
