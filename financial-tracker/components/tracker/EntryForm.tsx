@@ -4,19 +4,19 @@ import { useState } from 'react';
 import Button from '@/components/ui/Button';
 import Input from '@/components/ui/Input';
 import { formatVnd, parseVnd } from '@/lib/utils/formatVnd';
-import { Fund } from '@/types';
+import { Fund, Earning, Expense } from '@/types';
 
-interface EarningFormData {
+export interface EarningFormData {
   name: string;
   amount_vnd: number;
-  type: 'regular' | 'receivable';
+  type: 'income' | 'receivable';
   receiver_type: 'user' | 'fund';
   receiver_id: string | null;
   status: 'planned' | 'actual';
   month: string;
 }
 
-interface ExpenseFormData {
+export interface ExpenseFormData {
   name: string;
   amount_vnd: number;
   sender_type: 'user' | 'fund';
@@ -35,6 +35,11 @@ interface EntryFormProps {
   initialTab?: 'earning' | 'expense';
   defaultMonth: string;
   blockError?: string;
+  editEntry?: Earning | Expense;
+}
+
+function isEarning(entry: Earning | Expense): entry is Earning {
+  return 'type' in entry;
 }
 
 export default function EntryForm({
@@ -45,27 +50,39 @@ export default function EntryForm({
   initialTab = 'earning',
   defaultMonth,
   blockError,
+  editEntry,
 }: EntryFormProps) {
-  const [activeTab, setActiveTab] = useState<'earning' | 'expense'>(initialTab);
+  const resolvedTab: 'earning' | 'expense' = editEntry
+    ? isEarning(editEntry) ? 'earning' : 'expense'
+    : initialTab;
+
+  const [activeTab, setActiveTab] = useState<'earning' | 'expense'>(resolvedTab);
 
   return (
-    <div className="flex flex-col gap-0">
-      <div className="flex rounded-lg border border-claude-secondary overflow-hidden mb-5">
-        {(['earning', 'expense'] as const).map(tab => (
-          <button
-            key={tab}
-            type="button"
-            onClick={() => setActiveTab(tab)}
-            className={`flex-1 py-2 text-[15px] font-medium transition-colors duration-150 capitalize ${
-              activeTab === tab
-                ? 'bg-claude-primary text-white'
-                : 'bg-white text-claude-secondary hover:bg-black/5'
-            }`}
-          >
-            {tab}
-          </button>
-        ))}
-      </div>
+    <div className="flex flex-col gap-0 max-h-[90vh] overflow-y-auto">
+      {!editEntry && (
+        <div className="flex rounded-lg border border-claude-secondary overflow-hidden mb-5">
+          {(['earning', 'expense'] as const).map(tab => (
+            <button
+              key={tab}
+              type="button"
+              onClick={() => setActiveTab(tab)}
+              className={`flex-1 py-2 text-[15px] font-medium transition-colors duration-150 capitalize ${
+                activeTab === tab
+                  ? 'bg-claude-primary text-white'
+                  : 'bg-white text-claude-secondary hover:bg-black/5'
+              }`}
+            >
+              {tab}
+            </button>
+          ))}
+        </div>
+      )}
+      {editEntry && (
+        <p className="text-[13px] text-claude-secondary mb-4 capitalize">
+          Editing {isEarning(editEntry) ? 'earning' : 'expense'}
+        </p>
+      )}
 
       {activeTab === 'earning' ? (
         <EarningForm
@@ -74,6 +91,7 @@ export default function EntryForm({
           funds={funds}
           defaultMonth={defaultMonth}
           blockError={blockError}
+          editEntry={editEntry && isEarning(editEntry) ? editEntry : undefined}
         />
       ) : (
         <ExpenseForm
@@ -82,6 +100,7 @@ export default function EntryForm({
           funds={funds}
           defaultMonth={defaultMonth}
           blockError={blockError}
+          editEntry={editEntry && !isEarning(editEntry) ? editEntry : undefined}
         />
       )}
     </div>
@@ -94,21 +113,25 @@ function EarningForm({
   funds,
   defaultMonth,
   blockError,
+  editEntry,
 }: {
   onSubmit: (data: EarningFormData) => Promise<void>;
   onCancel: () => void;
   funds: Fund[];
   defaultMonth: string;
   blockError?: string;
+  editEntry?: Earning;
 }) {
-  const [name, setName] = useState('');
-  const [rawAmount, setRawAmount] = useState('');
-  const [displayAmount, setDisplayAmount] = useState('');
-  const [type, setType] = useState<'regular' | 'receivable'>('regular');
-  const [receiverType, setReceiverType] = useState<'user' | 'fund'>('user');
-  const [receiverId, setReceiverId] = useState<string>('');
-  const [status, setStatus] = useState<'planned' | 'actual'>('planned');
-  const [month, setMonth] = useState(defaultMonth);
+  const [name, setName] = useState(editEntry?.name ?? '');
+  const [rawAmount, setRawAmount] = useState(editEntry ? String(editEntry.amount_vnd) : '');
+  const [displayAmount, setDisplayAmount] = useState(editEntry ? formatVnd(editEntry.amount_vnd) : '');
+  const [type, setType] = useState<'income' | 'receivable'>(
+    editEntry ? editEntry.type as 'income' | 'receivable' : 'income'
+  );
+  const [receiverType, setReceiverType] = useState<'user' | 'fund'>(editEntry?.receiver_type ?? 'user');
+  const [receiverId, setReceiverId] = useState<string>(editEntry?.receiver_id ?? '');
+  const [status, setStatus] = useState<'planned' | 'actual'>(editEntry?.status ?? 'planned');
+  const [month, setMonth] = useState(editEntry?.month ?? defaultMonth);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [amountError, setAmountError] = useState<string | null>(null);
@@ -175,7 +198,7 @@ function EarningForm({
       <div className="flex flex-col gap-1">
         <span className="text-sm font-medium text-claude-secondary">Type</span>
         <div className="flex rounded-lg border border-claude-secondary overflow-hidden">
-          {(['regular', 'receivable'] as const).map(t => (
+          {(['income', 'receivable'] as const).map(t => (
             <button key={t} type="button" onClick={() => setType(t)}
               className={`flex-1 py-2 text-[15px] font-medium capitalize transition-colors duration-150 ${type === t ? 'bg-claude-primary text-white' : 'bg-white text-claude-secondary hover:bg-black/5'}`}>
               {t}
@@ -228,7 +251,9 @@ function EarningForm({
 
       <div className="flex gap-3 justify-end">
         <Button type="button" variant="ghost" onClick={onCancel} disabled={loading}>Cancel</Button>
-        <Button type="submit" variant="primary" loading={loading}>Add Earning</Button>
+        <Button type="submit" variant="primary" loading={loading}>
+          {editEntry ? 'Save Changes' : 'Add Earning'}
+        </Button>
       </div>
     </form>
   );
@@ -240,22 +265,24 @@ function ExpenseForm({
   funds,
   defaultMonth,
   blockError,
+  editEntry,
 }: {
   onSubmit: (data: ExpenseFormData) => Promise<void>;
   onCancel: () => void;
   funds: Fund[];
   defaultMonth: string;
   blockError?: string;
+  editEntry?: Expense;
 }) {
-  const [name, setName] = useState('');
-  const [rawAmount, setRawAmount] = useState('');
-  const [displayAmount, setDisplayAmount] = useState('');
-  const [senderType, setSenderType] = useState<'user' | 'fund'>('user');
-  const [senderId, setSenderId] = useState<string>('');
-  const [receiverType, setReceiverType] = useState<'fund' | 'none'>('none');
-  const [receiverId, setReceiverId] = useState<string>('');
-  const [status, setStatus] = useState<'planned' | 'actual'>('planned');
-  const [month, setMonth] = useState(defaultMonth);
+  const [name, setName] = useState(editEntry?.name ?? '');
+  const [rawAmount, setRawAmount] = useState(editEntry ? String(editEntry.amount_vnd) : '');
+  const [displayAmount, setDisplayAmount] = useState(editEntry ? formatVnd(editEntry.amount_vnd) : '');
+  const [senderType, setSenderType] = useState<'user' | 'fund'>(editEntry?.sender_type ?? 'user');
+  const [senderId, setSenderId] = useState<string>(editEntry?.sender_id ?? '');
+  const [receiverType, setReceiverType] = useState<'fund' | 'none'>(editEntry?.receiver_type ?? 'none');
+  const [receiverId, setReceiverId] = useState<string>(editEntry?.receiver_id ?? '');
+  const [status, setStatus] = useState<'planned' | 'actual'>(editEntry?.status ?? 'planned');
+  const [month, setMonth] = useState(editEntry?.month ?? defaultMonth);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [amountError, setAmountError] = useState<string | null>(null);
@@ -381,7 +408,9 @@ function ExpenseForm({
 
       <div className="flex gap-3 justify-end">
         <Button type="button" variant="ghost" onClick={onCancel} disabled={loading}>Cancel</Button>
-        <Button type="submit" variant="primary" loading={loading}>Add Expense</Button>
+        <Button type="submit" variant="primary" loading={loading}>
+          {editEntry ? 'Save Changes' : 'Add Expense'}
+        </Button>
       </div>
     </form>
   );

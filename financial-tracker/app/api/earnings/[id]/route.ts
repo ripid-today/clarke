@@ -44,8 +44,8 @@ export async function PATCH(
   }
 
   if (type !== undefined) {
-    if (!['regular', 'receivable'].includes(type as string)) {
-      return NextResponse.json({ error: 'type must be regular or receivable' }, { status: 400 });
+    if (!['income', 'receivable'].includes(type as string)) {
+      return NextResponse.json({ error: 'type must be income or receivable' }, { status: 400 });
     }
     updates.type = type;
   }

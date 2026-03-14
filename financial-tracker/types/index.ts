@@ -12,7 +12,7 @@ export interface Earning {
   amount_vnd: number;
   status: 'planned' | 'actual';
   name: string;                             // renamed from description
-  type: 'regular' | 'receivable';          // NEW
+  type: 'income' | 'receivable';           // renamed from 'regular'
   receiver_type: 'user' | 'fund';          // NEW (user = to themselves)
   receiver_id: string | null;              // NEW (fund id when receiver_type=fund)
   created_at: string;

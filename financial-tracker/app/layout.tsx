@@ -3,8 +3,11 @@ import "./globals.css";
 import Nav from "@/components/ui/Nav";
 
 export const metadata: Metadata = {
-  title: "Finance Tracker | ripid.vn",
+  title: "Tracker | ripid.vn",
   description: "Personal & shared VND budget tracker",
+  icons: {
+    icon: '/favicon.svg',
+  },
 };
 
 export default function RootLayout({

@@ -1,7 +1,7 @@
 # Business Requirements Document
-# tracker.ripid.vn — Personal & Shared Financial Tracker
+# tracker.ripid.vn — Personal & Shared Financial Tracker (v2.1)
 
-**Status:** Draft v1.0
+**Status:** Draft v2.1
 **Date:** 2026-03-14
 **Author:** Clarke / Business Analysis
 **Stakeholders:** Product Owner (Clarke team)
@@ -12,55 +12,47 @@
 
 ### Problem Statement
 
-Young professionals in Vietnam manage personal finances in isolation — spreadsheets are powerful but have no social layer, and expense-splitting apps (Splitwise) handle settlement only, not forward planning. There is no lightweight tool that lets individuals track their own planned vs. actual income/expenses **and** participate in shared group expense pools with friends or a partner — all in one place, denominated in VND.
+The current 4-tab app (Dashboard, Earnings, Expenses, Funds) fragments the financial overview, forcing users to mentally stitch together information across tabs. There is no multi-month comparison view, no way to track money owed to the user (receivables), and the expense model does not distinguish between personal spending and fund transfers. The result is a tool that is less useful than a spreadsheet for financial planning.
 
-### Current State → Future State
+### Goal
 
-| | Current State | Future State |
-|---|---|---|
-| Personal budget | Excel or mental accounting | Planned/actual dashboard per month |
-| Shared expenses | Splitwise or WhatsApp group | Fund view with each member's contributions + group total |
-| Constraint enforcement | None (overspend silently) | Hard block: expenses cannot exceed earnings for the month |
-| Currency | Manual VND conversion | Native VND integer amounts |
-
-### Target Users
-
-- **Primary:** Vietnamese adults (20s–30s) managing personal monthly income and expenses
-- **Secondary:** Small groups (couples, housemates, friend circles) with shared recurring costs (rent, utilities, groceries)
-
-### Success Metrics
-
-| Metric | Target |
-|--------|--------|
-| User can register and log first entry | < 3 minutes |
-| Dashboard load time | < 2 seconds |
-| Entry save time | < 1 second |
-| Constraint enforcement accuracy | 100% — no entry violates earnings ceiling |
-| Fund expense visible to all members | Immediate on save |
+Replace the multi-tab layout with a single-page, income-statement-style tracker. The top section is a rolling 12-month table (earnings rows → expense rows), and the bottom section is a companion bar-chart dashboard. Users get a canonical income statement view with planned vs. actual tracking, multi-month comparison, and a new receivables concept — all on one page.
 
 ### Scope Boundaries
 
-**IN SCOPE (MVP)**
-- Email + password registration with display name
-- Personal earnings (planned and actual) per month
-- Personal expenses (planned and actual) per month with hard-block enforcement
-- Shared funds: create fund, add members by email, log fund expenses, view group total
-- Monthly navigator (any past or future month)
-- Dashboard: planned totals, actual totals, net balance (earnings − expenses)
-- VND only
+**IN SCOPE (v2.0 — deployed baseline)**
+- Single-page layout: Income Statement Table + Bar Chart Dashboard
+- Receivables as a distinct entry type within earnings (money owed to the user)
+- Sender/receiver expense model (personal spending vs. fund transfers vs. inter-fund transfers)
+- Rolling 12-month column range (previous 6 → current → next 5)
+- Cell-level edit popup with quick planned/actual toggle
+- Settings page (gear icon in header) for fund management
+- Four chart design tokens: earnings, receivables, external expenses, fund contributions
+- Hard-block enforcement for expenses where sender = myself
 
-**OUT OF SCOPE (MVP)**
+**v2.1 additions: see Section 8**
+
+**OUT OF SCOPE (v2.0)**
+- Fund deletion
+- Fund-level hard-block enforcement (fund spending has no balance cap in MVP)
+- Multi-currency support
 - Push or email notifications
-- Budget categories / tagging
 - Data export (CSV, PDF)
 - Mobile native app (iOS/Android)
-- Fund creator removing members or deleting a fund
-- Multi-currency support
-- Analytics or insights beyond monthly summary
+
+### Success Criteria
+
+| Metric | Target |
+|--------|--------|
+| Income Statement table renders | < 2 seconds for rolling 12-month range |
+| Entry save (write + read-back) | < 1 second |
+| Hard-block enforcement accuracy | 100% — no entry violates earnings ceiling |
+| Fund management accessible from Settings | Gear icon in header, no nav tab |
+| Mobile horizontal scroll | Table and chart scrollable at 375px |
 
 ---
 
-## Section 2: MECE Use Case Map
+## Section 2: Use Case Map
 
 ### Domain 1 — Identity & Access (UC1.x)
 
@@ -69,262 +61,393 @@ Young professionals in Vietnam manage personal finances in isolation — spreads
 | UC1.1 | Register | Visitor | Clicks "Sign Up" |
 | UC1.2 | Verify email address | Visitor | Receives Supabase verification email |
 | UC1.3 | Log in | Registered user | Clicks "Log In" |
-| UC1.4 | Log out | Authenticated user | Clicks "Log Out" |
+| UC1.4 | Log out | Authenticated user | Clicks "Log Out" (header) |
 
-### Domain 2 — Earning Management (UC2.x)
-
-| ID | Use Case | Actor | Trigger |
-|----|----------|-------|---------|
-| UC2.1 | Create planned earning | User | Clicks "Add Earning" with status = planned |
-| UC2.2 | Create actual earning | User | Clicks "Add Earning" with status = actual |
-| UC2.3 | Toggle earning status | User | Clicks toggle on existing earning |
-| UC2.4 | Edit earning | User | Edits description or amount |
-| UC2.5 | Delete earning | User | Deletes own earning entry |
-
-### Domain 3 — Personal Expense Management (UC3.x)
+### Domain 2 — Entry Management (UC2.x)
 
 | ID | Use Case | Actor | Trigger |
 |----|----------|-------|---------|
-| UC3.1 | Create planned personal expense | User | Clicks "Add Expense" with status = planned |
-| UC3.2 | Create actual personal expense | User | Clicks "Add Expense" with status = actual |
-| UC3.3 | Toggle expense status | User | Clicks toggle on existing expense |
-| UC3.4 | Edit personal expense | User | Edits description or amount |
-| UC3.5 | Delete personal expense | User | Deletes own expense entry |
-| UC3.6 | Hard-block enforcement | System | Triggered on every create/edit/toggle |
+| UC2.1 | Add earning (regular or receivable) | User | Opens Add modal → Earning tab |
+| UC2.2 | Add expense (personal, contribution, fund expense, inter-fund transfer) | User | Opens Add modal → Expense tab |
+| UC2.3 | Quick toggle planned ↔ actual | User | Clicks toggle in cell popup |
+| UC2.4 | Edit full entry | User | Clicks "Edit" in cell popup |
+| UC2.5 | Delete entry | User | Deletes from edit form |
 
-### Domain 4 — Fund Management (UC4.x)
-
-| ID | Use Case | Actor | Trigger |
-|----|----------|-------|---------|
-| UC4.1 | Create a fund | User | Clicks "Create Fund" |
-| UC4.2 | Add member by email | Fund creator | Enters existing user's email |
-| UC4.3 | Add planned/actual fund expense | Fund member | Logs expense within a fund |
-| UC4.4 | Toggle fund expense status | Fund member | Clicks toggle on own fund expense |
-| UC4.5 | Edit / delete own fund expense | Fund member | Edits or deletes own fund expense |
-| UC4.6 | View fund member list | Fund member | Opens fund detail |
-
-### Domain 5 — Dashboard & Reporting (UC5.x)
+### Domain 3 — Income Statement Table (UC3.x)
 
 | ID | Use Case | Actor | Trigger |
 |----|----------|-------|---------|
-| UC5.1 | View monthly summary | User | Loads dashboard |
-| UC5.2 | Navigate months | User | Clicks previous/next month arrows |
-| UC5.3 | Filter dashboard to one fund | User | Selects a fund from fund filter |
+| UC3.1 | View Income Statement (Actual mode) | User | Loads page; default view |
+| UC3.2 | Switch to Planned view | User | Clicks view toggle |
+| UC3.3 | Open cell popup | User | Clicks any non-empty cell |
+| UC3.4 | Navigate implicit month range | System | Rolling 12 months always shown |
 
-_MECE verification: Each use case belongs to exactly one domain. All described functionality is covered with no overlap._
+### Domain 4 — Bar Chart Dashboard (UC4.x)
+
+| ID | Use Case | Actor | Trigger |
+|----|----------|-------|---------|
+| UC4.1 | View personal bar chart | User | Loads page; default filter = Myself |
+| UC4.2 | Filter chart by fund | User | Selects fund from dropdown |
+
+### Domain 5 — Fund Management / Settings (UC5.x)
+
+| ID | Use Case | Actor | Trigger |
+|----|----------|-------|---------|
+| UC5.1 | Open Settings | User | Clicks gear icon in header |
+| UC5.2 | Create a fund | User | "Create Fund" in Settings |
+| UC5.3 | Add member by email | Fund creator | Enters existing user's email in Settings |
+| UC5.4 | View fund member list | Fund member | Opens fund in Settings |
 
 ---
 
 ## Section 3: Functional Requirements
 
-### Domain 1 — Identity & Access
+### R1 — Single-Page Layout
 
-| Req ID | Priority | Description | Acceptance Criteria | Dependency |
-|--------|----------|-------------|---------------------|------------|
-| R1.1 | P0 | User registers with email, password, and display name | Given a visitor submits a unique email + password (8+ chars) + display name, when they submit, then a Supabase account is created and a verification email is sent | Supabase Auth |
-| R1.2 | P0 | User must verify email before accessing app | Given a registered user with unverified email, when they attempt to log in, then they are redirected to a "check your email" page | R1.1 |
-| R1.3 | P0 | User logs in with email and password | Given a verified user, when they submit correct credentials, then they are redirected to the current-month dashboard | R1.2 |
-| R1.4 | P1 | User logs out | Given an authenticated user, when they click Log Out, then their session is cleared and they are redirected to the login page | R1.3 |
+**Priority:** P0
 
-### Domain 2 — Earning Management
+| Req ID | Description | Acceptance Criteria |
+|--------|-------------|---------------------|
+| R1.1 | Remove ripid.vn brand text from header | Given the app loads, then the header contains no "ripid.vn" brand text |
+| R1.2 | Remove navigation tabs | Given the app loads, then there are no Dashboard / Earnings / Expenses / Funds nav tabs |
+| R1.3 | Header contains Sign Out button and Settings gear icon | Given an authenticated user, when they view the header, then Sign Out and a gear icon (→ Settings) are present |
+| R1.4 | Page layout: Income Statement Table (top) + Bar Chart (bottom) | Given the page loads, then both sections are present and stacked vertically |
 
-| Req ID | Priority | Description | Acceptance Criteria | Dependency |
-|--------|----------|-------------|---------------------|------------|
-| R2.1 | P0 | Create earning entry | Given an authenticated user on any month view, when they add an earning with amount (VND integer), status, and description, then the entry is saved and the monthly planned or actual earnings total updates immediately | R1.3 |
-| R2.2 | P1 | Toggle earning status (planned ↔ actual) | Given an existing earning, when user toggles its status, then status changes and the amount stays the same | R2.1 |
-| R2.3 | P1 | Edit earning | Given an existing earning owned by the user, when they update amount or description, then changes persist and monthly totals recalculate | R2.1 |
-| R2.4 | P1 | Delete earning | Given an existing earning owned by the user, when they delete it, then the entry is removed and monthly totals recalculate | R2.1 |
+### R2 — Income Statement Table
 
-### Domain 3 — Personal Expense Management
+**Priority:** P0
 
-| Req ID | Priority | Description | Acceptance Criteria | Dependency |
-|--------|----------|-------------|---------------------|------------|
-| R3.1 | P0 | Create personal expense | Given an authenticated user, when they add a personal expense, then it is saved and monthly expense total updates | R2.1 |
-| R3.2 | P0 | Hard-block: planned expenses ≤ planned earnings | Given a user with planned earnings = X, when they attempt to add/edit/toggle a planned expense that would make total planned expenses > X, then the system rejects the action with an error message | R3.1 |
-| R3.3 | P0 | Hard-block: actual expenses ≤ actual earnings | Given a user with actual earnings = Y, when they attempt to add/edit/toggle an actual expense that would make total actual expenses > Y, then the system rejects the action with an error message | R3.1 |
-| R3.4 | P1 | Toggle expense status (planned ↔ actual) | Given an existing personal expense, when user toggles its status, then status changes, amount stays the same, and hard-block is re-evaluated for the new status type | R3.2, R3.3 |
-| R3.5 | P1 | Edit personal expense | Given an existing personal expense owned by the user, when they update amount or description, then changes persist, hard-block is re-evaluated | R3.2, R3.3 |
-| R3.6 | P1 | Delete personal expense | Given an existing personal expense, when deleted, then entry is removed and monthly totals recalculate | R3.1 |
+| Req ID | Description | Acceptance Criteria |
+|--------|-------------|---------------------|
+| R2.1 | Table displays 12 columns: previous 6 months, current month, next 5 months | Given today is any date, when the table renders, then exactly 12 month columns appear in chronological order |
+| R2.2 | Earnings rows (regular) appear in the top section, sorted A–Z by name | Given a user has earnings with names "Salary" and "Freelance", then two rows appear in alphabetical order in the top section |
+| R2.3 | Receivable rows appear in the top section (after regular earnings), sorted A–Z | Given a user has a receivable "Loan from Kim", then it appears in the earnings section labelled as receivable |
+| R2.4 | Expense rows appear in the bottom section, sorted A–Z by name | Given a user has expenses "Rent" and "Groceries", then two rows appear in alphabetical order in the bottom section |
+| R2.5 | Each cell = sum of all entries matching that name × month | Given two "Salary" entries in 2026-03 totalling 20,000,000 VND, then the cell for "Salary" / "2026-03" displays 20,000,000 |
+| R2.6 | Empty cells display as "—" | Given no entries for a name × month combination, then the cell displays "—" |
+| R2.7 | Actual view (default): cells show actual amounts only | Given Actual view is active, then cells display only actual-status entry totals; planned entries are hidden |
+| R2.8 | Planned view: cells show both actual and planned; planned amounts styled in light yellow | Given Planned view is active, then cells show actual total + planned total with planned styled in light yellow background |
+| R2.9 | Clicking a cell opens a popup anchored to that cell | Given a non-empty cell is clicked, then a popup appears near the cell listing all matching entries |
+| R2.10 | Multi-entry popup lists each entry separately with edit + toggle | Given 2 "Rent" entries in the same month, when the cell is clicked, then the popup shows both entries with individual Edit and Toggle buttons |
+| R2.11 | Table horizontally scrollable on mobile | Given a 375px viewport, then the table scrolls horizontally to reveal all 12 columns |
 
-### Domain 4 — Fund Management
+### R3 — Add Entry (Single FAB/Button)
 
-| Req ID | Priority | Description | Acceptance Criteria | Dependency |
-|--------|----------|-------------|---------------------|------------|
-| R4.1 | P1 | Create a fund | Given an authenticated user, when they create a fund with a name, then the fund is created with the user as its creator and first member | R1.3 |
-| R4.2 | P1 | Add member to fund by email | Given a fund creator, when they add a member by entering an existing registered user's email, then that user is added to the fund and can see the fund on their next login | R4.1 |
-| R4.3 | P1 | Log fund expense | Given a fund member, when they add a planned or actual expense to a fund for a given month, then the expense is saved, visible to all members in the fund view, and counted toward the member's personal monthly expense total (hard-block applies) | R3.2, R3.3, R4.1 |
-| R4.4 | P2 | Toggle fund expense status | Given a fund expense owned by the user, when they toggle its status, then status changes, amount stays the same, hard-block is re-evaluated | R4.3 |
-| R4.5 | P2 | Edit / delete own fund expense | Given a fund expense owned by the user, when they edit or delete it, then the change persists and fund group totals recalculate | R4.3 |
-| R4.6 | P2 | View fund member list | Given any fund member, when they open the fund detail, then they can see all current members (display name + email) | R4.1 |
+**Priority:** P0
 
-### Domain 5 — Dashboard & Reporting
+| Req ID | Description | Acceptance Criteria |
+|--------|-------------|---------------------|
+| R3.1 | One primary action button opens a modal with Earning and Expense tabs | Given the user clicks the Add button, then a modal opens with two tabs |
+| R3.2 | Earning tab fields: Receiver (myself / any fund), Amount (VND integer), Name, Type (Regular / Receivable), Status (Planned / Actual), Month (editable, defaults to current) | Given the Earning tab is open, then all 6 fields are present and functional |
+| R3.3 | Expense tab fields: Sender (myself / any fund), Receiver (any fund / none), Amount (VND integer), Name, Status (Planned / Actual), Month (editable, defaults to current) | Given the Expense tab is open, then all 6 fields are present and functional |
+| R3.4 | Expense sender/receiver business rules are enforced: sender=myself + receiver=none → personal external expense; sender=myself + receiver=Fund X → contribution to Fund X; sender=Fund X + receiver=none → Fund X external expense; sender=Fund X + receiver=Fund Y → inter-fund transfer | Given each sender/receiver combination, then the entry is classified and stored correctly |
+| R3.5 | Hard-block applies when sender=myself: planned expenses ≤ planned earnings; actual expenses ≤ actual earnings for that month | Given planned earnings = 10,000,000 VND and planned expenses = 9,900,000 VND, when saving a 200,000 VND planned expense, then the system rejects with an error |
 
-| Req ID | Priority | Description | Acceptance Criteria | Dependency |
-|--------|----------|-------------|---------------------|------------|
-| R5.1 | P0 | Monthly summary dashboard | Given an authenticated user, when the dashboard loads, then it shows: planned earnings total, actual earnings total, planned expenses total, actual expenses total, planned net balance, actual net balance — all for the selected month | R2.1, R3.1 |
-| R5.2 | P1 | Month navigator | Given any dashboard view, when user clicks previous or next month, then the dashboard reloads data for that month; default is the current calendar month | R5.1 |
-| R5.3 | P2 | Fund filter view | Given a user who is a member of one or more funds, when they select a fund from the filter, then the dashboard shows: (a) the user's own contributions to that fund and (b) the group total for that fund — both for the selected month, side by side | R4.3, R5.2 |
+### R4 — Bar Chart Dashboard
+
+**Priority:** P1
+
+| Req ID | Description | Acceptance Criteria |
+|--------|-------------|---------------------|
+| R4.1 | Bar chart located below the Income Statement Table on the same page | Given the page loads, then the chart is visible below the table |
+| R4.2 | Filter dropdown: Myself / [each fund name] | Given a user with 2 funds, then the dropdown shows "Myself", "Fund A", "Fund B" |
+| R4.3 | Each month: 2 bar columns (Planned, Actual); each bar has 4 stacked sections | Given Myself is selected, then each month shows a Planned bar and an Actual bar, each with up to 4 colour sections |
+| R4.4 | 4 sections use design tokens: Earnings (`chart-earnings`), Receivables (`chart-receivables`), External expenses (`chart-expenses-ext`), Fund contributions (`chart-expenses-fund`) | Given entries of each type exist, then each section renders with its correct design token colour |
+| R4.5 | When filter = Fund X: bars represent Fund X transactions (contributions received, external expenses, inter-fund transfers); receivables section hidden | Given Fund X is selected, then the receivables colour section is absent |
+| R4.6 | Legend footnote below chart using the same 4 token colours | Given the chart renders, then a legend footnote with 4 labelled colour swatches is visible |
+| R4.7 | Chart horizontally scrollable on mobile | Given a 375px viewport, then the chart scrolls horizontally |
+
+### R5 — Settings (Fund Management)
+
+**Priority:** P1
+
+| Req ID | Description | Acceptance Criteria |
+|--------|-------------|---------------------|
+| R5.1 | Settings accessible via gear icon in header (not a nav tab) | Given the user clicks the gear icon, then they navigate to the Settings page |
+| R5.2 | Create fund with a name | Given a user submits a fund name, then the fund is created with the user as creator and first member |
+| R5.3 | Add fund member by email | Given a fund creator enters an existing registered user's email, then that user is added to the fund |
+| R5.4 | View fund member list (display name + email) | Given a fund member opens a fund in Settings, then all members are listed |
+| R5.5 | Fund deletion not available (out of scope) | Given the Settings page renders, then there is no delete fund option |
+
+### R6 — Data Model Extensions
+
+**Priority:** P0 (required before UI changes)
+
+| Req ID | Description | Acceptance Criteria |
+|--------|-------------|---------------------|
+| R6.1 | `earnings` table gains a `type` column: 'regular' \| 'receivable', default 'regular' | Given the migration runs, then all existing earnings have type = 'regular'; new entries can be set to 'receivable' |
+| R6.2 | `expenses` table: replace `fund_id` (nullable FK) with `sender_type`, `sender_id`, `receiver_type`, `receiver_id` columns | Given the migration runs, then existing expenses with fund_id IS NULL become sender_type='user', receiver_type='none'; existing fund expenses become sender_type='user', receiver_type='fund', receiver_id=fund_id |
+| R6.3 | Migration is reversible and tested in staging before production | Given the migration runs, then all pre-migration expense data is preserved and readable |
+
+### R7 — Hard-Block Enforcement (updated)
+
+**Priority:** P0
+
+| Req ID | Description | Acceptance Criteria |
+|--------|-------------|---------------------|
+| R7.1 | Hard-block applies only when sender=myself (personal external expenses + contributions to funds) | Given sender=Fund X, then no hard-block is applied |
+| R7.2 | Planned expenses (sender=myself) ≤ planned earnings for the month | Given planned earnings = X, when a planned expense would make total planned personal expenses > X, then the system rejects with an error |
+| R7.3 | Actual expenses (sender=myself) ≤ actual earnings for the month | Given actual earnings = Y, when an actual expense would make total actual personal expenses > Y, then the system rejects with an error |
+| R7.4 | Quick toggle (planned ↔ actual) re-evaluates hard-block for the new status | Given an expense is toggled from planned to actual, then the actual hard-block is re-evaluated before saving |
 
 ---
 
-## Section 4: Business Rules
-
-| ID | Rule | Enforcement Point |
-|----|------|-------------------|
-| BR1 | Planned total expenses (personal + fund) ≤ planned total earnings per user per month | API layer + database constraint |
-| BR2 | Actual total expenses (personal + fund) ≤ actual total earnings per user per month | API layer + database constraint |
-| BR3 | "Total expenses" for a user = sum of personal expenses + sum of that user's fund expenses for the month | Query logic |
-| BR4 | A fund member can only add, edit, or delete their own fund expense entries | Supabase RLS policy |
-| BR5 | Adding a member to a fund requires their email to match an existing registered user | Validated at API boundary before insert |
-| BR6 | All monetary amounts are stored in VND as integers (whole numbers only; no decimals) | Database: INTEGER type; frontend: integer validation |
-| BR7 | If no earnings are entered for a month, the earnings total = 0; any expense entry for that month triggers the hard block | Derived from BR1/BR2 |
-| BR8 | Toggling expense status does not change the amount — only the status field | Application logic |
-
----
-
-## Section 5: Non-Functional Requirements
+## Section 4: Non-Functional Requirements
 
 ### Performance
-- Dashboard load (server-rendered): < 2 seconds on standard 4G connection
+- Income Statement Table renders within 2 seconds for the rolling 12-month range
 - Entry save (write + read-back): < 1 second
 
 ### Security
-- Supabase Row Level Security (RLS): users can only read/write their own earnings and expenses
-- Fund data (expenses, member list) visible only to fund members (enforced via RLS policy on `fund_members`)
+- Supabase Row Level Security (RLS): unchanged — users can only read/write their own earnings and expenses
+- Fund data visible only to fund members (enforced via RLS policy on `fund_members`)
 - No personal financial data accessible without a valid authenticated session
-- Passwords managed entirely by Supabase Auth (never stored in application layer)
 
 ### Accessibility
-- Mobile-first responsive layout (320px minimum viewport)
-- WCAG AA target (4.5:1 contrast ratio for all text)
-- All interactive elements keyboard-navigable (Tab, Enter, Escape)
+- WCAG AA: 4.5:1 minimum contrast ratio for all text
+- Table keyboard-navigable (Tab, Enter, Escape); popup accessible via keyboard
+- All 4 chart colour tokens must individually meet WCAG AA against the chart background
 - Minimum 44×44px touch targets on mobile
 
-### Scalability
-- MVP targets ≤ 100 users; Supabase free tier handles this comfortably
-- Data model supports horizontal scaling with no schema changes for growth to 10,000 users
-
-### Data Isolation
-- Each user's earnings, personal expenses, and display name are private and inaccessible to other users
-- Fund expense amounts are visible to all members of that fund only
+### Responsive
+- Income Statement Table: horizontally scrollable on mobile (≥ 375px)
+- Bar Chart Dashboard: horizontally scrollable on mobile
 
 ---
 
-## Section 6: High-Level Data Model
+## Section 5: Constraints & Dependencies
+
+| Constraint | Detail |
+|-----------|--------|
+| Currency | VND only; all amounts stored as integers (no decimals) |
+| Auth | Supabase Auth + RLS — unchanged |
+| Breaking schema change | `expenses` table migration must run before any UI changes are deployed |
+| Design tokens | 4 new chart tokens must be added to Tailwind config before chart implementation |
+| Month format | Stored as TEXT `YYYY-MM`; unchanged |
+
+---
+
+## Section 6: Risks & Assumptions
+
+| Severity | Risk / Assumption | Mitigation / Owner |
+|----------|-------------------|--------------------|
+| CRITICAL | Schema migration for expenses (sender/receiver) touches all existing expense rows — data loss possible if rollback is not planned | Write reversible migration; test in staging with production data copy before deploying |
+| HIGH | Rolling 12-month table with many named rows (>50 unique names) may be slow on initial load | Lazy-load rows or paginate if row count exceeds 50; measure render time in dev before launch |
+| HIGH | Four chart colour tokens must meet WCAG AA against chart background | Validate contrast ratios for all tokens before implementing chart |
+| ASSUMPTION | Month picker in Add form defaults to current month; user can change to any month | — |
+| ASSUMPTION | When filter=Fund X in the bar chart, the receivables section is hidden (funds don't have receivables in MVP) | — |
+| ASSUMPTION | Hard-block applies only to expenses where sender=myself; fund spending has no balance cap in MVP | — |
+
+---
+
+## Section 7: Developer Handoff
+
+### Implementation Sequence
+
+| Phase | Scope | Goal |
+|-------|-------|------|
+| Phase 1 | Schema migration (R6) | Extend earnings with `type`; restructure expenses with sender/receiver fields; migrate existing data |
+| Phase 2 | API updates | Update POST/PATCH endpoints for new fields; update hard-block query to use sender_type='user' filter |
+| Phase 3 | Income Statement Table component | New component: rolling 12 months, grouped rows, Planned/Actual view toggle |
+| Phase 4 | Cell Edit Popup component | Popup anchored to cell; multi-entry list; Edit + Quick Toggle per entry |
+| Phase 5 | Add Entry modal (2-tab form) | Replace existing EntryForm; Earning tab + Expense tab with sender/receiver fields |
+| Phase 6 | Bar Chart Dashboard component | 4 colour sections, filter dropdown, legend footnote, 12-month range |
+| Phase 7 | Settings page | Fund management at `/settings`; not in nav tabs |
+| Phase 8 | Header update | Remove ripid.vn brand text; add gear icon linking to `/settings`; remove nav tabs |
+
+### Critical Files to Modify
+
+1. `financial-tracker/app/dashboard/page.tsx` — replace with single-page layout (table + chart)
+2. `financial-tracker/app/earnings/page.tsx` — remove (consolidated into single page)
+3. `financial-tracker/app/expenses/page.tsx` — remove (consolidated into single page)
+4. `financial-tracker/app/funds/page.tsx` — repurpose as `/settings`
+5. `financial-tracker/components/tracker/EntryForm.tsx` — rewrite as 2-tab modal
+6. `financial-tracker/components/tracker/SummaryCard.tsx` — replace with IncomeStatementTable
+7. `financial-tracker/components/ui/Nav.tsx` — remove nav tabs; add gear icon
+8. `financial-tracker/types/index.ts` — update Earning (add `type`) + Expense (add sender/receiver fields)
+9. `financial-tracker/tailwind.config.ts` — add `chart-earnings`, `chart-receivables`, `chart-expenses-ext`, `chart-expenses-fund` tokens
+10. All API routes under `financial-tracker/app/api/` — update for new schema fields and hard-block query
+
+### Updated Data Model
 
 ```
-users
-  id             UUID PK
-  email          TEXT UNIQUE NOT NULL
-  display_name   TEXT NOT NULL
-  created_at     TIMESTAMPTZ
-
 earnings
   id             UUID PK
   user_id        UUID FK → users.id
   month          TEXT NOT NULL          -- Format: "YYYY-MM"
-  amount_vnd     INTEGER NOT NULL       -- VND whole number
+  amount_vnd     INTEGER NOT NULL
   status         TEXT NOT NULL          -- "planned" | "actual"
-  description    TEXT
+  name           TEXT NOT NULL
+  type           TEXT NOT NULL          -- "regular" | "receivable" (NEW)
+  receiver_type  TEXT NOT NULL          -- "user" | "fund"
+  receiver_id    UUID                   -- user_id or fund_id
   created_at     TIMESTAMPTZ
   updated_at     TIMESTAMPTZ
 
 expenses
   id             UUID PK
   user_id        UUID FK → users.id     -- Who logged this expense
-  fund_id        UUID FK → funds.id     -- NULL = personal expense
   month          TEXT NOT NULL          -- Format: "YYYY-MM"
   amount_vnd     INTEGER NOT NULL
   status         TEXT NOT NULL          -- "planned" | "actual"
-  description    TEXT
+  name           TEXT NOT NULL
+  sender_type    TEXT NOT NULL          -- "user" | "fund" (REPLACES fund_id)
+  sender_id      UUID NOT NULL          -- user_id or fund_id
+  receiver_type  TEXT NOT NULL          -- "fund" | "none"
+  receiver_id    UUID                   -- fund_id or NULL
   created_at     TIMESTAMPTZ
   updated_at     TIMESTAMPTZ
 
-funds
-  id             UUID PK
-  name           TEXT NOT NULL
-  created_by     UUID FK → users.id
-  created_at     TIMESTAMPTZ
-
-fund_members
-  fund_id        UUID FK → funds.id
-  user_id        UUID FK → users.id
-  added_at       TIMESTAMPTZ
-  PRIMARY KEY (fund_id, user_id)
+funds            -- unchanged
+fund_members     -- unchanged
+users            -- unchanged
 ```
 
-**Design rationale:**
-- `expenses` table unifies personal and fund expenses — `fund_id IS NULL` means personal. Simplifies the hard-block enforcement query (one sum across both types) and reduces query complexity on the dashboard.
-- `month` stored as TEXT (`YYYY-MM`) for simple string-equality filtering and human-readable queries.
-- All foreign keys enforced at the database level; RLS policies layer on top for row-level access control.
-
----
-
-## Section 7: Lean Canvas Summary
-
-| Dimension | Detail |
-|-----------|--------|
-| **Desirability** | Social budgeting gap: Splitwise = settlement only (no planning); Excel = powerful but no social layer; no Vietnamese-first tool with planned vs. actual tracking in a shared context |
-| **Viability** | Zero infrastructure cost for MVP (Supabase free tier + Vercel free tier). Premium path via analytics, export, and category features post-MVP. Network effects within friend groups increase retention. |
-| **Feasibility** | Standard web stack (Next.js 15 + Supabase) with well-documented patterns. 2–3 week MVP realistic for a single developer. No novel technical problems. |
-
----
-
-## Section 8: Developer Handoff
-
-### Implementation Sequence
-
-| Phase | Scope | Goal |
-|-------|-------|------|
-| Phase 1 | Auth (UC1.1–1.4) | Users can register, verify, log in, log out |
-| Phase 2 | Earnings (UC2.1–2.5) | Users can log planned/actual earnings per month |
-| Phase 3 | Personal expenses + hard block (UC3.1–3.6) | Users can log expenses; hard-block prevents overspend |
-| Phase 4 | Funds (UC4.1–4.6) | Users can create funds, invite members, log fund expenses |
-| Phase 5 | Dashboard + navigation (UC5.1–5.3) | Monthly summary, month navigator, fund filter view |
-
-### Critical Acceptance Tests
+### Success Validation
 
 | Req | Test |
 |-----|------|
-| R1.1 | Register with fresh email → account created, verification email received |
-| R3.2 | With planned earnings = 5,000,000 VND and planned expenses = 4,900,000 VND, attempt to add a 200,000 VND planned expense → rejected with error |
-| R3.3 | Same as above for actual amounts |
-| R4.3 | Log 1,000,000 VND fund expense → (a) visible to all fund members in fund view, (b) counted in user's personal total for hard-block |
-| R5.1 | Dashboard shows correct planned/actual earnings, expenses, and net balance after adding 3 entries of each type |
-
-### Key Files to Create (New Project)
-
-1. `supabase/migrations/001_initial_schema.sql` — tables + RLS policies
-2. `app/(auth)/register/page.tsx` — registration form
-3. `app/(auth)/login/page.tsx` — login form
-4. `app/dashboard/page.tsx` — monthly summary dashboard
-5. `app/api/earnings/route.ts` — CRUD for earnings
-6. `app/api/expenses/route.ts` — CRUD for expenses (personal + fund) + hard-block
-7. `app/api/funds/route.ts` — fund create, member add
-8. `lib/supabase/client.ts` — Supabase client singleton
-9. `lib/supabase/server.ts` — Supabase server-side client (for API routes)
-10. `types/index.ts` — shared TypeScript interfaces
+| R2.5 | Given a user with "Salary" entries in 3 months, when viewing the Income Statement table, then 1 row "Salary" appears with correct amounts in each month column |
+| R2.8 | Given a planned "Rent" entry and an actual "Rent" entry in the same month, when in Planned view, then the cell shows both with planned amount in light yellow; in Actual view only the actual amount appears |
+| R3.5 | Given sender=myself and total planned expenses = planned earnings for the month, when saving one more planned expense, then the system returns a hard-block error |
+| R4.4 | Given entries of all 4 types exist, when the chart renders, then each section uses its correct design token colour |
+| R6.2 | Given the migration has run, when querying the expenses table, then no `fund_id` column exists and all rows have valid sender_type + sender_id values |
 
 ### Definition of Done
 
-- [ ] All P0 requirements pass their acceptance tests
-- [ ] All P1 requirements pass their acceptance tests
-- [ ] Hard-block enforcement tested with boundary values (exact limit, +1 VND over limit)
-- [ ] RLS policies verified: user A cannot read or write user B's data
-- [ ] Dashboard loads in < 2 seconds on simulated 4G
-- [ ] Mobile-first layout verified at 375px and 768px breakpoints
-- [ ] No TypeScript errors (`tsc --noEmit` passes)
-- [ ] Supabase RLS enabled on all tables (not just created — **enabled**)
-
-### Stated Assumptions (for stakeholder review)
-
-1. If a user has zero earnings for a month, the hard block prevents any expense entry until at least one earning is logged
-2. Users can edit or delete their own entries (personal expenses, earnings, fund expenses)
-3. Fund creator cannot remove members or delete a fund in MVP
-4. Password reset is handled via Supabase's built-in email reset flow — no custom implementation needed
-5. Fund expenses appear in the fund view filtered by month (same month navigator applies to all views)
-6. There is no notification when a user is added to a fund — they discover it in-app on next login
+- [ ] Schema migrated; all existing data preserved and readable
+- [ ] Single-page layout live: Income Statement Table + Bar Chart Dashboard on one page
+- [ ] No nav tabs; gear icon in header opens Settings
+- [ ] Add button opens 2-tab modal (Earning / Expense) with all fields per R3.2–R3.3
+- [ ] Fund management functional from Settings (`/settings`)
+- [ ] All 4 chart colour tokens render correctly; legend footnote present
+- [ ] Hard-block enforces for sender=myself only; fund expenses have no cap
+- [ ] Table and chart horizontally scrollable at 375px
+- [ ] TypeScript compiles (`tsc --noEmit` passes)
+- [ ] `npm test` passes with no regressions
 
 ---
 
-_End of BRD v1.0_
+## Section 8: v2.1 Changelog & Additions
+
+**Baseline:** v2.0 deployed (income statement table, bar chart, receivables, sender/receiver expense model).
+
+**v2.1 scope:** 10 post-deployment feedback items addressing navigation, chart redesign, income statement restructuring, bug fixes, and a DB migration.
+
+### v2.1 Scope Boundaries
+
+**IN SCOPE (v2.1)**
+- "Tracker" brand text in nav (routes to `/dashboard`); Claude Code favicon
+- Remove Settings gear icon; redirect `/settings` → `/dashboard`
+- "Your Funds" section inline on dashboard (below chart)
+- Rolling month navigation (← →) with `windowOffset` state; frozen first column
+- Income statement split expenses into External Expenses + Fund Contributions + 3 Remaining rows
+- Chart redesign: proportional stacking, single Actual/Planned toggle, new color scheme
+- Entry form: responsive modal height, rename 'regular' → 'income'
+- Edit entry from cell popup (edit icon → EntryForm in edit mode → PATCH)
+- Toast notification system for all data mutations (add, edit, toggle, create fund)
+- Bug fix: chart and table refresh after add entry without page reload
+
+**OUT OF SCOPE (v2.1)**
+- Fund deletion (deferred)
+- Multi-currency (deferred)
+- Push/email notifications (deferred)
+
+### R-v2.1.1 — Navigation & Branding
+
+| Req ID | Priority | Description | Acceptance Criteria |
+|--------|----------|-------------|---------------------|
+| RN1.1 | P1 | Add "Tracker" brand text in nav | Given any page, clicking "Tracker" routes to `/dashboard` |
+| RN1.2 | P1 | Add Claude Code favicon | Browser tab and bookmarks show Claude Code icon |
+| RN1.3 | P1 | Remove Settings gear icon from nav | Settings gear icon no longer visible in nav |
+| RN1.4 | P1 | Redirect `/settings` to `/dashboard` | Direct navigation to `/settings` redirects immediately |
+
+### R-v2.1.2 — Your Funds Inline
+
+| Req ID | Priority | Description | Acceptance Criteria |
+|--------|----------|-------------|---------------------|
+| RN2.1 | P1 | Your Funds section on dashboard below chart | Fund cards visible on main page; no separate settings page |
+| RN2.2 | P1 | Inline Create Fund button | Clicking "+ Create Fund" opens modal; works without page change |
+| RN2.3 | P1 | Fund cards show name + contribution total | Each card shows fund name and actual contribution total from current window |
+
+### R-v2.1.3 — Rolling Month Navigation
+
+| Req ID | Priority | Description | Acceptance Criteria |
+|--------|----------|-------------|---------------------|
+| RN3.1 | P1 | Left/right arrows control `windowOffset` ± 1 | Clicking ← shifts columns 1 month into past |
+| RN3.2 | P1 | Right arrow disabled at current month | → disabled when `windowOffset >= 0`; cannot navigate beyond current month |
+| RN3.3 | P1 | Both table and chart synchronized to same months | Chart x-axis matches income statement columns at all times |
+| RN3.4 | P1 | First column in income statement sticky during scroll | Name column stays fixed during horizontal scroll |
+
+### R-v2.1.4 — Income Statement Remaining Rows
+
+| Req ID | Priority | Description | Acceptance Criteria |
+|--------|----------|-------------|---------------------|
+| RN4.1 | P0 | Split expenses into External Expenses and Fund Contributions sections | `receiver_type='none'` → External Expenses; `receiver_type='fund'` → Fund Contributions |
+| RN4.2 | P0 | Add Remaining row after Receivables | `Remaining = SUM(earnings) + SUM(receivables)` |
+| RN4.3 | P0 | Add Remaining row after External Expenses | `Remaining = prev_remaining - SUM(external_expenses)` |
+| RN4.4 | P0 | Add Remaining row after Fund Contributions (Net Income) | `Remaining = prev_remaining - SUM(fund_contributions)` |
+| RN4.5 | P0 | Remaining rows highlighted with amber background and bold font | `bg-amber-50 font-semibold` visually distinct from standard rows |
+
+### R-v2.1.5 — Chart Redesign
+
+| Req ID | Priority | Description | Acceptance Criteria |
+|--------|----------|-------------|---------------------|
+| RN5.1 | P1 | Section title renamed to "Dashboard" | Chart section header reads "Dashboard" |
+| RN5.2 | P1 | Single toggle: Actual \| Planned | Chart renders only selected dataset; no paired bars |
+| RN5.3 | P1 | Proportional stacking: bar height = total income | Bar ceiling = earnings + receivables; expenses fill from bottom; remaining fills rest |
+| RN5.4 | P1 | New color scheme: ext expenses #E8724A, fund #B84A20, remaining #4A9B8E | Each segment renders with correct color |
+| RN5.5 | P1 | Overflow label when expenses > income | "+XM" label appears above bar; bar does not exceed income ceiling |
+
+### R-v2.1.6 — Entry Form Improvements
+
+| Req ID | Priority | Description | Acceptance Criteria |
+|--------|----------|-------------|---------------------|
+| RN6.1 | P2 | Modal scrollable on small screens | `max-h-[90vh] overflow-y-auto`; fits within 375px height device |
+| RN6.2 | P2 | Earning type renamed 'regular' → 'income' in UI | Type toggle reads "Income" not "Regular" |
+| RN6.3 | P2 | ⚠️ Breaking: DB migration `type='regular'` → `type='income'` | All existing earnings with type='regular' updated to 'income'; API validates 'income' or 'receivable' |
+
+### R-v2.1.7 — Edit Entry from Cell Popup
+
+| Req ID | Priority | Description | Acceptance Criteria |
+|--------|----------|-------------|---------------------|
+| RN7.1 | P1 | Edit icon (✎) on each entry in cell popup | Each entry has a visible edit icon |
+| RN7.2 | P1 | Clicking ✎ opens EntryForm pre-filled in edit mode | Name, amount, status, month pre-filled from existing entry |
+| RN7.3 | P1 | Edit form saves via PATCH endpoint | `PATCH /api/earnings/{id}` or `PATCH /api/expenses/{id}` |
+| RN7.4 | P1 | Table and chart refresh after save; toast shown | Green toast on success; no full page reload |
+
+### R-v2.1.8 — Toast Notifications
+
+| Req ID | Priority | Description | Acceptance Criteria |
+|--------|----------|-------------|---------------------|
+| RN8.1 | P1 | Green toast on successful mutation (auto-dismiss 3s) | Add/edit/toggle/create fund success shows green toast |
+| RN8.2 | P1 | Red toast on error (auto-dismiss 5s) | API errors show red toast with error message |
+| RN8.3 | P1 | Toasts do not block interaction; stack if multiple | Toast stack visible in bottom-right; page remains interactive |
+
+### R-v2.1.9 — Bug Fix: Chart Refresh After Add
+
+| Req ID | Priority | Description | Acceptance Criteria |
+|--------|----------|-------------|---------------------|
+| RN9.1 | P0 | Month window computation moved into useMemo (derived from windowOffset) | `months` array is reactive to windowOffset changes |
+| RN9.2 | P0 | `useEffect` deps include `[startMonth, endMonth]` | Changing windowOffset triggers data re-fetch |
+| RN9.3 | P0 | Both income statement and chart update immediately after add | Given adding an entry for a visible month, chart AND table reflect new value without page reload |
+
+### v2.1 Success Validation
+
+| Req | Test |
+|-----|------|
+| RN3.1 | Click ← → verify columns shift; click → at current month → button disabled |
+| RN4.2–4.4 | Add test entries; verify 3 Remaining rows show correct cumulative values |
+| RN5.3 | Add expenses > earnings for a month → bar capped at income; "+XM" label appears |
+| RN7.3 | Click ✎ in popup → EntryForm opens pre-filled → save → data updates without reload |
+| RN9.3 | Add entry for visible month → verify chart AND table update immediately |
+
+### v2.1 Breaking Changes
+
+| Change | Impact | Migration |
+|--------|--------|-----------|
+| `earning.type = 'regular'` → `'income'` | UI, API validation, TypeScript types | Run `scripts/migrate-earning-type.ts` once after deploy |
+
+---
+
+_End of BRD v2.1_

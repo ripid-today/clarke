@@ -9,12 +9,12 @@ interface CellPopupProps {
   anchorRect: DOMRect;
   onClose: () => void;
   onRefresh: () => void;
+  onEdit?: (entry: Earning | Expense) => void;
 }
 
-export default function CellPopup({ entries, anchorRect, onClose, onRefresh }: CellPopupProps) {
+export default function CellPopup({ entries, anchorRect, onClose, onRefresh, onEdit }: CellPopupProps) {
   const popupRef = useRef<HTMLDivElement>(null);
 
-  // Close on outside click
   useEffect(() => {
     function handleClick(e: MouseEvent) {
       if (popupRef.current && !popupRef.current.contains(e.target as Node)) {
@@ -32,9 +32,8 @@ export default function CellPopup({ entries, anchorRect, onClose, onRefresh }: C
     };
   }, [onClose]);
 
-  // Position: below the anchor cell, aligned to right edge
   const top = anchorRect.bottom + 8 + window.scrollY;
-  const left = Math.min(anchorRect.left, window.innerWidth - 280);
+  const left = Math.min(anchorRect.left, window.innerWidth - 300);
 
   function isEarning(entry: Earning | Expense): entry is Earning {
     return 'type' in entry;
@@ -54,7 +53,7 @@ export default function CellPopup({ entries, anchorRect, onClose, onRefresh }: C
   return (
     <div
       ref={popupRef}
-      style={{ top, left, position: 'fixed', zIndex: 50, width: '260px' }}
+      style={{ top, left, position: 'fixed', zIndex: 50, width: '280px' }}
       className="bg-white rounded-xl shadow-xl border border-claude-secondary/20 p-3"
     >
       <div className="flex items-center justify-between mb-2">
@@ -75,7 +74,7 @@ export default function CellPopup({ entries, anchorRect, onClose, onRefresh }: C
               <p className="text-[13px] font-medium text-black truncate">{entry.name || 'Unnamed'}</p>
               <p className="text-[12px] text-claude-secondary">{formatVnd(entry.amount_vnd)}</p>
             </div>
-            <div className="flex items-center gap-1 shrink-0">
+            <div className="flex items-center gap-1.5 shrink-0">
               <span className={`text-[11px] px-1.5 py-0.5 rounded-full font-medium ${
                 entry.status === 'actual'
                   ? 'bg-green-100 text-green-700'
@@ -90,6 +89,16 @@ export default function CellPopup({ entries, anchorRect, onClose, onRefresh }: C
               >
                 toggle
               </button>
+              {onEdit && (
+                <button
+                  onClick={() => { onClose(); onEdit(entry); }}
+                  className="text-[13px] text-claude-secondary hover:text-claude-primary transition-colors"
+                  title="Edit entry"
+                  aria-label="Edit entry"
+                >
+                  ✎
+                </button>
+              )}
             </div>
           </div>
         ))}

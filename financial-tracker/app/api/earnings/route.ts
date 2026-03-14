@@ -94,9 +94,9 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'status must be planned or actual' }, { status: 400 });
   }
 
-  const earningType = typeof type === 'string' ? type : 'regular';
-  if (!['regular', 'receivable'].includes(earningType)) {
-    return NextResponse.json({ error: 'type must be regular or receivable' }, { status: 400 });
+  const earningType = typeof type === 'string' ? type : 'income';
+  if (!['income', 'receivable'].includes(earningType)) {
+    return NextResponse.json({ error: 'type must be income or receivable' }, { status: 400 });
   }
 
   const earningReceiverType = typeof receiver_type === 'string' ? receiver_type : 'user';
