@@ -1,7 +1,7 @@
 # Business Requirements Document
-# tracker.ripid.vn — Personal & Shared Financial Tracker (v2.1)
+# tracker.ripid.vn — Personal & Shared Financial Tracker (v2.2)
 
-**Status:** Draft v2.1
+**Status:** Draft v2.2
 **Date:** 2026-03-14
 **Author:** Clarke / Business Analysis
 **Stakeholders:** Product Owner (Clarke team)
@@ -30,7 +30,7 @@ Replace the multi-tab layout with a single-page, income-statement-style tracker.
 - Four chart design tokens: earnings, receivables, external expenses, fund contributions
 - Hard-block enforcement for expenses where sender = myself
 
-**v2.1 additions: see Section 8**
+**v2.1 additions: see Section 8 | v2.2 additions: see Section 9**
 
 **OUT OF SCOPE (v2.0)**
 - Fund deletion
@@ -450,4 +450,94 @@ users            -- unchanged
 
 ---
 
-_End of BRD v2.1_
+---
+
+## Section 9: v2.2 — UI Polish & Animation System
+
+**Baseline:** v2.1 deployed (rolling navigation, income statement remaining rows, chart redesign, toast notifications, edit-in-popup).
+
+**v2.2 scope:** 6 post-deployment UX polish items addressing jarring navigation (no slide animation), misaligned form controls, obstructive toast positioning, and missing modal scroll constraint.
+
+### v2.2 Scope Boundaries
+
+**IN SCOPE (v2.2)**
+- Slide animation system for month navigation (← → transitions with direction awareness)
+- Modal scroll constraint: fixed header, scrollable body, max-height cap to prevent viewport overflow
+- Toggle button vertical alignment (all 5 segment toggles in EntryForm)
+- Custom select carets: `appearance-none` + inline SVG chevron on all 3 select inputs in EntryForm
+- Toast relocation: bottom-right → top-center
+- Chart title rename: "Dashboard" → "Monthly Overview"; "Planned" toggle → "All" (shows both statuses)
+- Animation standards rule file added to `.claude/rules/`
+
+**OUT OF SCOPE (v2.2)**
+- CSS exit animations (React unmounts instantly; exit animation deferred)
+- New entry types or data model changes
+- Any navigation or routing changes
+
+### R-v2.2.1 — Slide Navigation Animation
+
+| Req ID | Priority | Description | Acceptance Criteria |
+|--------|----------|-------------|---------------------|
+| RP1.1 | P1 | ← navigation triggers slide-from-left animation on table and chart | Given the dashboard is loaded, when the user clicks ←, then the table and chart animate in from the left with no loading spinner |
+| RP1.2 | P1 | → navigation triggers slide-from-right animation on table and chart | Given the dashboard is loaded, when the user clicks →, then the table and chart animate in from the right with no loading spinner |
+| RP1.3 | P1 | Navigation fetch dims content (opacity 0.6) instead of showing a full spinner | Given a navigation fetch is in progress, then the table and chart are visible but dimmed; no full loading overlay is shown |
+| RP1.4 | P1 | Full loading state shown only on initial page load | Given the page is loading for the first time, then a full loading state is shown; subsequent navigation fetches use dimming only |
+
+### R-v2.2.2 — Modal Scroll Constraint
+
+| Req ID | Priority | Description | Acceptance Criteria |
+|--------|----------|-------------|---------------------|
+| RP2.1 | P1 | Modal panel constrained to `max-h-[90vh]` | Given any viewport height, when the Add Entry modal is open, then the modal panel never exceeds 90% of the viewport height |
+| RP2.2 | P1 | Modal header fixed; body scrolls independently | Given the Add Entry modal is open on a short viewport, when the user scrolls within the modal, then the header (tabs + title) stays fixed and only the form body scrolls |
+
+### R-v2.2.3 — Form Control Alignment
+
+| Req ID | Priority | Description | Acceptance Criteria |
+|--------|----------|-------------|---------------------|
+| RP3.1 | P2 | All 5 segment toggle buttons vertically center their label text | Given any segment toggle (Earning/Expense tab, type, status toggles) is rendered, then the label text is vertically centered within the button hit area |
+| RP3.2 | P2 | All 3 select inputs hide native OS arrow and display custom SVG chevron right-aligned | Given any select input (receiver, sender, month) is rendered, then no native OS dropdown arrow is visible and a custom SVG chevron appears at the right edge |
+
+### R-v2.2.4 — Toast Relocation
+
+| Req ID | Priority | Description | Acceptance Criteria |
+|--------|----------|-------------|---------------------|
+| RP4.1 | P1 | Toast displays at top-center of viewport | Given an entry is added or edited successfully, when the success toast appears, then it is positioned at the horizontal center of the viewport near the top edge |
+| RP4.2 | P1 | Toast does not obstruct bottom form actions or table rows | Given a toast is visible, then the Add button, table rows, and chart are not obscured by the toast |
+
+### R-v2.2.5 — Chart & Toggle Label Updates
+
+| Req ID | Priority | Description | Acceptance Criteria |
+|--------|----------|-------------|---------------------|
+| RP5.1 | P2 | Chart section title reads "Monthly Overview" (was "Dashboard") | Given the chart section renders, then the section heading reads "Monthly Overview" |
+| RP5.2 | P2 | "Planned" toggle renamed "All"; when active, bars include both planned and actual entries summed | Given the "All" toggle is active, then each bar's height reflects the sum of both planned-status and actual-status entries for that month |
+
+### v2.2 Success Validation
+
+| Req | Test |
+|-----|------|
+| RP1.1–RP1.2 | Click ← → verify table and chart slide in from the correct direction; no spinner appears during navigation |
+| RP2.1–RP2.2 | Open Add Entry modal on a 667px-height viewport → modal does not overflow; scrolling within modal keeps header fixed |
+| RP3.2 | Render EntryForm → inspect each select → native arrow absent; custom SVG chevron visible right-aligned |
+| RP4.1 | Add an entry → toast appears at top-center; table rows and Add button remain visible and interactive |
+| RP5.2 | Toggle to "All" on chart → bars show combined planned + actual height for a month with both entry types |
+
+### v2.2 Impacted Files
+
+| File | Change |
+|------|--------|
+| `financial-tracker/app/dashboard/page.tsx` | `slideDirection` + `navLoading` states; `hasFetchedOnce` ref; `fetchData(isNav)` flag; `handleWindowOffsetChange` dispatcher |
+| `financial-tracker/components/tracker/IncomeStatementTable.tsx` | `slideDirection` prop; `key={windowOffset}` animation wrapper |
+| `financial-tracker/components/tracker/BarChartDashboard.tsx` | Title → "Monthly Overview"; "All" toggle (both statuses); `key={windowOffset}` animation wrapper |
+| `financial-tracker/components/tracker/EntryForm.tsx` | `flex items-center justify-center` on all 5 toggle buttons; `appearance-none` + SVG caret on all 3 selects; removed own `max-h` scroll |
+| `financial-tracker/components/ui/Modal.tsx` | `flex-col max-h-[90vh]` panel; `shrink-0` header; `overflow-y-auto flex-1` body |
+| `financial-tracker/components/ui/Toast.tsx` | Position changed from `fixed bottom-4 right-4` to `fixed top-4 left-1/2 -translate-x-1/2` |
+| `financial-tracker/app/globals.css` | `@keyframes slide-in-from-left/right` + `@theme` tokens for `animate-slide-from-left/right` |
+| `.claude/rules/animation-standards.md` | New rule file — full animation timing tokens, component patterns, CSS setup, interaction checklist |
+
+### v2.2 Breaking Changes
+
+None. All changes are UI-only (layout, animation, positioning). No schema, API contract, or data model changes.
+
+---
+
+_End of BRD v2.2_

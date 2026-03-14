@@ -1,6 +1,15 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
 
+@keyframes slide-in-from-left {
+  from { transform: translateX(-24px); opacity: 0; }
+  to   { transform: translateX(0);     opacity: 1; }
+}
+@keyframes slide-in-from-right {
+  from { transform: translateX(24px);  opacity: 0; }
+  to   { transform: translateX(0);     opacity: 1; }
+}
+
 @theme {
   --color-claude-primary: #C15F3C;
   --color-claude-secondary: #655C54;
@@ -13,6 +22,10 @@
   --color-chart-receivables: #4A9E8E;
   --color-chart-expenses-ext: #C17A6A;
   --color-chart-expenses-fund: #6A8EC1;
+
+  /* Animation tokens */
+  --animate-slide-from-left:  slide-in-from-left  220ms ease-out;
+  --animate-slide-from-right: slide-in-from-right 220ms ease-out;
 }
 
 * {

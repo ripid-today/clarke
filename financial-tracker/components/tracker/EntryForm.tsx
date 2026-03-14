@@ -59,7 +59,7 @@ export default function EntryForm({
   const [activeTab, setActiveTab] = useState<'earning' | 'expense'>(resolvedTab);
 
   return (
-    <div className="flex flex-col gap-0 max-h-[90vh] overflow-y-auto">
+    <div className="flex flex-col gap-0">
       {!editEntry && (
         <div className="flex rounded-lg border border-claude-secondary overflow-hidden mb-5">
           {(['earning', 'expense'] as const).map(tab => (
@@ -67,7 +67,7 @@ export default function EntryForm({
               key={tab}
               type="button"
               onClick={() => setActiveTab(tab)}
-              className={`flex-1 py-2 text-[15px] font-medium transition-colors duration-150 capitalize ${
+              className={`flex-1 flex items-center justify-center py-2 text-[15px] font-medium transition-colors duration-150 capitalize ${
                 activeTab === tab
                   ? 'bg-claude-primary text-white'
                   : 'bg-white text-claude-secondary hover:bg-black/5'
@@ -200,7 +200,7 @@ function EarningForm({
         <div className="flex rounded-lg border border-claude-secondary overflow-hidden">
           {(['income', 'receivable'] as const).map(t => (
             <button key={t} type="button" onClick={() => setType(t)}
-              className={`flex-1 py-2 text-[15px] font-medium capitalize transition-colors duration-150 ${type === t ? 'bg-claude-primary text-white' : 'bg-white text-claude-secondary hover:bg-black/5'}`}>
+              className={`flex-1 flex items-center justify-center py-2 text-[15px] font-medium capitalize transition-colors duration-150 ${type === t ? 'bg-claude-primary text-white' : 'bg-white text-claude-secondary hover:bg-black/5'}`}>
               {t}
             </button>
           ))}
@@ -209,19 +209,26 @@ function EarningForm({
 
       <div className="flex flex-col gap-1">
         <label className="text-sm font-medium text-claude-secondary">Receiver</label>
-        <select
-          value={receiverType === 'user' ? 'user' : receiverId}
-          onChange={e => {
-            if (e.target.value === 'user') { setReceiverType('user'); setReceiverId(''); }
-            else { setReceiverType('fund'); setReceiverId(e.target.value); }
-          }}
-          className="w-full rounded-lg border border-claude-secondary bg-white px-3 py-2 text-[15px] text-black focus:outline-none focus:ring-2 focus:ring-claude-primary"
-        >
-          <option value="user">Myself</option>
-          {funds.map(f => (
-            <option key={f.id} value={f.id}>{f.name}</option>
-          ))}
-        </select>
+        <div className="relative">
+          <select
+            value={receiverType === 'user' ? 'user' : receiverId}
+            onChange={e => {
+              if (e.target.value === 'user') { setReceiverType('user'); setReceiverId(''); }
+              else { setReceiverType('fund'); setReceiverId(e.target.value); }
+            }}
+            className="w-full appearance-none rounded-lg border border-claude-secondary bg-white px-3 py-2 pr-8 text-[15px] text-black focus:outline-none focus:ring-2 focus:ring-claude-primary"
+          >
+            <option value="user">Myself</option>
+            {funds.map(f => (
+              <option key={f.id} value={f.id}>{f.name}</option>
+            ))}
+          </select>
+          <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2.5 text-claude-secondary">
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+            </svg>
+          </div>
+        </div>
       </div>
 
       <div className="flex flex-col gap-1">
@@ -229,7 +236,7 @@ function EarningForm({
         <div className="flex rounded-lg border border-claude-secondary overflow-hidden">
           {(['planned', 'actual'] as const).map(s => (
             <button key={s} type="button" onClick={() => setStatus(s)}
-              className={`flex-1 py-2 text-[15px] font-medium capitalize transition-colors duration-150 ${status === s ? 'bg-claude-primary text-white' : 'bg-white text-claude-secondary hover:bg-black/5'}`}>
+              className={`flex-1 flex items-center justify-center py-2 text-[15px] font-medium capitalize transition-colors duration-150 ${status === s ? 'bg-claude-primary text-white' : 'bg-white text-claude-secondary hover:bg-black/5'}`}>
               {s}
             </button>
           ))}
@@ -349,36 +356,50 @@ function ExpenseForm({
 
       <div className="flex flex-col gap-1">
         <label className="text-sm font-medium text-claude-secondary">Sender</label>
-        <select
-          value={senderType === 'user' ? 'user' : senderId}
-          onChange={e => {
-            if (e.target.value === 'user') { setSenderType('user'); setSenderId(''); }
-            else { setSenderType('fund'); setSenderId(e.target.value); }
-          }}
-          className="w-full rounded-lg border border-claude-secondary bg-white px-3 py-2 text-[15px] text-black focus:outline-none focus:ring-2 focus:ring-claude-primary"
-        >
-          <option value="user">Myself</option>
-          {funds.map(f => (
-            <option key={f.id} value={f.id}>{f.name}</option>
-          ))}
-        </select>
+        <div className="relative">
+          <select
+            value={senderType === 'user' ? 'user' : senderId}
+            onChange={e => {
+              if (e.target.value === 'user') { setSenderType('user'); setSenderId(''); }
+              else { setSenderType('fund'); setSenderId(e.target.value); }
+            }}
+            className="w-full appearance-none rounded-lg border border-claude-secondary bg-white px-3 py-2 pr-8 text-[15px] text-black focus:outline-none focus:ring-2 focus:ring-claude-primary"
+          >
+            <option value="user">Myself</option>
+            {funds.map(f => (
+              <option key={f.id} value={f.id}>{f.name}</option>
+            ))}
+          </select>
+          <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2.5 text-claude-secondary">
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+            </svg>
+          </div>
+        </div>
       </div>
 
       <div className="flex flex-col gap-1">
         <label className="text-sm font-medium text-claude-secondary">Receiver (Fund)</label>
-        <select
-          value={receiverType === 'none' ? 'none' : receiverId}
-          onChange={e => {
-            if (e.target.value === 'none') { setReceiverType('none'); setReceiverId(''); }
-            else { setReceiverType('fund'); setReceiverId(e.target.value); }
-          }}
-          className="w-full rounded-lg border border-claude-secondary bg-white px-3 py-2 text-[15px] text-black focus:outline-none focus:ring-2 focus:ring-claude-primary"
-        >
-          <option value="none">None (external expense)</option>
-          {funds.map(f => (
-            <option key={f.id} value={f.id}>{f.name}</option>
-          ))}
-        </select>
+        <div className="relative">
+          <select
+            value={receiverType === 'none' ? 'none' : receiverId}
+            onChange={e => {
+              if (e.target.value === 'none') { setReceiverType('none'); setReceiverId(''); }
+              else { setReceiverType('fund'); setReceiverId(e.target.value); }
+            }}
+            className="w-full appearance-none rounded-lg border border-claude-secondary bg-white px-3 py-2 pr-8 text-[15px] text-black focus:outline-none focus:ring-2 focus:ring-claude-primary"
+          >
+            <option value="none">None (external expense)</option>
+            {funds.map(f => (
+              <option key={f.id} value={f.id}>{f.name}</option>
+            ))}
+          </select>
+          <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2.5 text-claude-secondary">
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+            </svg>
+          </div>
+        </div>
       </div>
 
       <div className="flex flex-col gap-1">
@@ -386,7 +407,7 @@ function ExpenseForm({
         <div className="flex rounded-lg border border-claude-secondary overflow-hidden">
           {(['planned', 'actual'] as const).map(s => (
             <button key={s} type="button" onClick={() => setStatus(s)}
-              className={`flex-1 py-2 text-[15px] font-medium capitalize transition-colors duration-150 ${status === s ? 'bg-claude-primary text-white' : 'bg-white text-claude-secondary hover:bg-black/5'}`}>
+              className={`flex-1 flex items-center justify-center py-2 text-[15px] font-medium capitalize transition-colors duration-150 ${status === s ? 'bg-claude-primary text-white' : 'bg-white text-claude-secondary hover:bg-black/5'}`}>
               {s}
             </button>
           ))}

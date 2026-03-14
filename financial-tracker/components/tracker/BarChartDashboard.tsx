@@ -8,6 +8,8 @@ interface Props {
   earnings: Earning[];
   expenses: Expense[];
   months: string[];
+  windowOffset?: number;
+  slideDirection?: 'back' | 'forward' | null;
 }
 
 const COLORS = {
@@ -74,13 +76,17 @@ interface FlatChartItem {
   overflowAmount: number;
 }
 
-export default function BarChartDashboard({ earnings, expenses, months }: Props) {
+export default function BarChartDashboard({ earnings, expenses, months, windowOffset, slideDirection }: Props) {
   const [chartMode, setChartMode] = useState<'actual' | 'planned'>('actual');
 
   const flatData = useMemo((): FlatChartItem[] => {
     return months.map(month => {
-      const me = earnings.filter(e => e.month === month && e.status === chartMode);
-      const mx = expenses.filter(e => e.month === month && e.status === chartMode);
+      const me = chartMode === 'actual'
+        ? earnings.filter(e => e.month === month && e.status === 'actual')
+        : earnings.filter(e => e.month === month);
+      const mx = chartMode === 'actual'
+        ? expenses.filter(e => e.month === month && e.status === 'actual')
+        : expenses.filter(e => e.month === month);
 
       const totalIncome =
         me.reduce((s, e) => s + e.amount_vnd, 0);
@@ -130,7 +136,7 @@ export default function BarChartDashboard({ earnings, expenses, months }: Props)
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-xl font-semibold text-black">Dashboard</h2>
+        <h2 className="text-xl font-semibold text-black">Monthly Overview</h2>
         <div className="flex gap-0 rounded-lg border border-claude-secondary overflow-hidden">
           <button
             onClick={() => setChartMode('actual')}
@@ -142,10 +148,18 @@ export default function BarChartDashboard({ earnings, expenses, months }: Props)
             onClick={() => setChartMode('planned')}
             className={chartMode === 'planned' ? 'bg-claude-primary text-white px-4 py-1.5 text-[14px] font-medium' : 'bg-white text-claude-secondary hover:bg-black/5 px-4 py-1.5 text-[14px] font-medium'}
           >
-            Planned
+            All
           </button>
         </div>
       </div>
+      <div
+        key={windowOffset}
+        className={
+          slideDirection === 'back' ? 'animate-slide-from-left' :
+          slideDirection === 'forward' ? 'animate-slide-from-right' :
+          ''
+        }
+      >
       <div className="overflow-x-auto">
         <div style={{ minWidth: '900px' }}>
           <ResponsiveContainer width="100%" height={280}>
@@ -173,6 +187,7 @@ export default function BarChartDashboard({ earnings, expenses, months }: Props)
             <LegendSwatch color={COLORS.fundContributions} label="Fund Contributions" />
           </div>
         </div>
+      </div>
       </div>
     </div>
   );

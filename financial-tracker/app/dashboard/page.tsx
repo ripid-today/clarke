@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useMemo, Suspense } from 'react';
+import { useEffect, useState, useMemo, Suspense, useRef } from 'react';
 import { Earning, Expense, Fund } from '@/types';
 import IncomeStatementTable from '@/components/tracker/IncomeStatementTable';
 import BarChartDashboard from '@/components/tracker/BarChartDashboard';
@@ -33,6 +33,7 @@ function isEarning(entry: Earning | Expense): entry is Earning {
 
 function DashboardContent() {
   const [windowOffset, setWindowOffset] = useState(0);
+  const [slideDirection, setSlideDirection] = useState<'back' | 'forward' | null>(null);
   const months = useMemo(() => getRollingMonths(windowOffset), [windowOffset]);
   const startMonth = months[0];
   const endMonth = months[months.length - 1];
@@ -41,7 +42,9 @@ function DashboardContent() {
   const [expenses, setExpenses] = useState<Expense[]>([]);
   const [funds, setFunds] = useState<Fund[]>([]);
   const [loading, setLoading] = useState(true);
+  const [navLoading, setNavLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const hasFetchedOnce = useRef(false);
 
   // Add entry modal
   const [addOpen, setAddOpen] = useState(false);
@@ -60,8 +63,12 @@ function DashboardContent() {
 
   const defaultMonth = getDefaultMonth();
 
-  async function fetchData() {
-    setLoading(true);
+  async function fetchData(isNav = false) {
+    if (isNav) {
+      setNavLoading(true);
+    } else {
+      setLoading(true);
+    }
     setError(null);
     try {
       const [entriesRes, fundsRes] = await Promise.all([
@@ -82,14 +89,25 @@ function DashboardContent() {
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to load data');
     } finally {
-      setLoading(false);
+      if (isNav) {
+        setNavLoading(false);
+      } else {
+        setLoading(false);
+      }
     }
   }
 
   useEffect(() => {
-    void fetchData();
+    const isNav = hasFetchedOnce.current;
+    hasFetchedOnce.current = true;
+    void fetchData(isNav);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [startMonth, endMonth]);
+
+  function handleWindowOffsetChange(newOffset: number) {
+    setSlideDirection(newOffset < windowOffset ? 'back' : 'forward');
+    setWindowOffset(newOffset);
+  }
 
   async function handleAddEarning(data: EarningFormData) {
     const res = await fetch('/api/earnings', {
@@ -241,22 +259,27 @@ function DashboardContent() {
         <div className="text-center py-16 text-claude-secondary">Loading...</div>
       ) : (
         <>
-          <IncomeStatementTable
-            earnings={earnings}
-            expenses={expenses}
-            months={months}
-            onRefresh={fetchData}
-            onEdit={setEditEntry}
-            windowOffset={windowOffset}
-            onWindowOffsetChange={setWindowOffset}
-          />
-
-          <div className="mt-12">
-            <BarChartDashboard
+          <div className={navLoading ? 'opacity-60 pointer-events-none transition-opacity duration-150' : 'transition-opacity duration-200'}>
+            <IncomeStatementTable
               earnings={earnings}
               expenses={expenses}
               months={months}
+              onRefresh={fetchData}
+              onEdit={setEditEntry}
+              windowOffset={windowOffset}
+              onWindowOffsetChange={handleWindowOffsetChange}
+              slideDirection={slideDirection}
             />
+
+            <div className="mt-12">
+              <BarChartDashboard
+                earnings={earnings}
+                expenses={expenses}
+                months={months}
+                windowOffset={windowOffset}
+                slideDirection={slideDirection}
+              />
+            </div>
           </div>
 
           {/* Your Funds section */}

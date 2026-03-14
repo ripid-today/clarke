@@ -40,8 +40,8 @@ export default function Modal({ isOpen, onClose, title, children }: ModalProps) 
         aria-hidden="true"
       />
       {/* Panel */}
-      <div className="relative z-10 w-full max-w-md rounded-xl shadow-lg bg-white p-6">
-        <div className="flex items-center justify-between mb-4">
+      <div className="relative z-10 w-full max-w-md rounded-xl shadow-lg bg-white flex flex-col max-h-[90vh]">
+        <div className="flex items-center justify-between px-6 pt-6 pb-4 shrink-0">
           <h2 id="modal-title" className="text-xl font-semibold text-black">
             {title}
           </h2>
@@ -55,7 +55,9 @@ export default function Modal({ isOpen, onClose, title, children }: ModalProps) 
             </svg>
           </button>
         </div>
-        {children}
+        <div className="overflow-y-auto px-6 pb-6 flex-1">
+          {children}
+        </div>
       </div>
     </div>
   );

@@ -381,8 +381,92 @@ export default function ArticlePage({ article }) {
 | Speed | Duration | Timing Function | Usage | Tailwind Class |
 |-------|----------|-----------------|-------|----------------|
 | **Fast** | 150ms | ease-out | UI feedback (hover, focus), instant response | `duration-150 ease-out` |
-| **Medium** | 300ms | ease-in-out | Component state changes, smooth transitions | `duration-300 ease-in-out` |
-| **Slow** | 500ms | ease-in-out | Page transitions, complex animations | `duration-500 ease-in-out` |
+| **Medium** | 220ms | ease-out | Slide navigation, state changes | `animate-slide-from-left/right` |
+| **Slow** | 300ms | ease-in-out | Page transitions, complex animations | `duration-300 ease-in-out` |
+
+### Component-Level Patterns
+
+| Component | Enter | Exit | Duration |
+|-----------|-------|------|----------|
+| Modal | scale(0.95)→scale(1) + opacity 0→1 | instant unmount | 150ms ease-out |
+| Toast | translateY(-8px)→0 + opacity 0→1 | fade out | 200ms / 150ms |
+| Slide nav | translateX(±24px)→0 + opacity 0→1 | key-driven remount | 220ms ease-out |
+| Tab toggle | color/bg transition only | — | 150ms |
+| Loading (nav) | opacity 0.6 on container (no spinner) | opacity 1 on complete | instant |
+
+**Rule: Never show a full loading spinner for navigation fetches.** Use opacity dimming + slide animation instead.
+
+### Slide Navigation Setup (Tailwind v4)
+
+**1. Define keyframes in `globals.css`:**
+```css
+@keyframes slide-in-from-left {
+  from { transform: translateX(-24px); opacity: 0; }
+  to   { transform: translateX(0);     opacity: 1; }
+}
+@keyframes slide-in-from-right {
+  from { transform: translateX(24px);  opacity: 0; }
+  to   { transform: translateX(0);     opacity: 1; }
+}
+
+@theme {
+  --animate-slide-from-left:  slide-in-from-left  220ms ease-out;
+  --animate-slide-from-right: slide-in-from-right 220ms ease-out;
+}
+```
+
+**2. Apply in component with direction-aware `key`:**
+```tsx
+// Track direction in parent
+const [slideDirection, setSlideDirection] = useState<'back' | 'forward' | null>(null);
+
+function handleOffsetChange(newOffset: number) {
+  setSlideDirection(newOffset < offset ? 'back' : 'forward');
+  setOffset(newOffset);
+}
+
+// In child component — key forces DOM remount → animation restarts
+<div
+  key={offset}
+  className={
+    slideDirection === 'back' ? 'animate-slide-from-left' :
+    slideDirection === 'forward' ? 'animate-slide-from-right' :
+    ''
+  }
+>
+  {/* content */}
+</div>
+```
+
+**3. Separate initial load from navigation fetch:**
+```tsx
+const hasFetchedOnce = useRef(false);
+
+useEffect(() => {
+  const isNav = hasFetchedOnce.current;
+  hasFetchedOnce.current = true;
+  void fetchData(isNav);
+}, [startMonth, endMonth]);
+
+async function fetchData(isNav = false) {
+  if (isNav) setNavLoading(true);
+  else setLoading(true);
+  // ... fetch ...
+  if (isNav) setNavLoading(false);
+  else setLoading(false);
+}
+```
+
+### Interaction Checklist
+
+Before shipping any interactive component:
+- [ ] All hover states: `transition-colors duration-150`
+- [ ] All focus rings: `focus:ring-2 focus:ring-claude-primary focus:ring-offset-2`
+- [ ] Navigation components: direction-aware slide animation
+- [ ] Modal: `max-h-[90vh]` + scrollable body + fixed header
+- [ ] Select inputs: `appearance-none` + custom caret SVG
+- [ ] Toast: `fixed top-4 left-1/2 -translate-x-1/2` (top-center)
+- [ ] No full loading-state flash for background data refreshes
 
 ### Standard Hover States
 

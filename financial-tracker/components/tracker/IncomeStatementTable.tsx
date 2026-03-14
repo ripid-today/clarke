@@ -14,6 +14,7 @@ interface Props {
   onEdit?: (entry: Earning | Expense) => void;
   windowOffset: number;
   onWindowOffsetChange: (offset: number) => void;
+  slideDirection?: 'back' | 'forward' | null;
 }
 
 function formatMonthLabel(month: string): string {
@@ -211,6 +212,7 @@ export default function IncomeStatementTable({
   onEdit,
   windowOffset,
   onWindowOffsetChange,
+  slideDirection,
 }: Props) {
   const [viewMode, setViewMode] = useState<'actual' | 'planned'>('actual');
   const [popup, setPopup] = useState<{
@@ -277,6 +279,14 @@ export default function IncomeStatementTable({
         </div>
       </div>
 
+      <div
+        key={windowOffset}
+        className={
+          slideDirection === 'back' ? 'animate-slide-from-left' :
+          slideDirection === 'forward' ? 'animate-slide-from-right' :
+          ''
+        }
+      >
       <div className="overflow-x-auto rounded-xl border border-claude-secondary/20">
         <table className="min-w-max w-full text-[13px] border-collapse">
           <thead>
@@ -323,6 +333,7 @@ export default function IncomeStatementTable({
             <RemainingRow months={months} values={remainingAfterFund} />
           </tbody>
         </table>
+      </div>
       </div>
 
       {popup && (

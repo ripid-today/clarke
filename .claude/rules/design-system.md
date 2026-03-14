@@ -84,13 +84,30 @@ mono: ['ui-monospace', 'SFMono-Regular', '"SF Mono"', 'Menlo', 'Monaco', 'Consol
 | Speed | Duration | Timing | Usage | Tailwind |
 |-------|----------|--------|-------|----------|
 | Fast | 150ms | ease-out | Hover, focus (instant feedback) | `duration-150 ease-out` |
-| Medium | 300ms | ease-in-out | State changes, transitions | `duration-300 ease-in-out` |
-| Slow | 500ms | ease-in-out | Page transitions, complex animations | `duration-500 ease-in-out` |
+| Medium | 220ms | ease-out | Slide navigation, state changes | `animate-slide-from-left/right` |
+| Slow | 300ms | ease-in-out | Page transitions, complex animations | `duration-300 ease-in-out` |
 
 **Standard Hover Patterns:**
 - Button: `hover:opacity-90 transition-opacity duration-150`
 - Card: `hover:shadow-xl hover:scale-105 transition-all duration-300`
 - Link: `hover:text-claude-primary transition-colors duration-150`
+
+## Component-Level Patterns
+
+| Component | Enter | Exit | Duration |
+|-----------|-------|------|----------|
+| Modal | scale(0.95)→scale(1) + opacity 0→1 | instant unmount | 150ms ease-out |
+| Toast | translateY(-8px)→0 + opacity 0→1 | fade out | 200ms / 150ms |
+| Slide nav | translateX(±24px)→0 + opacity 0→1 | key-driven remount | 220ms ease-out |
+| Tab toggle | color/bg transition | — | 150ms |
+| Loading (nav) | opacity 0.6 on container (no full spinner) | opacity 1 on data ready | instant |
+
+**Rule: Never show a full loading spinner for a navigation fetch** — the user triggered the action; they need immediate visual feedback (slide animation), not a blank screen.
+
+**Slide navigation mechanism:**
+- `key={offset}` on wrapper div forces DOM remount → restarts CSS animation
+- Pair with `animate-slide-from-left` (← = back/past) or `animate-slide-from-right` (→ = forward/future)
+- Tokens defined in `globals.css` via Tailwind v4 `@theme`
 
 ## Accessibility
 

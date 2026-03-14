@@ -26,6 +26,14 @@ Note: `design-system`, `api-conventions`, and `coding-standards` rules auto-load
 1. Identify the smallest set of changes needed
 2. Prefer editing existing files over creating new ones
 
+**STEP 3.5: Animation & Transition Check**
+For every interactive UI element in the changeset, verify against `.claude/rules/animation-standards.md`:
+- Navigation components (tabs, arrows, toggles): direction-aware slide or 150ms color transition
+- Modals: constrained `max-h-[90vh]`, scrollable body, fixed header, no viewport overflow
+- Toasts: top-center position, slide-in enter
+- Select inputs: custom caret (appearance-none + absolute SVG)
+- Data refresh: never show full loading state for background/nav fetches; use opacity dimming
+
 **STEP 4: Implement Changes**
 - Frontend: Implement React/Next.js, Tailwind changes using dev-toolkit + Frontend Guideline
 - Backend: Implement API endpoints and Firestore changes using dev-toolkit + Backend Guideline
