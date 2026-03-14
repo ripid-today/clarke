@@ -17,11 +17,23 @@ function getDefaultMonth(): string {
   return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
 }
 
+interface ExpenseFormData {
+  name: string;
+  amount_vnd: number;
+  sender_type: 'user' | 'fund';
+  sender_id: string | null;
+  receiver_type: 'fund' | 'none';
+  receiver_id: string | null;
+  status: 'planned' | 'actual';
+  month: string;
+}
+
 function FundDetailContent({ fundId }: { fundId: string }) {
   const searchParams = useSearchParams();
   const month = searchParams.get('month') ?? getDefaultMonth();
 
   const [fund, setFund] = useState<Fund | null>(null);
+  const [funds, setFunds] = useState<Fund[]>([]);
   const [members, setMembers] = useState<FundMember[]>([]);
   const [expenses, setExpenses] = useState<Expense[]>([]);
   const [loading, setLoading] = useState(true);
@@ -29,7 +41,6 @@ function FundDetailContent({ fundId }: { fundId: string }) {
 
   // Add expense modal
   const [expenseModalOpen, setExpenseModalOpen] = useState(false);
-  const [editingExpense, setEditingExpense] = useState<Expense | null>(null);
   const [blockError, setBlockError] = useState<string | null>(null);
 
   // Add member modal
@@ -51,7 +62,9 @@ function FundDetailContent({ fundId }: { fundId: string }) {
       if (!fundsRes.ok) throw new Error('Fund not found');
 
       const fundsData = await fundsRes.json() as { funds: Fund[] };
-      const foundFund = fundsData.funds?.find(f => f.id === fundId);
+      const allFunds = fundsData.funds ?? [];
+      setFunds(allFunds);
+      const foundFund = allFunds.find(f => f.id === fundId);
       if (!foundFund) throw new Error('Fund not found or you are not a member');
       setFund(foundFund);
 
@@ -79,12 +92,12 @@ function FundDetailContent({ fundId }: { fundId: string }) {
   // The API enforces that only the fund creator can add members.
   // We show the "Add Member" button to all members; unauthorized attempts are rejected by the API.
 
-  async function handleAddExpense(data: { description: string; amount_vnd: number; status: 'planned' | 'actual' }) {
+  async function handleAddExpense(data: ExpenseFormData) {
     setBlockError(null);
     const res = await fetch('/api/expenses', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ ...data, month, fund_id: fundId }),
+      body: JSON.stringify({ ...data, fund_id: fundId }),
     });
     if (!res.ok) {
       const err = await res.json() as { error: string; remaining?: number };
@@ -98,30 +111,6 @@ function FundDetailContent({ fundId }: { fundId: string }) {
       throw new Error(err.error ?? 'Failed to add expense');
     }
     setExpenseModalOpen(false);
-    setBlockError(null);
-    await fetchAll();
-  }
-
-  async function handleEditExpense(data: { description: string; amount_vnd: number; status: 'planned' | 'actual' }) {
-    if (!editingExpense) return;
-    setBlockError(null);
-    const res = await fetch(`/api/expenses/${editingExpense.id}`, {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data),
-    });
-    if (!res.ok) {
-      const err = await res.json() as { error: string; remaining?: number };
-      if (res.status === 422) {
-        const msg = err.remaining !== undefined
-          ? `${err.error}. Remaining: ${formatVnd(err.remaining)}`
-          : err.error;
-        setBlockError(msg);
-        throw new Error(msg);
-      }
-      throw new Error(err.error ?? 'Failed to update expense');
-    }
-    setEditingExpense(null);
     setBlockError(null);
     await fetchAll();
   }
@@ -195,7 +184,7 @@ function FundDetailContent({ fundId }: { fundId: string }) {
       <div className="flex items-center justify-between mb-8 flex-wrap gap-4">
         <div>
           <p className="text-[13px] text-claude-secondary mb-1">
-            <a href="/funds" className="hover:text-claude-primary transition-colors">Funds</a> /
+            <a href="/settings" className="hover:text-claude-primary transition-colors">Settings</a> /
           </p>
           <h1 className="text-3xl font-bold text-black">{fund?.name}</h1>
         </div>
@@ -253,7 +242,7 @@ function FundDetailContent({ fundId }: { fundId: string }) {
           <EntryList
             entries={expenses}
             onToggle={handleToggleExpense}
-            onEdit={entry => { setBlockError(null); setEditingExpense(entry as Expense); }}
+            onEdit={() => {}}
             onDelete={handleDeleteExpense}
             loading={false}
             showOwner
@@ -269,28 +258,14 @@ function FundDetailContent({ fundId }: { fundId: string }) {
         title="Add Fund Expense"
       >
         <EntryForm
-          type="expense"
-          onSubmit={handleAddExpense}
+          initialTab="expense"
+          onSubmitEarning={async () => {}}
+          onSubmitExpense={handleAddExpense}
           onCancel={() => { setExpenseModalOpen(false); setBlockError(null); }}
+          funds={funds}
+          defaultMonth={month}
           blockError={blockError ?? undefined}
         />
-      </Modal>
-
-      {/* Edit expense modal */}
-      <Modal
-        isOpen={!!editingExpense}
-        onClose={() => { setEditingExpense(null); setBlockError(null); }}
-        title="Edit Fund Expense"
-      >
-        {editingExpense && (
-          <EntryForm
-            type="expense"
-            initialValues={editingExpense ? { ...editingExpense, description: editingExpense.description ?? undefined } : undefined}
-            onSubmit={handleEditExpense}
-            onCancel={() => { setEditingExpense(null); setBlockError(null); }}
-            blockError={blockError ?? undefined}
-          />
-        )}
       </Modal>
 
       {/* Add member modal */}

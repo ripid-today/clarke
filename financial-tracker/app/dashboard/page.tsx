@@ -1,113 +1,142 @@
 'use client';
 
 import { useEffect, useState, Suspense } from 'react';
-import { useSearchParams } from 'next/navigation';
-import MonthNavigator, { useMonth } from '@/components/ui/MonthNavigator';
-import SummaryCard from '@/components/tracker/SummaryCard';
-import FundCard from '@/components/tracker/FundCard';
 import { Earning, Expense, Fund } from '@/types';
+import IncomeStatementTable from '@/components/tracker/IncomeStatementTable';
+import BarChartDashboard from '@/components/tracker/BarChartDashboard';
+import EntryForm from '@/components/tracker/EntryForm';
+import Modal from '@/components/ui/Modal';
+import Button from '@/components/ui/Button';
+
+function getRolling12Months(): string[] {
+  const months: string[] = [];
+  const now = new Date();
+  // Start 11 months back, end at current month
+  for (let i = 11; i >= 0; i--) {
+    const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+    months.push(`${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`);
+  }
+  return months;
+}
 
 function getDefaultMonth(): string {
   const now = new Date();
   return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
 }
 
-interface FundExpenseTotals {
-  fundId: string;
-  myTotal: number;
-  groupTotal: number;
+interface EarningFormData {
+  name: string;
+  amount_vnd: number;
+  type: 'regular' | 'receivable';
+  receiver_type: 'user' | 'fund';
+  receiver_id: string | null;
+  status: 'planned' | 'actual';
+  month: string;
+}
+
+interface ExpenseFormData {
+  name: string;
+  amount_vnd: number;
+  sender_type: 'user' | 'fund';
+  sender_id: string | null;
+  receiver_type: 'fund' | 'none';
+  receiver_id: string | null;
+  status: 'planned' | 'actual';
+  month: string;
 }
 
 function DashboardContent() {
-  const searchParams = useSearchParams();
-  const month = searchParams.get('month') ?? getDefaultMonth();
+  const months = getRolling12Months();
+  const startMonth = months[0];
+  const endMonth = months[months.length - 1];
 
   const [earnings, setEarnings] = useState<Earning[]>([]);
   const [expenses, setExpenses] = useState<Expense[]>([]);
   const [funds, setFunds] = useState<Fund[]>([]);
-  const [fundTotals, setFundTotals] = useState<FundExpenseTotals[]>([]);
-  const [selectedFundId, setSelectedFundId] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [addOpen, setAddOpen] = useState(false);
+  const [blockError, setBlockError] = useState<string | null>(null);
+
+  const defaultMonth = getDefaultMonth();
+
+  async function fetchData() {
+    setLoading(true);
+    setError(null);
+    try {
+      const [entriesRes, fundsRes] = await Promise.all([
+        fetch(`/api/entries?startMonth=${startMonth}&endMonth=${endMonth}`),
+        fetch('/api/funds'),
+      ]);
+
+      if (!entriesRes.ok) throw new Error('Failed to fetch entries');
+
+      const entriesData = await entriesRes.json() as { earnings: Earning[]; expenses: Expense[] };
+      setEarnings(entriesData.earnings ?? []);
+      setExpenses(entriesData.expenses ?? []);
+
+      if (fundsRes.ok) {
+        const fundsData = await fundsRes.json() as { funds: Fund[] };
+        setFunds(fundsData.funds ?? []);
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to load data');
+    } finally {
+      setLoading(false);
+    }
+  }
 
   useEffect(() => {
-    async function fetchData() {
-      setLoading(true);
-      setError(null);
-      try {
-        const [earningsRes, expensesRes, fundsRes] = await Promise.all([
-          fetch(`/api/earnings?month=${month}`),
-          fetch(`/api/expenses?month=${month}`),
-          fetch('/api/funds'),
-        ]);
-
-        if (!earningsRes.ok || !expensesRes.ok || !fundsRes.ok) {
-          throw new Error('Failed to fetch dashboard data');
-        }
-
-        const [earningsData, expensesData, fundsData] = await Promise.all([
-          earningsRes.json() as Promise<{ earnings: Earning[] }>,
-          expensesRes.json() as Promise<{ expenses: Expense[] }>,
-          fundsRes.json() as Promise<{ funds: Fund[] }>,
-        ]);
-
-        setEarnings(earningsData.earnings ?? []);
-        setExpenses(expensesData.expenses ?? []);
-        setFunds(fundsData.funds ?? []);
-
-        // Fetch fund expense totals
-        const fundList: Fund[] = fundsData.funds ?? [];
-        if (fundList.length > 0) {
-          const totals = await Promise.all(
-            fundList.map(async (fund) => {
-              const res = await fetch(`/api/expenses?month=${month}&fund_id=${fund.id}`);
-              if (!res.ok) return { fundId: fund.id, myTotal: 0, groupTotal: 0 };
-              const data = await res.json() as { expenses: Expense[] };
-              const allExpenses: Expense[] = data.expenses ?? [];
-              const myExp = allExpenses.filter(e => e.user_id === fund.created_by);
-              const myTotal = myExp.reduce((s, e) => s + e.amount_vnd, 0);
-              const groupTotal = allExpenses.reduce((s, e) => s + e.amount_vnd, 0);
-              return { fundId: fund.id, myTotal, groupTotal };
-            })
-          );
-          setFundTotals(totals);
-        }
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'Failed to load data');
-      } finally {
-        setLoading(false);
-      }
-    }
-
     void fetchData();
-  }, [month]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-  const plannedEarnings = earnings.filter(e => e.status === 'planned').reduce((s, e) => s + e.amount_vnd, 0);
-  const actualEarnings = earnings.filter(e => e.status === 'actual').reduce((s, e) => s + e.amount_vnd, 0);
-  const plannedExpenses = expenses.filter(e => e.status === 'planned').reduce((s, e) => s + e.amount_vnd, 0);
-  const actualExpenses = expenses.filter(e => e.status === 'actual').reduce((s, e) => s + e.amount_vnd, 0);
+  async function handleAddEarning(data: EarningFormData) {
+    const res = await fetch('/api/earnings', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    });
+    if (!res.ok) {
+      const err = await res.json() as { error: string };
+      throw new Error(err.error ?? 'Failed to add earning');
+    }
+    setAddOpen(false);
+    setBlockError(null);
+    await fetchData();
+  }
 
-  // Add fund expenses for selected user
-  const allFundExpensesPlanned = fundTotals.reduce((s, f) => {
-    const fund = funds.find(fu => fu.id === f.fundId);
-    if (!fund) return s;
-    return s + f.myTotal;
-  }, 0);
-
-  const totalPlannedExpenses = plannedExpenses + allFundExpensesPlanned;
-  const totalActualExpenses = actualExpenses;
-
-  const plannedNet = plannedEarnings - totalPlannedExpenses;
-  const actualNet = actualEarnings - totalActualExpenses;
-
-  const selectedFund = selectedFundId ? funds.find(f => f.id === selectedFundId) : null;
-  const selectedFundTotals = selectedFundId ? fundTotals.find(f => f.fundId === selectedFundId) : null;
+  async function handleAddExpense(data: ExpenseFormData) {
+    setBlockError(null);
+    const res = await fetch('/api/expenses', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    });
+    if (!res.ok) {
+      const err = await res.json() as { error: string; remaining?: number };
+      if (res.status === 422) {
+        const { formatVnd } = await import('@/lib/utils/formatVnd');
+        const msg = err.remaining !== undefined
+          ? `${err.error}. Remaining: ${formatVnd(err.remaining)}`
+          : err.error;
+        setBlockError(msg);
+        throw new Error(msg);
+      }
+      throw new Error(err.error ?? 'Failed to add expense');
+    }
+    setAddOpen(false);
+    setBlockError(null);
+    await fetchData();
+  }
 
   return (
-    <main className="max-w-5xl mx-auto px-4 py-8">
-      <div className="flex items-center justify-between mb-8 flex-wrap gap-4">
+    <main className="max-w-6xl mx-auto px-4 py-8">
+      <div className="flex items-center justify-between mb-8">
         <h1 className="text-3xl font-bold text-black">Dashboard</h1>
-        <MonthNavigator />
+        <Button variant="primary" onClick={() => { setBlockError(null); setAddOpen(true); }}>
+          + Add Entry
+        </Button>
       </div>
 
       {error && (
@@ -120,97 +149,37 @@ function DashboardContent() {
         <div className="text-center py-16 text-claude-secondary">Loading...</div>
       ) : (
         <>
-          {/* Summary cards */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
-            <SummaryCard
-              label="Planned"
-              planned={plannedEarnings}
-              actual={totalPlannedExpenses}
-              showNet
-            />
-            <SummaryCard
-              label="Actual"
-              planned={actualEarnings}
-              actual={totalActualExpenses}
-              showNet
+          <IncomeStatementTable
+            earnings={earnings}
+            expenses={expenses}
+            months={months}
+            onRefresh={fetchData}
+          />
+
+          <div className="mt-12">
+            <BarChartDashboard
+              earnings={earnings}
+              expenses={expenses}
+              months={months}
             />
           </div>
-
-          {/* Monthly net summary */}
-          <div className="bg-white rounded-xl shadow-md p-6 mb-10">
-            <h2 className="text-xl font-semibold text-black mb-4">Monthly Net</h2>
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <p className="text-[15px] text-claude-secondary mb-1">Planned net</p>
-                <p className={`text-2xl font-bold ${plannedNet >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-                  {plannedNet >= 0 ? '+' : ''}{plannedNet.toLocaleString('vi-VN')} ₫
-                </p>
-              </div>
-              <div>
-                <p className="text-[15px] text-claude-secondary mb-1">Actual net</p>
-                <p className={`text-2xl font-bold ${actualNet >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-                  {actualNet >= 0 ? '+' : ''}{actualNet.toLocaleString('vi-VN')} ₫
-                </p>
-              </div>
-            </div>
-          </div>
-
-          {/* Funds */}
-          {funds.length > 0 && (
-            <section>
-              <div className="flex items-center gap-4 mb-4 flex-wrap">
-                <h2 className="text-xl font-semibold text-black">Funds</h2>
-                <select
-                  className="text-[15px] border border-claude-secondary rounded-lg px-3 py-1.5 bg-white text-black focus:outline-none focus:ring-2 focus:ring-claude-primary"
-                  value={selectedFundId ?? ''}
-                  onChange={e => setSelectedFundId(e.target.value || null)}
-                  aria-label="Select fund to view"
-                >
-                  <option value="">All funds</option>
-                  {funds.map(f => (
-                    <option key={f.id} value={f.id}>{f.name}</option>
-                  ))}
-                </select>
-              </div>
-
-              {selectedFund && selectedFundTotals ? (
-                <div className="bg-white rounded-xl shadow-md p-6 mb-6">
-                  <h3 className="text-lg font-semibold text-black mb-4">{selectedFund.name}</h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                      <p className="text-sm text-claude-secondary mb-1">My contributions</p>
-                      <p className="text-2xl font-bold text-black">
-                        {selectedFundTotals.myTotal.toLocaleString('vi-VN')} ₫
-                      </p>
-                    </div>
-                    <div>
-                      <p className="text-sm text-claude-secondary mb-1">Group total</p>
-                      <p className="text-2xl font-bold text-claude-primary">
-                        {selectedFundTotals.groupTotal.toLocaleString('vi-VN')} ₫
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {funds.map(fund => {
-                    const totals = fundTotals.find(t => t.fundId === fund.id);
-                    return (
-                      <FundCard
-                        key={fund.id}
-                        fund={fund}
-                        myTotal={totals?.myTotal ?? 0}
-                        groupTotal={totals?.groupTotal ?? 0}
-                        month={month}
-                      />
-                    );
-                  })}
-                </div>
-              )}
-            </section>
-          )}
         </>
       )}
+
+      <Modal
+        isOpen={addOpen}
+        onClose={() => { setAddOpen(false); setBlockError(null); }}
+        title="Add Entry"
+      >
+        <EntryForm
+          onSubmitEarning={handleAddEarning}
+          onSubmitExpense={handleAddExpense}
+          onCancel={() => { setAddOpen(false); setBlockError(null); }}
+          funds={funds}
+          defaultMonth={defaultMonth}
+          blockError={blockError ?? undefined}
+        />
+      </Modal>
     </main>
   );
 }

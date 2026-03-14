@@ -45,7 +45,7 @@ export default function EntryList({
         <li key={entry.id} className="flex items-center gap-3 py-3 px-1">
           <div className="flex-1 min-w-0">
             <p className="text-[15px] text-black truncate">
-              {entry.description ?? <span className="italic text-claude-secondary">No description</span>}
+              {entry.name ?? <span className="italic text-claude-secondary">No name</span>}
             </p>
             <p className="text-sm font-semibold text-black mt-0.5">
               {formatVnd(entry.amount_vnd)}

@@ -8,40 +8,35 @@ export async function GET(request: Request) {
 
   const { searchParams } = new URL(request.url);
   const month = searchParams.get('month');
-  const fundId = searchParams.get('fund_id');
-
-  if (!month || !/^\d{4}-\d{2}$/.test(month)) {
-    return NextResponse.json({ error: 'Invalid month format. Use YYYY-MM' }, { status: 400 });
-  }
+  const startMonth = searchParams.get('startMonth');
+  const endMonth = searchParams.get('endMonth');
 
   const admin = createAdminClient();
 
-  if (fundId) {
-    // Return all members' expenses for this fund+month (group view)
-    // First verify user is a member
-    const { data: membership } = await admin
-      .from('fund_members')
-      .select('user_id')
-      .eq('fund_id', fundId)
-      .eq('user_id', user.id)
-      .maybeSingle();
-
-    if (!membership) {
-      return NextResponse.json({ error: 'Not a member of this fund' }, { status: 403 });
+  // Range query: startMonth + endMonth
+  if (startMonth || endMonth) {
+    if (!startMonth || !/^\d{4}-\d{2}$/.test(startMonth)) {
+      return NextResponse.json({ error: 'Invalid startMonth format. Use YYYY-MM' }, { status: 400 });
+    }
+    if (!endMonth || !/^\d{4}-\d{2}$/.test(endMonth)) {
+      return NextResponse.json({ error: 'Invalid endMonth format. Use YYYY-MM' }, { status: 400 });
     }
 
     const { data, error } = await admin
       .from('expenses')
       .select('*')
-      .eq('fund_id', fundId)
-      .eq('month', month)
+      .eq('sender_type', 'user')
+      .eq('sender_id', user.id)
+      .gte('month', startMonth)
+      .lte('month', endMonth)
+      .order('month', { ascending: true })
       .order('created_at', { ascending: true });
 
     if (error) {
-      console.error('GET /api/expenses (fund) error:', {
-        context: 'Fetching fund expenses',
-        fundId,
-        month,
+      console.error('GET /api/expenses (range) error:', {
+        context: 'Fetching expenses range',
+        startMonth,
+        endMonth,
         error: error.message,
       });
       return NextResponse.json({ error: 'Failed to fetch expenses' }, { status: 500 });
@@ -49,11 +44,16 @@ export async function GET(request: Request) {
     return NextResponse.json({ expenses: data });
   }
 
-  // Personal expenses only
+  // Single month query
+  if (!month || !/^\d{4}-\d{2}$/.test(month)) {
+    return NextResponse.json({ error: 'Invalid month format. Use YYYY-MM' }, { status: 400 });
+  }
+
   const { data, error } = await admin
     .from('expenses')
     .select('*')
-    .eq('user_id', user.id)
+    .eq('sender_type', 'user')
+    .eq('sender_id', user.id)
     .eq('month', month)
     .order('created_at', { ascending: true });
 
@@ -84,7 +84,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Invalid request body' }, { status: 400 });
   }
 
-  const { month, amount_vnd, status, description, fund_id } = body as Record<string, unknown>;
+  const { month, amount_vnd, status, name, sender_type, sender_id, receiver_type, receiver_id } = body as Record<string, unknown>;
 
   if (!month || typeof month !== 'string' || !/^\d{4}-\d{2}$/.test(month)) {
     return NextResponse.json({ error: 'Invalid month format. Use YYYY-MM' }, { status: 400 });
@@ -96,63 +96,80 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'status must be planned or actual' }, { status: 400 });
   }
 
-  const admin = createAdminClient();
-  const fundIdStr = typeof fund_id === 'string' ? fund_id : null;
-
-  // If fund_id provided, verify user is a member
-  if (fundIdStr) {
-    const { data: membership } = await admin
-      .from('fund_members')
-      .select('user_id')
-      .eq('fund_id', fundIdStr)
-      .eq('user_id', user.id)
-      .maybeSingle();
-
-    if (!membership) {
-      return NextResponse.json({ error: 'Not a member of this fund' }, { status: 403 });
-    }
+  const expSenderType = typeof sender_type === 'string' ? sender_type : 'user';
+  if (!['user', 'fund'].includes(expSenderType)) {
+    return NextResponse.json({ error: 'sender_type must be user or fund' }, { status: 400 });
   }
 
-  // Hard-block: sum existing expenses for this user + month + status
-  const { data: expensesSum } = await admin
-    .from('expenses')
-    .select('amount_vnd')
-    .eq('user_id', user.id)
-    .eq('month', month as string)
-    .eq('status', status as string);
+  // sender_id: for user sender, use the authenticated user's id
+  const expSenderId = expSenderType === 'user'
+    ? user.id
+    : (typeof sender_id === 'string' ? sender_id : null);
 
-  const existingExpenses = (expensesSum ?? []).reduce((sum, e) => sum + (e.amount_vnd as number), 0);
+  if (expSenderType === 'fund' && !expSenderId) {
+    return NextResponse.json({ error: 'sender_id required when sender_type is fund' }, { status: 400 });
+  }
 
-  // Sum earnings for this user + month + status
-  const { data: earningsSum } = await admin
-    .from('earnings')
-    .select('amount_vnd')
-    .eq('user_id', user.id)
-    .eq('month', month as string)
-    .eq('status', status as string);
+  const expReceiverType = typeof receiver_type === 'string' ? receiver_type : 'none';
+  if (!['fund', 'none'].includes(expReceiverType)) {
+    return NextResponse.json({ error: 'receiver_type must be fund or none' }, { status: 400 });
+  }
 
-  const earningsTotal = (earningsSum ?? []).reduce((sum, e) => sum + (e.amount_vnd as number), 0);
+  const expReceiverId = expReceiverType === 'fund'
+    ? (typeof receiver_id === 'string' ? receiver_id : null)
+    : null;
 
-  if (existingExpenses + (amount_vnd as number) > earningsTotal) {
-    const remaining = earningsTotal - existingExpenses;
-    return NextResponse.json(
-      {
-        error: `Exceeds your ${status} earnings limit`,
-        remaining: remaining < 0 ? 0 : remaining,
-      },
-      { status: 422 }
-    );
+  if (expReceiverType === 'fund' && !expReceiverId) {
+    return NextResponse.json({ error: 'receiver_id required when receiver_type is fund' }, { status: 400 });
+  }
+
+  const admin = createAdminClient();
+
+  // Hard-block: only apply when sender is the user themselves
+  if (expSenderType === 'user') {
+    const { data: expensesSum } = await admin
+      .from('expenses')
+      .select('amount_vnd')
+      .eq('sender_type', 'user')
+      .eq('sender_id', user.id)
+      .eq('month', month as string)
+      .eq('status', status as string);
+
+    const existingExpenses = (expensesSum ?? []).reduce((sum, e) => sum + (e.amount_vnd as number), 0);
+
+    const { data: earningsSum } = await admin
+      .from('earnings')
+      .select('amount_vnd')
+      .eq('user_id', user.id)
+      .eq('month', month as string)
+      .eq('status', status as string);
+
+    const earningsTotal = (earningsSum ?? []).reduce((sum, e) => sum + (e.amount_vnd as number), 0);
+
+    if (existingExpenses + (amount_vnd as number) > earningsTotal) {
+      const remaining = earningsTotal - existingExpenses;
+      return NextResponse.json(
+        {
+          error: `Exceeds your ${status as string} earnings limit`,
+          remaining: remaining < 0 ? 0 : remaining,
+        },
+        { status: 422 }
+      );
+    }
   }
 
   const { data, error } = await admin
     .from('expenses')
     .insert({
       user_id: user.id,
-      fund_id: fundIdStr,
       month,
       amount_vnd,
       status,
-      description: typeof description === 'string' ? description || null : null,
+      name: typeof name === 'string' ? name : '',
+      sender_type: expSenderType,
+      sender_id: expSenderId,
+      receiver_type: expReceiverType,
+      receiver_id: expReceiverId,
     })
     .select()
     .single();

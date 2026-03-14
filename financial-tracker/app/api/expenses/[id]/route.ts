@@ -22,7 +22,7 @@ export async function PATCH(
     return NextResponse.json({ error: 'Invalid request body' }, { status: 400 });
   }
 
-  const { amount_vnd, status, description } = body as Record<string, unknown>;
+  const { amount_vnd, status, name, receiver_type, receiver_id } = body as Record<string, unknown>;
 
   // Validate inputs
   if (amount_vnd !== undefined) {
@@ -38,7 +38,7 @@ export async function PATCH(
 
   const admin = createAdminClient();
 
-  // Fetch current expense (verify ownership)
+  // Fetch current expense (verify ownership via user_id)
   const { data: current } = await admin
     .from('expenses')
     .select('*')
@@ -52,43 +52,56 @@ export async function PATCH(
 
   const newAmount = typeof amount_vnd === 'number' ? amount_vnd : (current.amount_vnd as number);
   const newStatus = typeof status === 'string' ? status : (current.status as string);
+  const currentSenderType = current.sender_type as string;
 
-  // Hard-block: sum all expenses EXCLUDING this expense, then add new amount
-  const { data: expensesSum } = await admin
-    .from('expenses')
-    .select('amount_vnd')
-    .eq('user_id', user.id)
-    .eq('month', current.month as string)
-    .eq('status', newStatus)
-    .neq('id', id);
+  // Hard-block: only apply when sender is the user themselves
+  if (currentSenderType === 'user') {
+    const { data: expensesSum } = await admin
+      .from('expenses')
+      .select('amount_vnd')
+      .eq('sender_type', 'user')
+      .eq('sender_id', user.id)
+      .eq('month', current.month as string)
+      .eq('status', newStatus)
+      .neq('id', id);
 
-  const otherExpenses = (expensesSum ?? []).reduce((sum, e) => sum + (e.amount_vnd as number), 0);
+    const otherExpenses = (expensesSum ?? []).reduce((sum, e) => sum + (e.amount_vnd as number), 0);
 
-  const { data: earningsSum } = await admin
-    .from('earnings')
-    .select('amount_vnd')
-    .eq('user_id', user.id)
-    .eq('month', current.month as string)
-    .eq('status', newStatus);
+    const { data: earningsSum } = await admin
+      .from('earnings')
+      .select('amount_vnd')
+      .eq('user_id', user.id)
+      .eq('month', current.month as string)
+      .eq('status', newStatus);
 
-  const earningsTotal = (earningsSum ?? []).reduce((sum, e) => sum + (e.amount_vnd as number), 0);
+    const earningsTotal = (earningsSum ?? []).reduce((sum, e) => sum + (e.amount_vnd as number), 0);
 
-  if (otherExpenses + newAmount > earningsTotal) {
-    const remaining = earningsTotal - otherExpenses;
-    return NextResponse.json(
-      {
-        error: `Exceeds your ${newStatus} earnings limit`,
-        remaining: remaining < 0 ? 0 : remaining,
-      },
-      { status: 422 }
-    );
+    if (otherExpenses + newAmount > earningsTotal) {
+      const remaining = earningsTotal - otherExpenses;
+      return NextResponse.json(
+        {
+          error: `Exceeds your ${newStatus} earnings limit`,
+          remaining: remaining < 0 ? 0 : remaining,
+        },
+        { status: 422 }
+      );
+    }
   }
 
   const updates: Record<string, unknown> = {};
   if (amount_vnd !== undefined) updates.amount_vnd = amount_vnd;
   if (status !== undefined) updates.status = status;
-  if (description !== undefined) {
-    updates.description = typeof description === 'string' ? description || null : null;
+  if (name !== undefined) {
+    updates.name = typeof name === 'string' ? name : '';
+  }
+  if (receiver_type !== undefined) {
+    if (!['fund', 'none'].includes(receiver_type as string)) {
+      return NextResponse.json({ error: 'receiver_type must be fund or none' }, { status: 400 });
+    }
+    updates.receiver_type = receiver_type;
+    updates.receiver_id = receiver_type === 'fund'
+      ? (typeof receiver_id === 'string' ? receiver_id : null)
+      : null;
   }
 
   if (Object.keys(updates).length === 0) {

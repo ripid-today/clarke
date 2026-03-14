@@ -22,7 +22,7 @@ export async function PATCH(
     return NextResponse.json({ error: 'Invalid request body' }, { status: 400 });
   }
 
-  const { amount_vnd, status, description } = body as Record<string, unknown>;
+  const { amount_vnd, status, name, type, receiver_type, receiver_id } = body as Record<string, unknown>;
   const updates: Record<string, unknown> = {};
 
   if (amount_vnd !== undefined) {
@@ -39,8 +39,25 @@ export async function PATCH(
     updates.status = status;
   }
 
-  if (description !== undefined) {
-    updates.description = typeof description === 'string' ? description || null : null;
+  if (name !== undefined) {
+    updates.name = typeof name === 'string' ? name : '';
+  }
+
+  if (type !== undefined) {
+    if (!['regular', 'receivable'].includes(type as string)) {
+      return NextResponse.json({ error: 'type must be regular or receivable' }, { status: 400 });
+    }
+    updates.type = type;
+  }
+
+  if (receiver_type !== undefined) {
+    if (!['user', 'fund'].includes(receiver_type as string)) {
+      return NextResponse.json({ error: 'receiver_type must be user or fund' }, { status: 400 });
+    }
+    updates.receiver_type = receiver_type;
+    updates.receiver_id = receiver_type === 'fund'
+      ? (typeof receiver_id === 'string' ? receiver_id : null)
+      : null;
   }
 
   if (Object.keys(updates).length === 0) {

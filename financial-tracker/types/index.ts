@@ -8,10 +8,13 @@ export interface Profile {
 export interface Earning {
   id: string;
   user_id: string;
-  month: string;
+  month: string;                            // "YYYY-MM"
   amount_vnd: number;
   status: 'planned' | 'actual';
-  description: string | null;
+  name: string;                             // renamed from description
+  type: 'regular' | 'receivable';          // NEW
+  receiver_type: 'user' | 'fund';          // NEW (user = to themselves)
+  receiver_id: string | null;              // NEW (fund id when receiver_type=fund)
   created_at: string;
   updated_at: string;
 }
@@ -19,11 +22,14 @@ export interface Earning {
 export interface Expense {
   id: string;
   user_id: string;
-  fund_id: string | null;
   month: string;
   amount_vnd: number;
   status: 'planned' | 'actual';
-  description: string | null;
+  name: string;                             // renamed from description
+  sender_type: 'user' | 'fund';           // NEW
+  sender_id: string;                        // NEW (user_id or fund_id)
+  receiver_type: 'fund' | 'none';         // NEW
+  receiver_id: string | null;              // NEW (fund id when receiver_type=fund)
   created_at: string;
   updated_at: string;
 }
@@ -51,4 +57,25 @@ export interface MonthlySummary {
   actualExpenses: number;
   plannedNet: number;
   actualNet: number;
+}
+
+// For Income Statement Table
+export interface IncomeStatementCell {
+  actual: number;
+  planned: number;
+  actualEntries: (Earning | Expense)[];
+  plannedEntries: (Earning | Expense)[];
+}
+
+export interface IncomeStatementRow {
+  name: string;
+  cells: Record<string, IncomeStatementCell>;
+}
+
+// For bar chart
+export interface ChartMonthData {
+  month: string;
+  monthLabel: string;
+  planned: { earnings: number; receivables: number; expensesExt: number; expensesFund: number };
+  actual:  { earnings: number; receivables: number; expensesExt: number; expensesFund: number };
 }
