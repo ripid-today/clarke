@@ -4,7 +4,8 @@
 
 **Tech Stack:** Next.js 15, React 19, TypeScript, Tailwind CSS, Firebase/Firestore
 **Directory Structure:**
-- `website/` - Next.js application (source code, components, pages, scripts)
+- `projects/the-intelligent-investor/` - The Intelligent Investor app (daily news briefings, deployed at clarke.ripid.vn)
+- `projects/financial-tracker/` - Financial Tracker app (personal finance tracking)
 - `library/` - Documentation (`requirements/PRDs/` for WHAT/WHY, `guidelines/` for HOW)
 - `.claude/` - Agent definitions, skills, rules, and agent memory
 
