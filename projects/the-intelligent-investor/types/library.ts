@@ -39,8 +39,6 @@ export interface Article {
   // Daily News optional fields (backward compatible)
   publishedAt?: FirestoreTimestamp;
   category?: "vietnam" | "world";
-  sourceUrl?: string;
-  sourceName?: string;
   isUpdated?: boolean;
   metadata?: {
     wordCount?: number;
@@ -50,9 +48,6 @@ export interface Article {
     // v2 aggregated article fields
     newsDate?: string;
     topicGroup?: string;
-    sourceCount?: number;
-    sourceUrls?: string[];
-    sourceNames?: string[];
     isAggregated?: boolean;
     lastDuplicateCheck?: string;
   };

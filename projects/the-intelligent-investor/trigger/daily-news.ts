@@ -38,9 +38,6 @@ interface AggregatedArticle {
   content: string;
   description: string;
   topicGroup: string;
-  sourceCount: number;
-  sourceUrls: string[];
-  sourceNames: string[];
   publishedAt: Date;
 }
 
@@ -196,8 +193,6 @@ SOURCE ITEMS: ${JSON.stringify(sourceItems)}`;
   const description = contentBody.replace(/[#*`\[\]]/g, "").trim().substring(0, 200);
 
   const slug = `${toSlug(group.topicTitle)}-${dateStr}`;
-  const sourceUrls = groupItems.map(i => i.link).filter(Boolean);
-  const sourceNames = [...new Set(groupItems.map(i => i.sourceName))];
 
   return {
     title: parsedTitle,
@@ -205,9 +200,6 @@ SOURCE ITEMS: ${JSON.stringify(sourceItems)}`;
     content: contentBody,
     description,
     topicGroup: group.topicId,
-    sourceCount: groupItems.length,
-    sourceUrls,
-    sourceNames,
     publishedAt: groupItems[0]?.publishedAt || new Date(),
   };
 }
@@ -305,9 +297,6 @@ async function ingestArticle(
       "metadata.readingTime": readingTime,
       "metadata.lastModifiedBy": "brief-daily-news-v2",
       "metadata.version": FieldValue.increment(1),
-      "metadata.sourceCount": article.sourceCount,
-      "metadata.sourceUrls": article.sourceUrls,
-      "metadata.sourceNames": article.sourceNames,
       "metadata.lastDuplicateCheck": new Date().toISOString(),
     });
     return "updated";
@@ -337,9 +326,6 @@ async function ingestArticle(
       version: 1,
       newsDate: dateStr,
       topicGroup: article.topicGroup,
-      sourceCount: article.sourceCount,
-      sourceUrls: article.sourceUrls,
-      sourceNames: article.sourceNames,
       isAggregated: true,
       lastDuplicateCheck: new Date().toISOString(),
     },

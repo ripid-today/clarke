@@ -41,12 +41,7 @@ export function NewsArticleList({ articles, folderSlug }: NewsArticleListProps) 
             )}
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2 mb-1 flex-wrap">
-                {article.sourceName && (
-                  <span className="text-[13px] font-medium text-claude-secondary uppercase tracking-wide">
-                    {article.sourceName}
-                  </span>
-                )}
-                {article.category && (
+{article.category && (
                   <span className="text-[13px] text-claude-secondary">
                     · {article.category === "vietnam" ? "Vietnam" : "World"}
                   </span>
