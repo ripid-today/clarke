@@ -165,18 +165,17 @@ async function writeArticle(
     summary: item.summary.substring(0, 300),
   }));
 
-  const prompt = `Write a 200-300 word investment brief for Vietnam-based investors about this news topic.
+  const prompt = `Write a 100-150 word investment brief for Vietnam-based investors about this news topic.
 
 FORMAT (no section headers):
 - Paragraph 1 (2-3 sentences): What happened + key number/figure + immediate impact
 - Paragraph 2 (2-3 sentences): Why it matters for Vietnam investors — gold/silver, VN-Index, USD/VND, FDI, rates
 - "**Key Numbers**" bullet list: 2-5 metrics with values
-- "**Sources:**" inline comma-separated list
 
 RULES:
 - Start with the specific number, event, or person — not context or scene-setting
 - Include at least one specific figure (price, %, bps, USD amount)
-- Hard cap: 300 words total. Choose the most impactful facts; do not exceed this limit
+- Hard cap: 150 words total. Choose the most impactful facts; do not exceed this limit
 - Write in English for a sophisticated investor audience
 - First line must be: TITLE: [a compelling, investment-focused headline]
 

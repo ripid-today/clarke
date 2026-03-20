@@ -15,6 +15,7 @@ const config: Config = {
       },
       fontFamily: {
         sans: [
+          "var(--font-inter)",
           "-apple-system",
           "BlinkMacSystemFont",
           '"Segoe UI"',
@@ -34,19 +35,10 @@ const config: Config = {
           '"Courier New"',
           "monospace",
         ],
-        serif: [
-          "ui-serif",
-          "Georgia",
-          "Cambria",
-          '"Times New Roman"',
-          "Times",
-          "serif",
-        ],
       },
       typography: {
         DEFAULT: {
           css: {
-            fontFamily: 'ui-serif, Georgia, Cambria, "Times New Roman", Times, serif',
             color: "#000000",
             maxWidth: "768px",
             a: {

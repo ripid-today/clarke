@@ -15,9 +15,7 @@ export function CategoryTabs({ activeCategory }: CategoryTabsProps) {
     <div className="flex gap-2 mb-6 border-b border-claude-secondary/30">
       {tabs.map((tab) => {
         const isActive = activeCategory === tab.value;
-        const href = tab.value
-          ? `/library/daily-news?category=${tab.value}`
-          : "/library/daily-news";
+        const href = tab.value ? `/?category=${tab.value}` : "/";
         return (
           <Link
             key={tab.label}

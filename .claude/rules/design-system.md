@@ -25,7 +25,7 @@ description: "Clarke's Library design system - colors, typography, spacing, anim
 
 ## Typography
 
-**Font: San Francisco (system font stack) - no font files needed.**
+**Font: Inter — loaded via `next/font/google` with `latin` + `vietnamese` subsets. Chosen for full Vietnamese diacritic support.**
 
 | Element | Desktop | Mobile | Weight | Tailwind |
 |---------|---------|--------|--------|----------|
@@ -39,9 +39,9 @@ description: "Clarke's Library design system - colors, typography, spacing, anim
 
 **Font Weights:** Regular (400), Medium (500), Semibold (600), Bold (700)
 
-**System Font Stack:**
+**Font Stack:**
 ```
-sans: ['-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'Roboto', 'Helvetica', 'Arial', 'sans-serif']
+sans: ['var(--font-inter)', '-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'Roboto', 'sans-serif']
 mono: ['ui-monospace', 'SFMono-Regular', '"SF Mono"', 'Menlo', 'Monaco', 'Consolas', 'monospace']
 ```
 
