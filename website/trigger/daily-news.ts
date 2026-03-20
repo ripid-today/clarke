@@ -4,6 +4,7 @@ import { Timestamp, FieldValue } from "firebase-admin/firestore";
 import Anthropic from "@anthropic-ai/sdk";
 import Parser from "rss-parser";
 import newsSourcesData from "../config/news-sources.json";
+import { getYesterdayRangeGMT7 } from "@/lib/utils/dateGMT7";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -58,22 +59,6 @@ const rssParser = new Parser({
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
-function getYesterdayRangeGMT7(): { start: Date; end: Date; dateStr: string } {
-  const now = new Date();
-  const gmt7Offset = 7 * 60 * 60 * 1000;
-  const nowGMT7 = new Date(now.getTime() + gmt7Offset);
-  const yesterdayGMT7 = new Date(nowGMT7);
-  yesterdayGMT7.setUTCDate(yesterdayGMT7.getUTCDate() - 1);
-  yesterdayGMT7.setUTCHours(0, 0, 0, 0);
-
-  const start = new Date(yesterdayGMT7.getTime() - gmt7Offset);
-  const end = new Date(start.getTime() + 24 * 60 * 60 * 1000 - 1);
-
-  const y = yesterdayGMT7.getUTCFullYear();
-  const m = String(yesterdayGMT7.getUTCMonth() + 1).padStart(2, "0");
-  const d = String(yesterdayGMT7.getUTCDate()).padStart(2, "0");
-  return { start, end, dateStr: `${y}-${m}-${d}` };
-}
 
 function toSlug(text: string): string {
   return text
@@ -173,30 +158,34 @@ async function writeArticle(
 ): Promise<AggregatedArticle> {
   const groupItems = group.indices.filter(i => i < items.length).map(i => items[i]);
 
-  const sourceText = groupItems.map(item =>
-    `[${item.sourceName}] ${item.title}\n${item.summary}`
-  ).join("\n\n");
+  const sourceItems = groupItems.map(item => ({
+    title: item.title,
+    source: item.sourceName,
+    url: item.link,
+    summary: item.summary.substring(0, 300),
+  }));
 
-  const prompt = `You are an investment analyst writing for Vietnam-based investors.
+  const prompt = `Write a 200-300 word investment brief for Vietnam-based investors about this news topic.
 
-Output format — use EXACTLY this structure, nothing else:
-TITLE: [a compelling, specific article headline]
+FORMAT (no section headers):
+- Paragraph 1 (2-3 sentences): What happened + key number/figure + immediate impact
+- Paragraph 2 (2-3 sentences): Why it matters for Vietnam investors — gold/silver, VN-Index, USD/VND, FDI, rates
+- "**Key Numbers**" bullet list: 2-5 metrics with values
+- "**Sources:**" inline comma-separated list
 
-[1000+ word article in continuous flowing prose. No headers, bullets, or markdown.]
-
-Rules:
-- English ONLY. Translate any non-English source material.
-- Do NOT repeat the title inside the article body.
-- Cover: what happened, why it matters, market and investment implications.
+RULES:
+- Start with the specific number, event, or person — not context or scene-setting
+- Include at least one specific figure (price, %, bps, USD amount)
+- Hard cap: 300 words total. Choose the most impactful facts; do not exceed this limit
+- Write in English for a sophisticated investor audience
+- First line must be: TITLE: [a compelling, investment-focused headline]
 
 TOPIC: ${group.topicTitle}
-
-SOURCE ITEMS:
-${sourceText}`;
+SOURCE ITEMS: ${JSON.stringify(sourceItems)}`;
 
   const response = await anthropic.messages.create({
     model: "claude-haiku-4-5-20251001",
-    max_tokens: 4096,
+    max_tokens: 600,
     messages: [{ role: "user", content: prompt }],
   });
 
@@ -320,6 +309,7 @@ async function ingestArticle(
       content: article.content,
       description: article.description,
       updatedAt: now,
+      isUpdated: true,
       "metadata.wordCount": wordCount,
       "metadata.readingTime": readingTime,
       "metadata.lastModifiedBy": "brief-daily-news-v2",

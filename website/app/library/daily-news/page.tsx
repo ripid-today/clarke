@@ -1,4 +1,4 @@
-import { getDailyNewsArticles } from "@/lib/firebase/firestore";
+import { getDailyNewsArticles, getDailyNewsUpdateCount } from "@/lib/firebase/firestore";
 import { NewsArticleFeed } from "@/components/library/news/NewsArticleFeed";
 import { PaginationControls } from "@/components/library/news/PaginationControls";
 import type { Article } from "@/types/library";
@@ -20,13 +20,18 @@ export default async function DailyNewsPage({ searchParams }: PageProps) {
   let hasMore = false;
   let nextCursor: string | undefined;
   let queryError = false;
+  let updateCount = 0;
 
   if (DAILY_NEWS_FOLDER_ID) {
     try {
-      const result = await getDailyNewsArticles(DAILY_NEWS_FOLDER_ID, cursor, 20);
+      const [result, count] = await Promise.all([
+        getDailyNewsArticles(DAILY_NEWS_FOLDER_ID, cursor, 20),
+        getDailyNewsUpdateCount(DAILY_NEWS_FOLDER_ID),
+      ]);
       articles = result.articles;
       hasMore = result.hasMore;
       nextCursor = result.nextCursor;
+      updateCount = count;
     } catch (err) {
       console.error("DailyNewsPage: failed to fetch articles", err);
       queryError = true;
@@ -41,6 +46,13 @@ export default async function DailyNewsPage({ searchParams }: PageProps) {
         </h1>
         <p className="text-[17px] leading-relaxed text-claude-secondary">
           Investment-focused briefings on Vietnam and global economics. Aggregated every morning at 9 AM GMT+7.
+        </p>
+        <p className="text-[15px] text-claude-secondary mt-1">
+          {updateCount === 1
+            ? "1 article published today."
+            : updateCount > 1
+            ? `${updateCount} articles published today.`
+            : "No articles published yet today."}
         </p>
       </div>
 

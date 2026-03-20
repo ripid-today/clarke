@@ -2,6 +2,7 @@ import { adminDb } from "./admin";
 import { Timestamp } from "firebase-admin/firestore";
 import { unstable_cache } from "next/cache";
 import type { Folder, Article, SearchResult } from "@/types/library";
+import { getTodayStartGMT7 } from "@/lib/utils/dateGMT7";
 
 // Convert Firestore Admin Timestamp instances to plain serializable objects
 // so they can be passed from Server Components to Client Components
@@ -168,6 +169,17 @@ export async function getRecentArticleTitles(
     .get();
 
   return snapshot.docs.map(doc => ({ id: doc.id, title: (doc.data().title as string) || "" }));
+}
+
+export async function getDailyNewsUpdateCount(rootFolderId: string): Promise<number> {
+  const snapshot = await adminDb
+    .collection("articles")
+    .where("folderId", "==", rootFolderId)
+    .where("updatedAt", ">=", Timestamp.fromDate(getTodayStartGMT7()))
+    .count()
+    .get();
+
+  return snapshot.data().count;
 }
 
 export async function getFolderArticleCount(folderId: string): Promise<number> {

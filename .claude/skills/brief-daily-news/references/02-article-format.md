@@ -1,35 +1,30 @@
 # Article Format, Prompts & Metadata Schema
 
-## 1000-Word Article Template
+## Article Template (200-300 Words)
 
 ```markdown
-# [Headline: Concise, investment-focused title]
+# [Headline — investment-focused, concise]
+**Date:** YYYY-MM-DD | **Sources:** N | **Category:** vietnam/world
 
-**Date:** YYYY-MM-DD | **Sources:** N RSS feeds | **Topic:** topicGroup
+[Paragraph 1: 2-3 sentences — what happened, most important development, key numbers.
+Start with the number or the named event. Be specific.]
 
----
+[Paragraph 2: 2-3 sentences — why this matters for Vietnam-based investors.
+Impact on gold/silver, VN-Index, USD/VND, FDI, interest rates as applicable.]
 
-## Lead
-[150 words: What happened — the single most important development and immediate market impact]
-
-## Background
-[200 words: Why this matters — historical context, prior developments, relevant macro conditions]
-
-## Key Developments
-[350 words: Detailed breakdown — what was announced, by whom, with specific data and numbers]
-
-## Investment Implications for Vietnam
-[200 words: Specific impact for Vietnam-based investors tracking gold, silver, VN-Index, USD/VND, FDI, interest rates]
-
-## Key Data Points
+**Key Numbers**
 - [Metric]: [Value] (vs [prior period] if available)
 - [Metric]: [Value]
-- ...
 
-## Sources
-- [Source Name]: [Article title] — [URL]
-- ...
+**Sources:** [Source 1], [Source 2], ...
 ```
+
+**Writing guidelines (enforced in prompt):**
+- Lead with the specific number, person, or event — no scene-setting filler
+- Every word earns its place; cut vague transitions and filler phrases
+- Always include at least one figure/percentage/price
+- Always close with Vietnam investment relevance
+- **Hard cap: 300 words** — if choosing between facts, pick the most impactful
 
 ---
 
@@ -54,40 +49,30 @@ NEWS ITEMS:
 
 ---
 
-## Pass 2 Prompt — Article Writing
+## Pass 2 Prompt — Brief Writing
 
 ```
-Write a 1000+ word English investment briefing article about this news topic for Vietnam-based investors tracking gold, silver, VN stocks, USD/VND, and macro trends.
+Write a 200-300 word investment brief for Vietnam-based investors about this news topic.
+
+FORMAT (no section headers):
+- Paragraph 1 (2-3 sentences): What happened + key number/figure + immediate impact
+- Paragraph 2 (2-3 sentences): Why it matters for Vietnam investors — gold/silver, VN-Index, USD/VND, FDI, rates
+- "**Key Numbers**" bullet list: 2-5 metrics with values
+- "**Sources:**" inline comma-separated list
+
+RULES:
+- Start with the specific number, event, or person — not context or scene-setting
+- Include at least one specific figure (price, %, bps, USD amount)
+- Hard cap: 300 words total. Choose the most impactful facts; do not exceed this limit
+- Write in English for a sophisticated investor audience
 
 TOPIC: [topicTitle]
-
-Use this exact structure (include all headers):
-
-## Lead
-[150 words: What happened — the most important development and immediate market impact]
-
-## Background
-[200 words: Why this matters — historical context, prior developments, relevant macro conditions]
-
-## Key Developments
-[350 words: Detailed breakdown — what was announced, by whom, with specific data and numbers]
-
-## Investment Implications for Vietnam
-[200 words: Specific impact analysis for Vietnam-based investors — gold/silver prices, VN-Index, USD/VND, FDI, interest rates]
-
-## Key Data Points
-- [Metric]: [Value] (vs [prior period] if available)
-
-## Sources
-- [Source Name]: [Article title] — [URL]
-
-SOURCE ITEMS:
-[JSON array: { title, source, url, content, publishedAt }]
+SOURCE ITEMS: [JSON array: { title, source, url, summary }]
 ```
 
 **Model:** `claude-haiku-4-5-20251001`
-**Max tokens:** 2000
-**Target word count:** 1000+ words
+**Max tokens:** 600
+**Target word count:** 200-300 words
 
 ---
 
@@ -123,9 +108,14 @@ metadata: {
   sourceCount: number,        // Number of RSS items that contributed
   sourceUrls: string[],       // Array of contributing article URLs
   sourceNames: string[],      // Unique list of contributing source names
-  isAggregated: true,         // Distinguishes v2 aggregated from v1 individual articles
+  isAggregated: true,         // Distinguishes aggregated from individual articles
   lastDuplicateCheck: string, // ISO timestamp of last dedup check
 }
+```
+
+Top-level field on update:
+```typescript
+isUpdated: true  // Set when an existing article is refreshed with new content
 ```
 
 ---
@@ -135,11 +125,12 @@ metadata: {
 ```
 folders/
   DAILY_NEWS_FOLDER_ID (root folder)
-    └── YYYY-MM-DD subfolder (auto-created daily)
-        ├── article: topic-one-YYYY-MM-DD
-        ├── article: topic-two-YYYY-MM-DD
-        └── article: topic-three-YYYY-MM-DD
+    └── YYYY-MM-DD subfolder (auto-created daily, organisational only)
+
+articles/
+  All daily news articles stored with folderId = DAILY_NEWS_FOLDER_ID
+  Date tracked via metadata.newsDate
 ```
 
-- Articles: `folderId = DATE_SUBFOLDER_ID`, `folderPath = [DAILY_NEWS_FOLDER_ID, DATE_SUBFOLDER_ID]`
-- Query for flat feed: `articles WHERE folderPath array-contains DAILY_NEWS_FOLDER_ID ORDER BY publishedAt DESC`
+- Articles: `folderId = DAILY_NEWS_FOLDER_ID`, `folderPath = [DAILY_NEWS_FOLDER_ID]`
+- Query for flat feed: `articles WHERE folderId == DAILY_NEWS_FOLDER_ID ORDER BY publishedAt DESC`

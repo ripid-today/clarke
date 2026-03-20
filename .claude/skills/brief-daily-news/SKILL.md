@@ -1,106 +1,58 @@
 ---
 name: brief-daily-news
-description: Aggregate yesterday's RSS news into 5-15 distinct 1000+ word English investment briefing articles stored in date-based Firestore subfolders
-user-invokable: true
+description: Receive summarized news briefs from research-news, match against existing Firestore articles (semantic dedup), and create or update articles in Firestore. Phase 2 of the economic-journalist pipeline.
+user-invokable: false
 triggers:
   - "brief daily news"
   - "run brief daily news"
   - "generate daily briefing"
   - "aggregate daily news"
   - "news briefing"
-version: 2.0.0
+version: 3.0.0
 ---
 
 # brief-daily-news Skill
 
-Aggregate yesterday's RSS news feeds into a small set of distinct, 1000+ word English investment briefing articles per topic, stored in date-based Firestore subfolders.
+Receive `SummarizedNewsItem[]` from `research-news`, compare against the last 30 days of articles in Firestore, and create or update articles accordingly.
 
-## Trigger Phrases
+**Scope:** DB comparison and publish only. Fetching and summarizing is handled by `research-news`.
 
-- "brief daily news"
-- "run brief daily news"
-- "generate daily briefing"
-- "aggregate daily news"
-- "news briefing"
+## Workflow (4 Steps)
 
-## Workflow (7 Steps)
+### Step 1 — Receive Input
 
-### Step 1 — Determine Date Range
+Accept `SummarizedNewsItem[]` from the `research-news` skill. Each item has:
+- `title`, `slug`, `content` (200-300 words), `description`, `topicGroup`
+- `sourceCount`, `sourceUrls`, `sourceNames`, `publishedAt`, `dateStr`
 
-Calculate yesterday's date in GMT+7 (Asia/Bangkok):
-- Start: `YYYY-MM-DD 00:00:00 +0700` → convert to UTC
-- End: `YYYY-MM-DD 23:59:59 +0700` → convert to UTC
-- Date label: `YYYY-MM-DD` (used for subfolder name and article slugs)
-
-### Step 2 — Fetch All RSS Sources
-
-Parse all 39 RSS feeds from `references/01-news-sources.md`.
-- Per-feed timeout: 15 seconds (skip on failure, log error)
-- Filter: only items with `pubDate` within yesterday's GMT+7 range
-- Collect each item as `RawNewsItem`: `{ index, title, link, summary, sourceName, sourceId, category, publishedAt }`
-- Log: item count per source, total collected
-
-### Step 3 — Pass 1: Topic Grouping (Single Haiku Call)
-
-Send ALL collected items (title + summary only) to `claude-haiku-4-5-20251001` in one call.
-
-**Prompt:** See `references/02-article-format.md` → "Pass 1 Prompt"
-
-Target: 5–15 distinct topic groups. Haiku merges items about the same underlying event.
-
-Output format:
-```json
-{
-  "topics": [
-    { "topicTitle": "...", "topicId": "kebab-case-id", "indices": [0, 3, 7] }
-  ]
-}
-```
-
-### Step 4 — Pass 2: Article Writing (One Haiku Call Per Group)
-
-For each topic group, send the full content of grouped items to Haiku.
-
-**Prompt:** See `references/02-article-format.md` → "Pass 2 Prompt"
-
-Output: 1000+ word English investment briefing article with sections:
-- Lead (150 words)
-- Background (200 words)
-- Key Developments (350 words)
-- Investment Implications for Vietnam (200 words)
-- Key Data Points (bullets)
-- Sources
-
-### Step 5 — Dedup Check (One Haiku Call Per Article)
+### Step 2 — Load Recent Titles
 
 Fetch last 30 days of article titles from Firestore:
 ```
-articles WHERE folderPath array-contains DAILY_NEWS_FOLDER_ID AND publishedAt >= 30 days ago
+articles WHERE folderId == DAILY_NEWS_FOLDER_ID AND publishedAt >= 30 days ago
 ```
+Returns `{ id: string; title: string }[]`
 
-**Prompt:** See `references/02-article-format.md` → "Dedup Prompt"
+### Step 3 — Semantic Match (One Haiku Call Per Article)
 
-Output: `"null"` (new article) | existing article document ID (update existing instead of create)
+For each `SummarizedNewsItem`, run the dedup check:
 
-### Step 6 — Date Subfolder Creation
+**Prompt:** See `references/02-article-format.md` → "Dedup Check Prompt"
 
-Check Firestore `folders` collection for slug `YYYY-MM-DD` under `DAILY_NEWS_FOLDER_ID`:
-- If not exists: create with `{ name: "YYYY-MM-DD", slug: "YYYY-MM-DD", parentId: DAILY_NEWS_FOLDER_ID, path: [...], articleCount: 0, featured: false }`
-- Return subfolder ID
+- **Match found** → UPDATE: `content`, `description`, `updatedAt`, `isUpdated: true`, `metadata.version` (FieldValue.increment(1)), `metadata.wordCount`, `metadata.readingTime`, `metadata.sourceCount`, `metadata.sourceUrls`, `metadata.sourceNames`, `metadata.lastDuplicateCheck`, `metadata.lastModifiedBy`
+- **No match** → CREATE new article under `rootFolderId` with full metadata
 
-### Step 7 — Ingest to Firestore
+### Step 4 — Report
 
-For each article:
-- **New:** Create in date subfolder with full metadata; increment `articleCount` on date subfolder and root folder
-- **Duplicate:** Update `content`, `metadata`, `updatedAt` on existing article
+Return: `{ created: number, updated: number, skipped: number, errors: string[] }`
 
-**Metadata schema:** See `references/02-article-format.md` → "Article Metadata"
+## Article Metadata Schema
+
+See `references/02-article-format.md` → "Article Metadata Schema"
 
 ## Implementation Reference
 
-Full TypeScript implementation: `scripts/brief-daily-news.ts`
-
-Cron job (runs 9 AM GMT+7 daily): `website/trigger/daily-news.ts`
+Full implementation: `website/trigger/daily-news.ts`
 
 ## References
 
