@@ -157,8 +157,6 @@ async function writeArticle(
 
   const sourceItems = groupItems.map(item => ({
     title: item.title,
-    source: item.sourceName,
-    url: item.link,
     summary: item.summary.substring(0, 300),
   }));
 
@@ -175,6 +173,7 @@ RULES:
 - Hard cap: 150 words total. Choose the most impactful facts; do not exceed this limit
 - Write in English for a sophisticated investor audience
 - First line must be: TITLE: [a compelling, investment-focused headline]
+- DO NOT include a Sources, References, or Citations section
 
 TOPIC: ${group.topicTitle}
 SOURCE ITEMS: ${JSON.stringify(sourceItems)}`;
