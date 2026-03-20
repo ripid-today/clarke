@@ -217,8 +217,8 @@ SOURCE ITEMS: ${JSON.stringify(sourceItems)}`;
 
 async function getRecentArticleTitles(
   rootFolderId: string,
-  days = 30
-): Promise<{ id: string; title: string }[]> {
+  days = 7
+): Promise<{ id: string; title: string; topicGroup: string; newsDate: string }[]> {
   const cutoff = new Date();
   cutoff.setDate(cutoff.getDate() - days);
 
@@ -228,70 +228,63 @@ async function getRecentArticleTitles(
     .where("publishedAt", ">=", Timestamp.fromDate(cutoff))
     .get();
 
-  return snapshot.docs.map(doc => ({ id: doc.id, title: doc.data().title || "" }));
+  return snapshot.docs.map(doc => ({
+    id: doc.id,
+    title: doc.data().title || "",
+    topicGroup: doc.data().metadata?.topicGroup || "",
+    newsDate: doc.data().metadata?.newsDate || "",
+  }));
 }
 
-async function checkDuplicate(
-  title: string,
-  existingTitles: { id: string; title: string }[]
-): Promise<string | null> {
-  if (existingTitles.length === 0) return null;
+async function checkDuplicates(
+  newArticles: { title: string; topicGroup: string }[],
+  existingArticles: { id: string; title: string; topicGroup: string; newsDate: string }[]
+): Promise<Map<string, string | null>> {
+  if (existingArticles.length === 0) {
+    return new Map(newArticles.map(a => [a.title, null]));
+  }
 
-  const prompt = `Is the new article about the same event as any existing article?
-Reply with ONLY the matching article document ID if it is a duplicate, or "null" if it is a genuinely new event. Reply with one word only.
+  const prompt = `You are a news deduplication assistant.
+For each new article, determine if it covers the same real-world event as any existing article.
+Use SEMANTIC matching — same event even if wording differs. Do NOT match same recurring topic
+(e.g. daily gold price) across different dates — newsDate is a strong signal.
 
-New article: "${title}"
+Return ONLY valid JSON: {"matches":[{"newTitle":"...","matchedId":"existing-doc-id or null"}]}
 
-Existing articles:
-${existingTitles.map(a => `${a.id}: ${a.title}`).join("\n")}`;
+NEW ARTICLES:
+${JSON.stringify(newArticles.map(a => ({ title: a.title, topicGroup: a.topicGroup })))}
+
+EXISTING ARTICLES (last 7 days):
+${JSON.stringify(existingArticles.map(a => ({
+  id: a.id, title: a.title, topicGroup: a.topicGroup, newsDate: a.newsDate
+})))}`;
 
   const response = await anthropic.messages.create({
     model: "claude-haiku-4-5-20251001",
-    max_tokens: 100,
+    max_tokens: 1024,
     messages: [{ role: "user", content: prompt }],
   });
 
-  const text = (response.content[0].type === "text" ? response.content[0].text : "").trim();
-  return text === "null" || text === "" ? null : text;
+  const text = response.content[0].type === "text" ? response.content[0].text : "";
+  const jsonMatch = text.match(/\{[\s\S]*\}/);
+  if (!jsonMatch) throw new Error("No JSON in dedup response");
+  const parsed = JSON.parse(jsonMatch[0]) as {
+    matches: { newTitle: string; matchedId: string | "null" | null }[];
+  };
+
+  const result = new Map<string, string | null>();
+  for (const match of parsed.matches) {
+    const id = match.matchedId === "null" || !match.matchedId ? null : match.matchedId;
+    result.set(match.newTitle, id);
+  }
+  // Default unmapped articles to null (new)
+  for (const a of newArticles) {
+    if (!result.has(a.title)) result.set(a.title, null);
+  }
+  return result;
 }
 
-// ─── Phase 5: Date subfolder creation ────────────────────────────────────────
-
-async function getOrCreateDateFolder(
-  dateStr: string,
-  parentFolderId: string,
-  parentPath: string[]
-): Promise<string> {
-  const existing = await adminDb
-    .collection("folders")
-    .where("parentId", "==", parentFolderId)
-    .where("slug", "==", dateStr)
-    .limit(1)
-    .get();
-
-  if (!existing.empty) return existing.docs[0].id;
-
-  const folderRef = adminDb.collection("folders").doc();
-  const path = [...parentPath, folderRef.id];
-  await folderRef.set({
-    id: folderRef.id,
-    name: dateStr,
-    slug: dateStr,
-    parentId: parentFolderId,
-    description: `Daily news briefing for ${dateStr}`,
-    path,
-    order: 0,
-    featured: false,
-    articleCount: 0,
-    createdAt: Timestamp.now(),
-    updatedAt: Timestamp.now(),
-  });
-
-  console.log(`  Created date subfolder: ${dateStr} (${folderRef.id})`);
-  return folderRef.id;
-}
-
-// ─── Phase 6: Ingest ──────────────────────────────────────────────────────────
+// ─── Phase 5: Ingest ──────────────────────────────────────────────────────────
 
 async function ingestArticle(
   article: AggregatedArticle,
@@ -306,7 +299,6 @@ async function ingestArticle(
 
   if (duplicateId) {
     await adminDb.collection("articles").doc(duplicateId).update({
-      content: article.content,
       description: article.description,
       updatedAt: now,
       isUpdated: true,
@@ -429,29 +421,27 @@ export const dailyNewsTask = schedules.task({
       }
     }
 
-    // Phase 4: Dedup check
-    console.log(`\n[Phase 4] Checking for duplicates against last 30 days...`);
-    const existingTitles = await getRecentArticleTitles(rootFolderId, 30);
+    // Phase 4: Dedup check (single batch call)
+    console.log(`\n[Phase 4] Checking for duplicates against last 7 days...`);
+    const existingTitles = await getRecentArticleTitles(rootFolderId, 7);
     console.log(`  ${existingTitles.length} existing articles found`);
 
-    const duplicateMap = new Map<string, string | null>();
-    for (const article of aggregatedArticles) {
-      try {
-        const dupId = await checkDuplicate(article.title, existingTitles);
-        duplicateMap.set(article.slug, dupId);
-        if (dupId) console.log(`  DUPLICATE: "${article.title}" → update ${dupId}`);
-      } catch (err) {
-        console.error(`  Dedup check failed for "${article.title}":`, err);
-        duplicateMap.set(article.slug, null);
+    let duplicateMap: Map<string, string | null>;
+    try {
+      duplicateMap = await checkDuplicates(
+        aggregatedArticles.map(a => ({ title: a.title, topicGroup: a.topicGroup })),
+        existingTitles
+      );
+      for (const [title, dupId] of duplicateMap) {
+        if (dupId) console.log(`  DUPLICATE: "${title}" → update ${dupId}`);
       }
+    } catch (err) {
+      console.error(`  Dedup batch call failed:`, err);
+      duplicateMap = new Map(aggregatedArticles.map(a => [a.title, null]));
     }
 
-    // Phase 5: Create date subfolder (organisational reference only — articles stored under rootFolderId)
-    console.log(`\n[Phase 5] Getting/creating date subfolder: ${dateStr}`);
-    await getOrCreateDateFolder(dateStr, rootFolderId, rootPath);
-
-    // Phase 6: Ingest
-    console.log(`\n[Phase 6] Ingesting ${aggregatedArticles.length} articles...`);
+    // Phase 5: Ingest
+    console.log(`\n[Phase 5] Ingesting ${aggregatedArticles.length} articles...`);
     let created = 0;
     let updated = 0;
     let skipped = 0;
@@ -459,7 +449,7 @@ export const dailyNewsTask = schedules.task({
 
     for (const article of aggregatedArticles) {
       try {
-        const dupId = duplicateMap.get(article.slug) ?? null;
+        const dupId = duplicateMap.get(article.title) ?? null;
         const result = await ingestArticle(
           article,
           rootFolderId,
