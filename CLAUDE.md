@@ -27,7 +27,7 @@ npm test         # Run tests
 At the start of every session, before accepting the first task:
 1. Read `.claude/agent-memory/` for relevant agents to load prior patterns and decisions
 2. Check TaskList for any active tasks from a prior session; re-establish context if resuming
-3. Review the applicable rules in `.claude/rules/` that apply to the expected task type
+3. Route to the relevant squad agent, which carries its own rules (see Task Orchestration § Squad Routing)
 
 ### 1. Plan Mode Always On
 
@@ -137,7 +137,24 @@ Every task follows this sequence:
 **Step 2 — Apply Confidence Protocol.** Achieve 95% before implementation. Use AskUserQuestion to close gaps.
 
 **Step 3 — Select Agent and Route.**
-Check `.claude/agents/` for available agents and their descriptions. Match the task type to the agent best suited for it. For tasks spanning multiple agents, assign sequentially or in parallel based on dependencies. For complex changes (3+ agents or 5+ steps), present the full execution plan before starting.
+All investment, product, and infrastructure work routes through a squad. Use "Hey [SquadName], ..." to invoke — the squad reads its `CLAUDE.md` at `.claude/agents/squads/{squad}/CLAUDE.md` and dispatches internally.
+
+### Squad Routing
+
+| Trigger | Squad | Entry point |
+|---------|-------|-------------|
+| buy / sell / invest / analyze [ticker] | **Commander** | `.claude/agents/squads/commander/CLAUDE.md` |
+| macro / outlook / inflation / GDP (no ticker) | **Commander → Scout macro-analyst** | Commander routes internally |
+| earnings / P/E / balance sheet + ticker | **Commander → Scout micro-analyst** | Commander routes internally |
+| chart / RSI / technical / price action + ticker | **Commander → Scout technical-analyst** | Commander routes internally |
+| TII product feature / bug / UI / pipeline | **Tinker** | `.claude/agents/squads/tinker/CLAUDE.md` |
+| memory / agent improvement / skill upgrade | **Libra** | `.claude/agents/squads/libra/CLAUDE.md` |
+| PRD / requirements / specification | **Tinker → product-analyst** | Tinker routes internally |
+| frontend / UI code changes | **Tinker → frontend-engineer** | Tinker routes internally |
+| backend / API / Firestore / pipeline code | **Tinker → backend-engineer** | Tinker routes internally |
+| QA / validation / acceptance criteria | **Tinker → quality-engineer** | Tinker routes internally |
+
+See `.claude/agents/squads/SQUADS.md` for the full squad index.
 
 ---
 
