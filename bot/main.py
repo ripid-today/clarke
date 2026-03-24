@@ -2,6 +2,7 @@
 Co Telegram Bot — entry point.
 Run: python -m bot.main  (from dr_co/ directory)
 """
+import asyncio
 import logging
 from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, filters
 from bot import config, handlers
@@ -30,6 +31,10 @@ def main() -> None:
 
     if config.WEBHOOK_URL:
         logger.info("Webhook mode — %s", config.WEBHOOK_URL)
+        # Python 3.10+ no longer auto-creates an event loop outside async context.
+        # PTB's run_webhook() needs one to already exist.
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
         app.run_webhook(
             listen="0.0.0.0",
             port=config.PORT,
