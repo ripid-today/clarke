@@ -118,12 +118,17 @@ COMMANDER_TOOLS: list[dict] = [
         "input_schema": {
             "type": "object",
             "properties": {
-                "conversation_summary": {"type": "string", "description": "2-3 sentence summary"},
-                "quality_score": {"type": "integer", "description": "Self-assessment 0-100"},
+                "task": {
+                    "type": "string",
+                    "enum": ["self_improvement_scan", "knowledge_update"],
+                    "description": "Which mode to run: self_improvement_scan (post-conversation) or knowledge_update (Workflow 4)"
+                },
+                "conversation_summary": {"type": "string", "description": "2-3 sentence summary (self_improvement_scan only)"},
+                "quality_score": {"type": "integer", "description": "Self-assessment 0-100 (self_improvement_scan only)"},
                 "friction_points": {
                     "type": "array",
                     "items": {"type": "string"},
-                    "description": "Low-confidence events, routing issues, missing memory"
+                    "description": "Low-confidence events, routing issues, missing memory (self_improvement_scan only)"
                 },
                 "user_feedback": {"type": "string", "description": "Verbatim user feedback if any"},
                 "feedback_priority": {
@@ -131,9 +136,21 @@ COMMANDER_TOOLS: list[dict] = [
                     "enum": ["high", "routine"],
                     "description": "high=explicit user feedback, routine=post-conversation scan"
                 },
-                "memory_entry": {"type": "string", "description": "The Step 8 memory entry text"}
+                "memory_entry": {"type": "string", "description": "The session memory entry text"},
+                "domain": {
+                    "type": "string",
+                    "description": "Knowledge domain for knowledge_update: iching, numerology, tarot, astrology"
+                },
+                "content": {
+                    "type": "string",
+                    "description": "Verbatim content to evaluate for knowledge_update"
+                },
+                "source": {
+                    "type": "string",
+                    "description": "Source description for knowledge_update (e.g., 'user message', 'document filename')"
+                }
             },
-            "required": ["conversation_summary", "quality_score", "friction_points", "feedback_priority", "memory_entry"]
+            "required": ["task"]
         }
     },
     {
@@ -160,7 +177,7 @@ COMMANDER_TOOLS: list[dict] = [
     },
     {
         "name": "save_person",
-        "description": "Save a person's profile to Supabase after a reading. Silent — do not announce.",
+        "description": "Save a person's basic profile (name, birth date/time) to Supabase. Silent — do not announce.",
         "input_schema": {
             "type": "object",
             "properties": {
@@ -170,6 +187,25 @@ COMMANDER_TOOLS: list[dict] = [
                 "notes": {"type": "string", "description": "One-line reading summary"}
             },
             "required": ["name"]
+        }
+    },
+    {
+        "name": "save_life_writing",
+        "description": (
+            "Save the completed life writing markdown narrative to Supabase for a person. "
+            "Call this after synthesizing the full narrative, before generating the PDF. "
+            "This persists the writing so it can be retrieved without rewriting."
+        ),
+        "input_schema": {
+            "type": "object",
+            "properties": {
+                "name": {"type": "string", "description": "Person's full name"},
+                "life_writing_md": {
+                    "type": "string",
+                    "description": "Full markdown narrative of the life analysis"
+                }
+            },
+            "required": ["name", "life_writing_md"]
         }
     },
     {
@@ -190,14 +226,23 @@ COMMANDER_TOOLS: list[dict] = [
     },
     {
         "name": "generate_pdf",
-        "description": "Generate a PDF life analysis report. Bot delivers it automatically.",
+        "description": (
+            "Generate a PDF life analysis report and queue it for delivery. "
+            "Pass narrative_md (preferred) for life writing narratives, "
+            "or sections for structured output."
+        ),
         "input_schema": {
             "type": "object",
             "properties": {
                 "subject_name": {"type": "string"},
                 "birth_date": {"type": "string"},
+                "narrative_md": {
+                    "type": "string",
+                    "description": "Full markdown narrative (## headers become PDF sections). Use this for life writings."
+                },
                 "sections": {
                     "type": "array",
+                    "description": "Alternative to narrative_md: structured sections.",
                     "items": {
                         "type": "object",
                         "properties": {
@@ -208,7 +253,7 @@ COMMANDER_TOOLS: list[dict] = [
                     }
                 }
             },
-            "required": ["subject_name", "birth_date", "sections"]
+            "required": ["subject_name", "birth_date"]
         }
     },
     {
@@ -281,14 +326,27 @@ LIBRA_TOOLS: list[dict] = [
     },
     {
         "name": "write_memory",
-        "description": "Write to a .claude/ memory file. Path must be under .claude/.",
+        "description": (
+            "Write content to a file under .claude/ (memory files or knowledge files). "
+            "Path must be under .claude/ — e.g. '.claude/knowledge/numerology/life-path.md' "
+            "or '.claude/agent-memory/libra/MEMORY.md'."
+        ),
         "input_schema": {
             "type": "object",
             "properties": {
-                "path": {"type": "string"},
-                "content": {"type": "string"}
+                "path": {"type": "string", "description": "Relative path from project root, must be under .claude/"},
+                "content": {"type": "string", "description": "Full file content to write"}
             },
             "required": ["path", "content"]
+        }
+    },
+    {
+        "name": "search_knowledge",
+        "description": "Search the knowledge base to check if content already exists before adding new knowledge.",
+        "input_schema": {
+            "type": "object",
+            "properties": {"query": {"type": "string"}},
+            "required": ["query"]
         }
     },
 ]
@@ -331,6 +389,14 @@ async def _dispatch_commander_tool(
         )
         return "Đã lưu hồ sơ vào bộ nhớ."
 
+    elif name == "save_life_writing":
+        memory.save_life_writing(
+            owner_telegram_id=telegram_id,
+            name=inputs["name"],
+            life_writing_md=inputs["life_writing_md"],
+        )
+        return f"Đã lưu luận cuộc đời cho {inputs['name']}."
+
     elif name == "draw_hexagram":
         result = divination.draw_hexagram()
         return divination.format_hexagram(result)
@@ -344,7 +410,8 @@ async def _dispatch_commander_tool(
         pdf_bytes = pdf_gen.generate_pdf(
             subject_name=inputs["subject_name"],
             birth_date=inputs["birth_date"],
-            sections=inputs["sections"],
+            narrative_md=inputs.get("narrative_md"),
+            sections=inputs.get("sections"),
         )
         _current_pdf[telegram_id] = pdf_bytes
         return f"PDF đã tạo cho {inputs['subject_name']}. Đang gửi..."
@@ -388,6 +455,9 @@ def _dispatch_libra_tool(name: str, inputs: dict) -> str:
     elif name == "write_memory":
         path = config.ROOT / inputs["path"]
         return _write_memory_safe(path, inputs["content"])
+
+    elif name == "search_knowledge":
+        return knowledge.search_knowledge(inputs["query"])
 
     else:
         return f"Unknown Libra tool: {name}"
@@ -457,14 +527,24 @@ async def _run_libra(brief: dict) -> None:
             logger.debug("Libra: libra.md not found, skipping.")
             return
 
-        brief_text = (
-            f"CONVERSATION_SUMMARY: {brief.get('conversation_summary', '')}\n"
-            f"QUALITY_SCORE: {brief.get('quality_score', 75)}\n"
-            f"FRICTION_POINTS: {json.dumps(brief.get('friction_points', []))}\n"
-            f"USER_FEEDBACK: {brief.get('user_feedback', 'none')}\n"
-            f"FEEDBACK_PRIORITY: {brief.get('feedback_priority', 'routine')}\n"
-            f"MEMORY_ENTRY:\n{brief.get('memory_entry', '')}\n"
-        )
+        task = brief.get("task", "self_improvement_scan")
+        if task == "knowledge_update":
+            brief_text = (
+                f"TASK: knowledge_update\n"
+                f"DOMAIN: {brief.get('domain', '')}\n"
+                f"CONTENT: {brief.get('content', '')}\n"
+                f"SOURCE: {brief.get('source', 'user message')}\n"
+            )
+        else:
+            brief_text = (
+                f"TASK: self_improvement_scan\n"
+                f"CONVERSATION_SUMMARY: {brief.get('conversation_summary', '')}\n"
+                f"QUALITY_SCORE: {brief.get('quality_score', 75)}\n"
+                f"FRICTION_POINTS: {json.dumps(brief.get('friction_points', []))}\n"
+                f"USER_FEEDBACK: {brief.get('user_feedback', 'none')}\n"
+                f"FEEDBACK_PRIORITY: {brief.get('feedback_priority', 'routine')}\n"
+                f"MEMORY_ENTRY:\n{brief.get('memory_entry', '')}\n"
+            )
 
         messages: list[dict] = [{"role": "user", "content": brief_text}]
 

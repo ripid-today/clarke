@@ -150,18 +150,62 @@ def _make_styles(font: str) -> dict:
 # Public API
 # ---------------------------------------------------------------------------
 
+def _parse_narrative_md(narrative_md: str) -> list[dict]:
+    """
+    Parse a markdown narrative into sections for PDF rendering.
+    Lines starting with '## ' become headings; other lines become body content.
+    """
+    sections: list[dict] = []
+    current_heading = ""
+    current_lines: list[str] = []
+
+    for line in narrative_md.splitlines():
+        if line.startswith("## "):
+            if current_lines or current_heading:
+                sections.append({
+                    "heading": current_heading,
+                    "content": "\n\n".join(p.strip() for p in "\n".join(current_lines).split("\n\n") if p.strip()),
+                })
+            current_heading = line[3:].strip()
+            current_lines = []
+        elif line.startswith("### "):
+            # Treat sub-headers as bold inline text within body
+            current_lines.append(f"**{line[4:].strip()}**")
+        elif line.startswith("---"):
+            continue
+        else:
+            current_lines.append(line)
+
+    # Flush last section
+    if current_lines or current_heading:
+        sections.append({
+            "heading": current_heading,
+            "content": "\n\n".join(p.strip() for p in "\n".join(current_lines).split("\n\n") if p.strip()),
+        })
+
+    return sections
+
+
 def generate_pdf(
     subject_name: str,
     birth_date: str,
-    sections: list[dict],
+    sections: list[dict] | None = None,
+    narrative_md: str | None = None,
     generated_by: str = "Co — Chuyên gia Kinh Dịch, Nhân Số Học & Tarot",
 ) -> bytes:
     """
     Generate a life analysis PDF.
 
-    sections: list of {"heading": str, "content": str} dicts.
+    Pass either:
+    - narrative_md: a markdown string (## headers become section headings), OR
+    - sections: list of {"heading": str, "content": str} dicts.
+    narrative_md takes precedence when both are provided.
     Returns PDF bytes.
     """
+    if narrative_md:
+        sections = _parse_narrative_md(narrative_md)
+    elif not sections:
+        sections = []
     font = _get_font()
     styles = _make_styles(font)
     bold_font = font + "-Bold" if font != "Helvetica" else "Helvetica-Bold"

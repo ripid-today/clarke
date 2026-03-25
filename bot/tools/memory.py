@@ -80,6 +80,21 @@ def save_person(
     ).execute()
 
 
+def save_life_writing(owner_telegram_id: int, name: str, life_writing_md: str) -> None:
+    """
+    Save or update the life writing markdown for a person.
+    Upserts on owner_telegram_id + name; creates the person record if absent.
+    """
+    get_client().table("person_profiles").upsert(
+        {
+            "owner_telegram_id": owner_telegram_id,
+            "name": name,
+            "life_writing_md": life_writing_md,
+        },
+        on_conflict="owner_telegram_id,name",
+    ).execute()
+
+
 def list_persons(owner_telegram_id: int) -> list[dict]:
     """List all saved person profiles for a user."""
     result = (
