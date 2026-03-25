@@ -166,13 +166,44 @@ COMMANDER_TOOLS: list[dict] = [
     },
     {
         "name": "get_person",
-        "description": "Look up a person's profile in Supabase by name.",
+        "description": "Deprecated — use find_persons_by_name_and_date (W1) or find_persons_by_normalized_name (W2) instead. Look up a person's profile by name.",
         "input_schema": {
             "type": "object",
             "properties": {
                 "name": {"type": "string"}
             },
             "required": ["name"]
+        }
+    },
+    {
+        "name": "find_persons_by_normalized_name",
+        "description": (
+            "Find all person profiles matching a name, ignoring diacritics and case. "
+            "Returns {count, matches[]}. Use in Workflow 2 as the first lookup step. "
+            "1 match → proceed. 0 matches → ask for birth_date. 2+ matches → ask for birth_date to disambiguate."
+        ),
+        "input_schema": {
+            "type": "object",
+            "properties": {
+                "name": {"type": "string", "description": "Person's name — diacritics optional"}
+            },
+            "required": ["name"]
+        }
+    },
+    {
+        "name": "find_persons_by_name_and_date",
+        "description": (
+            "Find all person profiles matching name (diacritic-insensitive) AND exact birth date. "
+            "Returns {count, matches[]}. Use in Workflow 1 and Workflow 2 disambiguation. "
+            "0 matches → new entry. 1 match → retrieve or create. 2+ matches → list options and ask user to select."
+        ),
+        "input_schema": {
+            "type": "object",
+            "properties": {
+                "name": {"type": "string"},
+                "birth_date": {"type": "string", "description": "YYYY-MM-DD"}
+            },
+            "required": ["name", "birth_date"]
         }
     },
     {
@@ -194,18 +225,19 @@ COMMANDER_TOOLS: list[dict] = [
         "description": (
             "Save the completed life writing markdown narrative to Supabase for a person. "
             "Call this after synthesizing the full narrative, before generating the PDF. "
-            "This persists the writing so it can be retrieved without rewriting."
+            "birth_date is required as part of the conflict key."
         ),
         "input_schema": {
             "type": "object",
             "properties": {
                 "name": {"type": "string", "description": "Person's full name"},
+                "birth_date": {"type": "string", "description": "YYYY-MM-DD — required for correct upsert"},
                 "life_writing_md": {
                     "type": "string",
                     "description": "Full markdown narrative of the life analysis"
                 }
             },
-            "required": ["name", "life_writing_md"]
+            "required": ["name", "birth_date", "life_writing_md"]
         }
     },
     {
@@ -361,23 +393,39 @@ async def _dispatch_commander_tool(
     inputs: dict,
     telegram_id: int,
     libra_tasks: list,
+    retrieved_context_log: list,
 ) -> str:
     if name == "spawn_seer":
         return await _run_seer(inputs, telegram_id)
 
     elif name == "spawn_libra":
+        # Inject accumulated retrieved_context into the Libra brief
+        if retrieved_context_log:
+            inputs["retrieved_context"] = "\n---\n".join(retrieved_context_log)
         task = asyncio.create_task(_run_libra(inputs))
         libra_tasks.append(task)
         return "Libra spawned as background task."
 
     elif name == "search_knowledge":
-        return knowledge.search_knowledge(inputs["query"])
+        result = knowledge.search_knowledge(inputs["query"])
+        retrieved_context_log.append(f"[query: {inputs['query']}]\n{result[:500]}")
+        return result
 
     elif name == "get_person":
         person = memory.get_person(telegram_id, inputs["name"])
         if person:
             return json.dumps(person, ensure_ascii=False, default=str)
         return f"Không tìm thấy hồ sơ cho '{inputs['name']}'."
+
+    elif name == "find_persons_by_normalized_name":
+        persons = memory.find_persons_by_normalized_name(telegram_id, inputs["name"])
+        return json.dumps({"count": len(persons), "matches": persons}, ensure_ascii=False, default=str)
+
+    elif name == "find_persons_by_name_and_date":
+        persons = memory.find_persons_by_name_and_date(
+            telegram_id, inputs["name"], inputs["birth_date"]
+        )
+        return json.dumps({"count": len(persons), "matches": persons}, ensure_ascii=False, default=str)
 
     elif name == "save_person":
         memory.save_person(
@@ -393,6 +441,7 @@ async def _dispatch_commander_tool(
         memory.save_life_writing(
             owner_telegram_id=telegram_id,
             name=inputs["name"],
+            birth_date=inputs["birth_date"],
             life_writing_md=inputs["life_writing_md"],
         )
         return f"Đã lưu luận cuộc đời cho {inputs['name']}."
@@ -640,6 +689,7 @@ async def run(
     messages = history + [{"role": "user", "content": user_message}]
 
     libra_tasks: list[asyncio.Task] = []
+    retrieved_context_log: list[str] = []
 
     while True:
         response = _anthropic.messages.create(
@@ -659,7 +709,8 @@ async def run(
             for block in response.content:
                 if block.type == "tool_use":
                     result = await _dispatch_commander_tool(
-                        block.name, block.input, telegram_id, libra_tasks
+                        block.name, block.input, telegram_id, libra_tasks,
+                        retrieved_context_log,
                     )
                     tool_results.append({
                         "type": "tool_result",
@@ -672,7 +723,7 @@ async def run(
 
         # Unexpected stop reason
         parts = [b.text for b in response.content if hasattr(b, "text")]
-        return "\n".join(parts).strip() or "Tôi gặp sự cố không mong muốn. Bạn vui lòng thử lại nhé."
+        return "\n".join(parts).strip() or "Cơ gặp sự cố không mong muốn. Bạn vui lòng thử lại nhé."
 
 
 def pop_pdf(telegram_id: int) -> bytes | None:
