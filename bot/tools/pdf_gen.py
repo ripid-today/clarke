@@ -150,40 +150,116 @@ def _make_styles(font: str) -> dict:
 # Public API
 # ---------------------------------------------------------------------------
 
+def _parse_table_lines(lines: list[str]) -> list[list[str]]:
+    """Parse accumulated markdown table lines into a list of rows (each row is a list of cell strings).
+    Separator rows (|---|---|) are skipped."""
+    rows = []
+    for line in lines:
+        stripped = line.strip()
+        inner = stripped.strip("|")
+        if all(c in "-: |" for c in inner):
+            continue
+        cells = [c.strip() for c in stripped.strip("|").split("|")]
+        rows.append(cells)
+    return rows
+
+
 def _parse_narrative_md(narrative_md: str) -> list[dict]:
     """
     Parse a markdown narrative into sections for PDF rendering.
-    Lines starting with '## ' become headings; other lines become body content.
+    Lines starting with '## ' become headings.
+    Pipe-delimited blocks become table items; other lines become text items.
+    Returns list of {"heading": str, "items": [{"type": "text"/"table", ...}]}.
     """
     sections: list[dict] = []
     current_heading = ""
-    current_lines: list[str] = []
+    current_items: list[dict] = []
+    current_text_lines: list[str] = []
+    table_lines: list[str] = []
+    in_table = False
+
+    def flush_text():
+        nonlocal current_text_lines
+        joined = "\n".join(current_text_lines)
+        for p in joined.split("\n\n"):
+            p = p.strip()
+            if p:
+                current_items.append({"type": "text", "text": p})
+        current_text_lines.clear()
+
+    def flush_table():
+        nonlocal table_lines, in_table
+        if table_lines:
+            rows = _parse_table_lines(table_lines)
+            if rows:
+                current_items.append({"type": "table", "rows": rows})
+        table_lines.clear()
+        in_table = False
+
+    def flush_section():
+        nonlocal current_heading, current_items
+        flush_text()
+        flush_table()
+        if current_items or current_heading:
+            sections.append({"heading": current_heading, "items": current_items[:]})
+        current_heading = ""
+        current_items.clear()
 
     for line in narrative_md.splitlines():
         if line.startswith("## "):
-            if current_lines or current_heading:
-                sections.append({
-                    "heading": current_heading,
-                    "content": "\n\n".join(p.strip() for p in "\n".join(current_lines).split("\n\n") if p.strip()),
-                })
+            flush_text()
+            flush_table()
+            flush_section()
             current_heading = line[3:].strip()
-            current_lines = []
         elif line.startswith("### "):
-            # Treat sub-headers as bold inline text within body
-            current_lines.append(f"**{line[4:].strip()}**")
+            if in_table:
+                flush_table()
+            current_text_lines.append(f"**{line[4:].strip()}**")
         elif line.startswith("---"):
-            continue
+            pass
+        elif line.strip().startswith("|"):
+            if not in_table:
+                flush_text()
+                in_table = True
+            table_lines.append(line)
         else:
-            current_lines.append(line)
+            if in_table:
+                flush_table()
+            current_text_lines.append(line)
 
-    # Flush last section
-    if current_lines or current_heading:
-        sections.append({
-            "heading": current_heading,
-            "content": "\n\n".join(p.strip() for p in "\n".join(current_lines).split("\n\n") if p.strip()),
-        })
-
+    flush_text()
+    flush_table()
+    flush_section()
     return sections
+
+
+def _render_table(rows: list[list[str]], styles: dict, font: str, bold_font: str):
+    """Render a parsed markdown table as a reportlab Table flowable."""
+    header_style = ParagraphStyle(
+        "th", fontName=bold_font, fontSize=9,
+        textColor=HexColor("#FFFFFF"), leading=12,
+    )
+    cell_style = ParagraphStyle(
+        "td", fontName=font, fontSize=9,
+        textColor=COLOR_DARK, leading=12,
+    )
+    table_data = []
+    for i, row in enumerate(rows):
+        s = header_style if i == 0 else cell_style
+        table_data.append([Paragraph(cell, s) for cell in row])
+
+    t = Table(table_data, repeatRows=1, hAlign="LEFT")
+    t.setStyle(TableStyle([
+        ("BACKGROUND", (0, 0), (-1, 0), COLOR_ACCENT),
+        ("GRID", (0, 0), (-1, -1), 0.5, COLOR_SEPARATOR),
+        ("VALIGN", (0, 0), (-1, -1), "TOP"),
+        ("ROWBACKGROUNDS", (0, 1), (-1, -1), [COLOR_LIGHT_BG, HexColor("#FFFFFF")]),
+        ("LEFTPADDING", (0, 0), (-1, -1), 6),
+        ("RIGHTPADDING", (0, 0), (-1, -1), 6),
+        ("TOPPADDING", (0, 0), (-1, -1), 4),
+        ("BOTTOMPADDING", (0, 0), (-1, -1), 4),
+    ]))
+    return t
 
 
 def generate_pdf(
@@ -232,18 +308,26 @@ def generate_pdf(
     # Sections
     for section in sections:
         heading = section.get("heading", "")
-        content = section.get("content", "")
-
         if heading:
             story.append(Paragraph(f"◈ {heading}", styles["heading"]))
             story.append(HRFlowable(width="60%", thickness=0.5, color=COLOR_SEPARATOR, spaceAfter=6))
 
-        if content:
-            # Split into paragraphs
-            for para_text in content.split("\n\n"):
-                para_text = para_text.strip()
+        items = section.get("items")
+        if items is None:
+            # Legacy format: content is a plain string
+            content = section.get("content", "")
+            items = [{"type": "text", "text": p} for p in content.split("\n\n") if p.strip()]
+
+        for item in items:
+            if item["type"] == "text":
+                para_text = item["text"].strip()
                 if para_text:
                     story.append(Paragraph(para_text, styles["body"]))
+            elif item["type"] == "table":
+                tbl_rows = item["rows"]
+                if tbl_rows:
+                    story.append(_render_table(tbl_rows, styles, font, bold_font))
+                    story.append(Spacer(1, 0.3 * cm))
 
         story.append(Spacer(1, 0.3 * cm))
 
