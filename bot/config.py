@@ -15,9 +15,12 @@ WEBHOOK_URL: str = os.environ.get("WEBHOOK_URL", "")
 PORT: int = int(os.environ.get("PORT", "8443"))
 WEBHOOK_PATH: str = f"/{TELEGRAM_TOKEN}"
 
-CLAUDE_MODEL = "claude-haiku-4-5-20251001"
+CLAUDE_MODEL = "claude-sonnet-4-6"
 KNOWLEDGE_DIR = ROOT / ".claude" / "knowledge"
 AGENT_MEMORY_DIR = ROOT / ".claude" / "agent-memory"
+ACTIONS_DIR = ROOT / ".claude" / "actions"
+
+# Legacy paths (for backward compatibility during transition)
 COMMANDER_MD = ROOT / ".claude" / "agents" / "commander.md"
 LIBRA_MEMORY = ROOT / ".claude" / "agent-memory" / "libra" / "MEMORY.md"
 COMMANDER_MEMORY = ROOT / ".claude" / "agent-memory" / "commander" / "MEMORY.md"

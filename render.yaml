@@ -17,7 +17,10 @@ services:
         sync: false
       - key: WEBHOOK_URL
         sync: false
+      - key: PORT
+        value: 10000
     disk:
       name: agent-memory
       mountPath: /opt/render/project/src/.claude/agent-memory
       sizeGB: 1
+    healthCheckPath: /health

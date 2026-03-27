@@ -1,16 +1,162 @@
 """
-Knowledge base retrieval for Co.
-Reads INDEX.md to identify relevant files, then extracts matching sections.
-No LLM call — deterministic keyword matching.
+Knowledge base retrieval for Cơ.
+
+Retrieval tiers:
+  Tier 2 (default): BM25 keyword ranking via rank_bm25
+  Tier 3 (fallback): Deterministic keyword matching if rank_bm25 unavailable
+  Tier 1 (future): PhoBERT + vector store (not yet implemented)
 """
 import re
+import logging
 from pathlib import Path
 from bot import config
 
-# Map from keyword → list of relative file paths (populated from INDEX.md at startup)
+log = logging.getLogger(__name__)
+
+# --- BM25 availability detection ---
+try:
+    from rank_bm25 import BM25Okapi
+    _BM25_AVAILABLE = True
+except ImportError:
+    log.warning(
+        "rank_bm25 not installed — falling back to keyword search (Tier 3). "
+        "Install with: pip install rank_bm25"
+    )
+    _BM25_AVAILABLE = False
+
+
+# --- BM25 index (lazy, module-level cache) ---
+_bm25_chunks: list[dict] = []
+_bm25_index = None
+_bm25_built = False
+
+# --- Lexicon index (lazy) ---
+_lexicon_chunks: list[dict] = []
+_lexicon_index = None
+_lexicon_built = False
+
+# --- Legacy keyword index (Tier 3) ---
 _keyword_map: dict[str, list[str]] = {}
 _index_loaded = False
 
+
+def _tokenize(text: str) -> list[str]:
+    """Simple whitespace + punctuation tokenizer for BM25."""
+    return re.findall(r"\w+", text.lower())
+
+
+# ── Tier 2: BM25 ──────────────────────────────────────────────────────────────
+
+def _build_bm25_index() -> None:
+    """Build BM25 index from all knowledge .md files, chunked on ## headers."""
+    global _bm25_chunks, _bm25_index, _bm25_built
+    if _bm25_built:
+        return
+
+    knowledge_dir = config.KNOWLEDGE_DIR
+    md_files = [
+        p for p in knowledge_dir.rglob("*.md")
+        if p.name != "INDEX.md" and "terminology" not in str(p)
+    ]
+
+    chunks = []
+    for filepath in sorted(md_files):
+        try:
+            content = filepath.read_text(encoding="utf-8")
+        except Exception:
+            continue
+        # Split on ## headers (each section becomes a chunk)
+        sections = re.split(r"(?=^## )", content, flags=re.MULTILINE)
+        for section in sections:
+            section = section.strip()
+            if len(section) < 30:
+                continue
+            header_match = re.match(r"^##\s+(.+)", section)
+            header = header_match.group(1).strip() if header_match else filepath.stem
+            chunks.append({
+                "text": section,
+                "source": filepath,
+                "header": header,
+            })
+
+    if not chunks:
+        _bm25_built = True
+        return
+
+    _bm25_chunks = chunks
+    _bm25_index = BM25Okapi([_tokenize(c["text"]) for c in chunks])
+    _bm25_built = True
+
+
+def _build_lexicon_index() -> None:
+    """Build BM25 index from the domain terminology lexicon."""
+    global _lexicon_chunks, _lexicon_index, _lexicon_built
+    if _lexicon_built:
+        return
+
+    lexicon_path = config.KNOWLEDGE_DIR / "terminology" / "viet-domain-lexicon.md"
+    if not lexicon_path.exists():
+        _lexicon_built = True
+        return
+
+    try:
+        content = lexicon_path.read_text(encoding="utf-8")
+    except Exception:
+        _lexicon_built = True
+        return
+
+    chunks = []
+    for line in content.splitlines():
+        line = line.strip()
+        if (
+            line.startswith("|")
+            and not line.startswith("| Vietnamese")
+            and "---" not in line
+            and line.count("|") >= 4
+        ):
+            chunks.append({"text": line, "source": lexicon_path, "header": "lexicon"})
+
+    if not chunks:
+        _lexicon_built = True
+        return
+
+    _lexicon_chunks = chunks
+    _lexicon_index = BM25Okapi([_tokenize(c["text"]) for c in chunks])
+    _lexicon_built = True
+
+
+def search_lexicon(query: str, top_n: int = 5) -> str:
+    """
+    Search the domain terminology lexicon for terms relevant to the query.
+    Returns a formatted markdown table of matching entries, or empty string.
+    """
+    if not _BM25_AVAILABLE:
+        return ""
+    _build_lexicon_index()
+    if not _lexicon_chunks or _lexicon_index is None:
+        return ""
+
+    tokens = _tokenize(query)
+    results = _lexicon_index.get_top_n(tokens, _lexicon_chunks, n=top_n)
+    lines = [c["text"] for c in results if c["text"].strip()]
+    if not lines:
+        return ""
+
+    header = "| Vietnamese | English | Domain | Register Note | Fixed |"
+    separator = "|------------|---------|--------|---------------|-------|"
+    return "\n".join([header, separator] + lines)
+
+
+def _bm25_search(query: str, top_n: int = 5) -> list[dict]:
+    """Run BM25 retrieval over chunked knowledge files."""
+    _build_bm25_index()
+    if not _bm25_chunks or _bm25_index is None:
+        return []
+    tokens = _tokenize(query)
+    return _bm25_index.get_top_n(tokens, _bm25_chunks, n=top_n)
+
+
+# ── Tier 3: Legacy keyword fallback ───────────────────────────────────────────
 
 def _load_index() -> None:
     global _index_loaded
@@ -20,7 +166,6 @@ def _load_index() -> None:
     if not index_path.exists():
         return
     content = index_path.read_text(encoding="utf-8")
-    # Parse lines like: `- Keyword text: `path/to/file.md``
     for line in content.splitlines():
         match = re.search(r"-\s+(.+?):\s+`([^`]+)`", line)
         if match:
@@ -29,10 +174,8 @@ def _load_index() -> None:
             _keyword_map.setdefault(topic, [])
             if filepath not in _keyword_map[topic]:
                 _keyword_map[topic].append(filepath)
-        # Also parse multi-file entries: `path1.md`, `path2.md`
         elif "`" in line:
             files_in_line = re.findall(r"`([^`]+\.md)`", line)
-            # Extract topic from beginning
             topic_match = re.match(r"-\s+(.+?):", line)
             if topic_match and files_in_line:
                 topic = topic_match.group(1).lower().strip()
@@ -44,13 +187,12 @@ def _load_index() -> None:
 
 
 def _find_relevant_files(query: str) -> list[Path]:
-    """Return knowledge file paths most relevant to the query."""
+    """Tier 3: keyword-based file selection."""
     _load_index()
     query_lower = query.lower()
-    matched: dict[str, int] = {}  # filepath → match score
+    matched: dict[str, int] = {}
 
     for topic, files in _keyword_map.items():
-        # Check if any word in topic appears in query or vice versa
         topic_words = set(re.findall(r"\w+", topic))
         query_words = set(re.findall(r"\w+", query_lower))
         overlap = topic_words & query_words
@@ -58,7 +200,6 @@ def _find_relevant_files(query: str) -> list[Path]:
             for f in files:
                 matched[f] = matched.get(f, 0) + len(overlap)
 
-    # Fallback: match domain keywords directly
     domain_keywords = {
         "iching": ["iching/hexagrams-01-32.md", "iching/hexagrams-33-64.md", "iching/methods.md", "iching/trigrams.md"],
         "kinh dịch": ["iching/hexagrams-01-32.md", "iching/hexagrams-33-64.md", "iching/methods.md"],
@@ -79,7 +220,6 @@ def _find_relevant_files(query: str) -> list[Path]:
             for f in files:
                 matched[f] = matched.get(f, 0) + 5
 
-    # Sort by score, return top 3 files
     sorted_files = sorted(matched.items(), key=lambda x: x[1], reverse=True)[:3]
     result = []
     for rel_path, _ in sorted_files:
@@ -90,12 +230,11 @@ def _find_relevant_files(query: str) -> list[Path]:
 
 
 def _extract_sections(filepath: Path, query: str, context_lines: int = 30) -> str:
-    """Extract sections from a file that are relevant to the query."""
+    """Tier 3: keyword-based section extraction."""
     content = filepath.read_text(encoding="utf-8")
     lines = content.splitlines()
     query_words = set(re.findall(r"\w+", query.lower()))
 
-    # Find matching line indices
     match_indices = set()
     for i, line in enumerate(lines):
         line_words = set(re.findall(r"\w+", line.lower()))
@@ -103,10 +242,8 @@ def _extract_sections(filepath: Path, query: str, context_lines: int = 30) -> st
             match_indices.add(i)
 
     if not match_indices:
-        # Return first 60 lines as fallback
         return "\n".join(lines[:60])
 
-    # Expand to context window around matches
     expanded = set()
     for idx in match_indices:
         for j in range(max(0, idx - 5), min(len(lines), idx + context_lines)):
@@ -124,11 +261,50 @@ def _extract_sections(filepath: Path, query: str, context_lines: int = 30) -> st
     return "\n".join(extracted)
 
 
+# ── Main entry point ───────────────────────────────────────────────────────────
+
 def search_knowledge(query: str, max_chars: int = 8000) -> str:
     """
-    Main entry point for Co's knowledge tool.
-    Returns relevant knowledge content as a string, capped at max_chars.
+    Main entry point for Cơ's knowledge tool.
+
+    Tier 2 (BM25): rank_bm25 available → semantic keyword ranking over chunked files,
+                   prepended with a [TERMINOLOGY REFERENCE] block from the domain lexicon.
+    Tier 3 (fallback): rank_bm25 not available → legacy keyword + file matching.
+
+    Returns knowledge content capped at max_chars.
     """
+    # ── Tier 2: BM25 ──
+    if _BM25_AVAILABLE:
+        results = _bm25_search(query, top_n=5)
+        parts = []
+        total_chars = 0
+
+        lexicon_block = search_lexicon(query)
+        if lexicon_block:
+            section = "[TERMINOLOGY REFERENCE]\n" + lexicon_block
+            parts.append(section)
+            total_chars += len(section)
+
+        for chunk in results:
+            try:
+                rel = chunk["source"].relative_to(config.KNOWLEDGE_DIR)
+            except ValueError:
+                rel = chunk["source"].name
+            header = f"\n\n=== {rel} — {chunk['header']} ===\n"
+            entry = header + chunk["text"]
+            if total_chars + len(entry) > max_chars:
+                remaining = max_chars - total_chars
+                if remaining > 200:
+                    parts.append(entry[:remaining] + "\n[... truncated ...]")
+                break
+            parts.append(entry)
+            total_chars += len(entry)
+
+        if parts:
+            return "\n".join(parts).strip()
+        return "Không tìm thấy thông tin liên quan trong kho kiến thức."
+
+    # ── Tier 3: Legacy keyword fallback ──
     files = _find_relevant_files(query)
     if not files:
         return "Không tìm thấy thông tin liên quan trong kho kiến thức."

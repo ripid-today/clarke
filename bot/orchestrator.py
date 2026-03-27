@@ -1,676 +1,419 @@
 """
-bot/orchestrator.py
+Single-call orchestrator for Co divination system.
 
-Multi-agent engine for Co.
-
-Commander (Haiku 4.5) is the sole user-facing agent. It reads commander.md from disk
-at runtime, receives injected session memory, and orchestrates the squad.
-
-Seer (Haiku 4.5) is a silent knowledge researcher spawned synchronously by Commander
-when memory or knowledge lookup is needed. Returns structured findings to Commander only.
-
-Libra (Haiku 4.5) is a silent self-improvement agent fired as an asyncio background
-task after every completed conversation. Never blocks the user response.
+Eliminates nested agent spawning latency by using:
+1. Deterministic intent classification (router)
+2. Direct action handler calls
+3. Single LLM call for synthesis (when needed)
+4. Background Libra tasks only (fire-and-forget)
 """
+
 from __future__ import annotations
 import asyncio
-import json
 import logging
+from calendar import monthrange
 from datetime import date
-from pathlib import Path
-from typing import Any
+from typing import Any, Dict, Optional
 
 import anthropic
 
 from bot import config
-from bot.tools import knowledge, memory, divination, pdf_gen
+from bot.tools import knowledge, memory, pdf_gen
+from bot.progress import get_inquiry_response
+
+# Import action handlers
+from actions.router import (
+    classify_intent,
+    ActionType,
+    get_clarification_question,
+    extract_date,
+    extract_name,
+    extract_period,
+)
+from actions.action_qa import handle_qa, format_update_response
+from actions.action_life_writings import handle_life_writings, format_analysis_response
+from actions.action_shortcomings import handle_shortcomings, format_shortcomings_response
+from actions.action_knowledge_update import handle_knowledge_update
+
+from bot.tools.validators import parse_birth_date, parse_time_period
 
 logger = logging.getLogger(__name__)
 
-# ---------------------------------------------------------------------------
-# Anthropic client (shared across all three agents)
-# ---------------------------------------------------------------------------
-
+# Anthropic client
 _anthropic = anthropic.Anthropic(api_key=config.ANTHROPIC_API_KEY)
 
-# PDF storage keyed by telegram_id
+# PDF storage
 _current_pdf: dict[int, bytes] = {}
 
-# Model for all three agents
-COMMANDER_MODEL = "claude-haiku-4-5-20251001"
-SEER_MODEL = "claude-haiku-4-5-20251001"
-LIBRA_MODEL = "claude-haiku-4-5-20251001"
+# Active analysis tracking for inquiry handling
+_active_analyses: dict[int, Dict] = {}
 
 
-# ---------------------------------------------------------------------------
-# File helpers
-# ---------------------------------------------------------------------------
+# =============================================================================
+# Intent Classification → Action Routing
+# =============================================================================
 
-def _read_file_safe(path: Path) -> str:
-    """Read a file, returning empty string if missing or unreadable."""
-    try:
-        if path.exists():
-            return path.read_text(encoding="utf-8")
-        return ""
-    except Exception as e:
-        logger.debug("Could not read %s: %s", path, e)
-        return ""
-
-
-def _write_memory_safe(path: Path, content: str) -> str:
-    """Write content to a .claude/ memory file. Blocks writes outside .claude/."""
-    try:
-        claude_root = (config.ROOT / ".claude").resolve()
-        if not str(path.resolve()).startswith(str(claude_root)):
-            return f"BLOCKED: {path} is outside .claude/"
-        path.parent.mkdir(parents=True, exist_ok=True)
-        path.write_text(content, encoding="utf-8")
-        return f"Written {len(content)} chars to {path.name}"
-    except Exception as e:
-        return f"Write failed: {e}"
-
-
-# ---------------------------------------------------------------------------
-# Tool definitions
-# ---------------------------------------------------------------------------
-
-COMMANDER_TOOLS: list[dict] = [
-    {
-        "name": "spawn_seer",
-        "description": (
-            "Spawn the Seer sub-agent to search memory, knowledge files, or Supabase. "
-            "Use when the request references past conversations, people/birthdays, or requires "
-            "knowledge base lookup before a reading. Seer returns a structured findings report. "
-            "Seer is invisible to the user — synthesize its findings naturally."
-        ),
-        "input_schema": {
-            "type": "object",
-            "properties": {
-                "user_request": {"type": "string", "description": "Verbatim user message"},
-                "interpretation": {"type": "string", "description": "Commander's understanding of intent"},
-                "search_domains": {
-                    "type": "array",
-                    "items": {"type": "string"},
-                    "description": "Domains to search: memory, local_files, web"
-                },
-                "priority_keywords": {
-                    "type": "array",
-                    "items": {"type": "string"},
-                    "description": "Key terms, names, topics to prioritize"
-                },
-                "web_authorized": {"type": "boolean", "description": "Allow web search. Default: false."},
-                "knowledge_files": {
-                    "type": "array",
-                    "items": {"type": "string"},
-                    "description": "Specific knowledge files to read fully, relative to .claude/knowledge/"
-                }
-            },
-            "required": ["user_request", "interpretation", "search_domains", "priority_keywords"]
-        }
-    },
-    {
-        "name": "spawn_libra",
-        "description": (
-            "Spawn the Libra self-improvement agent as a background task. "
-            "Call this after every completed response, or immediately on user feedback. "
-            "Returns immediately — do NOT wait for Libra before responding to the user."
-        ),
-        "input_schema": {
-            "type": "object",
-            "properties": {
-                "task": {
-                    "type": "string",
-                    "enum": ["self_improvement_scan", "knowledge_update"],
-                    "description": "Which mode to run: self_improvement_scan (post-conversation) or knowledge_update (Workflow 4)"
-                },
-                "conversation_summary": {"type": "string", "description": "2-3 sentence summary (self_improvement_scan only)"},
-                "quality_score": {"type": "integer", "description": "Self-assessment 0-100 (self_improvement_scan only)"},
-                "friction_points": {
-                    "type": "array",
-                    "items": {"type": "string"},
-                    "description": "Low-confidence events, routing issues, missing memory (self_improvement_scan only)"
-                },
-                "user_feedback": {"type": "string", "description": "Verbatim user feedback if any"},
-                "feedback_priority": {
-                    "type": "string",
-                    "enum": ["high", "routine"],
-                    "description": "high=explicit user feedback, routine=post-conversation scan"
-                },
-                "memory_entry": {"type": "string", "description": "The session memory entry text"},
-                "domain": {
-                    "type": "string",
-                    "description": "Knowledge domain for knowledge_update: iching, numerology, tarot, astrology"
-                },
-                "content": {
-                    "type": "string",
-                    "description": "Verbatim content to evaluate for knowledge_update"
-                },
-                "source": {
-                    "type": "string",
-                    "description": "Source description for knowledge_update (e.g., 'user message', 'document filename')"
-                }
-            },
-            "required": ["task"]
-        }
-    },
-    {
-        "name": "search_knowledge",
-        "description": "Search the local knowledge base (I Ching, numerology, tarot, astrology). Call before any reading.",
-        "input_schema": {
-            "type": "object",
-            "properties": {
-                "query": {"type": "string", "description": "Search keywords"}
-            },
-            "required": ["query"]
-        }
-    },
-    {
-        "name": "get_person",
-        "description": "Deprecated — use find_persons_by_name_and_date (W1) or find_persons_by_normalized_name (W2) instead. Look up a person's profile by name.",
-        "input_schema": {
-            "type": "object",
-            "properties": {
-                "name": {"type": "string"}
-            },
-            "required": ["name"]
-        }
-    },
-    {
-        "name": "find_persons_by_normalized_name",
-        "description": (
-            "Find all person profiles matching a name, ignoring diacritics and case. "
-            "Returns {count, matches[]}. Use in Workflow 2 as the first lookup step. "
-            "1 match → proceed. 0 matches → ask for birth_date. 2+ matches → ask for birth_date to disambiguate."
-        ),
-        "input_schema": {
-            "type": "object",
-            "properties": {
-                "name": {"type": "string", "description": "Person's name — diacritics optional"}
-            },
-            "required": ["name"]
-        }
-    },
-    {
-        "name": "find_persons_by_name_and_date",
-        "description": (
-            "Find all person profiles matching name (diacritic-insensitive) AND exact birth date. "
-            "Returns {count, matches[]}. Use in Workflow 1 and Workflow 2 disambiguation. "
-            "0 matches → new entry. 1 match → retrieve or create. 2+ matches → list options and ask user to select."
-        ),
-        "input_schema": {
-            "type": "object",
-            "properties": {
-                "name": {"type": "string"},
-                "birth_date": {"type": "string", "description": "YYYY-MM-DD"}
-            },
-            "required": ["name", "birth_date"]
-        }
-    },
-    {
-        "name": "save_person",
-        "description": "Save a person's basic profile (name, birth date/time) to Supabase. Silent — do not announce.",
-        "input_schema": {
-            "type": "object",
-            "properties": {
-                "name": {"type": "string"},
-                "birth_date": {"type": "string", "description": "YYYY-MM-DD"},
-                "birth_time": {"type": "string", "description": "HH:MM (optional)"},
-                "notes": {"type": "string", "description": "One-line reading summary"}
-            },
-            "required": ["name"]
-        }
-    },
-    {
-        "name": "save_life_writing",
-        "description": (
-            "Save the completed life writing markdown narrative to Supabase for a person. "
-            "Call this after synthesizing the full narrative, before generating the PDF. "
-            "birth_date is required as part of the conflict key."
-        ),
-        "input_schema": {
-            "type": "object",
-            "properties": {
-                "name": {"type": "string", "description": "Person's full name"},
-                "birth_date": {"type": "string", "description": "YYYY-MM-DD — required for correct upsert"},
-                "life_writing_md": {
-                    "type": "string",
-                    "description": "Full markdown narrative of the life analysis"
-                }
-            },
-            "required": ["name", "birth_date", "life_writing_md"]
-        }
-    },
-    {
-        "name": "draw_hexagram",
-        "description": "Cast an I Ching hexagram using the three-coin method.",
-        "input_schema": {"type": "object", "properties": {}, "required": []}
-    },
-    {
-        "name": "draw_tarot",
-        "description": "Draw n random tarot cards.",
-        "input_schema": {
-            "type": "object",
-            "properties": {
-                "n": {"type": "integer", "description": "Number of cards (default 1, max 10)"}
-            },
-            "required": []
-        }
-    },
-    {
-        "name": "generate_pdf",
-        "description": (
-            "Generate a PDF life analysis report and queue it for delivery. "
-            "Pass narrative_md (preferred) for life writing narratives, "
-            "or sections for structured output."
-        ),
-        "input_schema": {
-            "type": "object",
-            "properties": {
-                "subject_name": {"type": "string"},
-                "birth_date": {"type": "string"},
-                "narrative_md": {
-                    "type": "string",
-                    "description": "Full markdown narrative (## headers become PDF sections). Use this for life writings."
-                },
-                "sections": {
-                    "type": "array",
-                    "description": "Alternative to narrative_md: structured sections.",
-                    "items": {
-                        "type": "object",
-                        "properties": {
-                            "heading": {"type": "string"},
-                            "content": {"type": "string"}
-                        },
-                        "required": ["heading", "content"]
-                    }
-                }
-            },
-            "required": ["subject_name", "birth_date"]
-        }
-    },
-    {
-        "name": "write_memory",
-        "description": "Write or update a memory file under .claude/agent-memory/. Used for Step 8 memory update.",
-        "input_schema": {
-            "type": "object",
-            "properties": {
-                "path": {
-                    "type": "string",
-                    "description": "Relative path from project root, must be under .claude/ (e.g. '.claude/agent-memory/commander/MEMORY.md')"
-                },
-                "content": {"type": "string", "description": "Full file content to write"}
-            },
-            "required": ["path", "content"]
-        }
-    },
-    {
-        "name": "read_file",
-        "description": "Read a file from disk. Use to read memory files or knowledge files.",
-        "input_schema": {
-            "type": "object",
-            "properties": {
-                "path": {"type": "string", "description": "Relative path from project root"}
-            },
-            "required": ["path"]
-        }
-    },
-]
-
-SEER_TOOLS: list[dict] = [
-    {
-        "name": "search_knowledge",
-        "description": "Search the knowledge base files for relevant content.",
-        "input_schema": {
-            "type": "object",
-            "properties": {"query": {"type": "string"}},
-            "required": ["query"]
-        }
-    },
-    {
-        "name": "get_person",
-        "description": "Look up a person profile in Supabase.",
-        "input_schema": {
-            "type": "object",
-            "properties": {"name": {"type": "string"}},
-            "required": ["name"]
-        }
-    },
-    {
-        "name": "read_file",
-        "description": "Read a file from disk (memory files, knowledge files).",
-        "input_schema": {
-            "type": "object",
-            "properties": {"path": {"type": "string"}},
-            "required": ["path"]
-        }
-    },
-]
-
-LIBRA_TOOLS: list[dict] = [
-    {
-        "name": "read_file",
-        "description": "Read any file from disk.",
-        "input_schema": {
-            "type": "object",
-            "properties": {"path": {"type": "string"}},
-            "required": ["path"]
-        }
-    },
-    {
-        "name": "write_memory",
-        "description": (
-            "Write content to a file under .claude/ (memory files or knowledge files). "
-            "Path must be under .claude/ — e.g. '.claude/knowledge/numerology/life-path.md' "
-            "or '.claude/agent-memory/libra/MEMORY.md'."
-        ),
-        "input_schema": {
-            "type": "object",
-            "properties": {
-                "path": {"type": "string", "description": "Relative path from project root, must be under .claude/"},
-                "content": {"type": "string", "description": "Full file content to write"}
-            },
-            "required": ["path", "content"]
-        }
-    },
-    {
-        "name": "search_knowledge",
-        "description": "Search the knowledge base to check if content already exists before adding new knowledge.",
-        "input_schema": {
-            "type": "object",
-            "properties": {"query": {"type": "string"}},
-            "required": ["query"]
-        }
-    },
-]
-
-
-# ---------------------------------------------------------------------------
-# Tool dispatchers
-# ---------------------------------------------------------------------------
-
-async def _dispatch_commander_tool(
-    name: str,
-    inputs: dict,
+async def route_and_execute(
     telegram_id: int,
-    libra_tasks: list,
-    retrieved_context_log: list,
+    user_message: str,
+    user_first_name: str | None = None,
 ) -> str:
-    if name == "spawn_seer":
-        return await _run_seer(inputs, telegram_id)
+    """
+    Main entry point: classify intent and execute appropriate action.
 
-    elif name == "spawn_libra":
-        # Inject accumulated retrieved_context into the Libra brief
-        if retrieved_context_log:
-            inputs["retrieved_context"] = "\n---\n".join(retrieved_context_log)
-        task = asyncio.create_task(_run_libra(inputs))
-        libra_tasks.append(task)
-        return "Libra spawned as background task."
+    This is the core single-call flow:
+    1. Classify intent using deterministic router
+    2. If confidence < 95%, ask clarifying question
+    3. Execute action handler directly
+    4. Return result
+    """
+    # Check if this is an inquiry during active analysis
+    if telegram_id in _active_analyses:
+        if _is_how_long_inquiry(user_message):
+            return _handle_how_long_inquiry(telegram_id)
 
-    elif name == "search_knowledge":
-        result = knowledge.search_knowledge(inputs["query"])
-        retrieved_context_log.append(f"[query: {inputs['query']}]\n{result[:500]}")
-        return result
+    # Classify intent
+    classification = classify_intent(user_message)
 
-    elif name == "get_person":
-        person = memory.get_person(telegram_id, inputs["name"])
-        if person:
-            return json.dumps(person, ensure_ascii=False, default=str)
-        return f"Không tìm thấy hồ sơ cho '{inputs['name']}'."
+    # Handle low confidence - ask clarifying question
+    if classification.requires_clarification:
+        question = classification.clarification_question or get_clarification_question(classification)
+        return question
 
-    elif name == "find_persons_by_normalized_name":
-        persons = memory.find_persons_by_normalized_name(telegram_id, inputs["name"])
-        return json.dumps({"count": len(persons), "matches": persons}, ensure_ascii=False, default=str)
+    # Route to appropriate action
+    action = classification.action
+    params = classification.extracted_params
 
-    elif name == "find_persons_by_name_and_date":
-        persons = memory.find_persons_by_name_and_date(
-            telegram_id, inputs["name"], inputs["birth_date"]
+    # Parse extracted parameters
+    name = params.get("name") or extract_name(user_message)
+
+    date_info = params.get("birth_date") or extract_date(user_message)
+    birth_date = None
+    if date_info:
+        try:
+            year = date_info.get("year") or date.today().year - 25  # Default assumption
+            birth_date = date(year, date_info["month"], date_info["day"])
+        except (ValueError, TypeError):
+            birth_date = None
+
+    # Execute based on action type
+    if action == ActionType.QA:
+        return await handle_qa(user_message, {})
+
+    elif action == ActionType.KNOWLEDGE_UPDATE:
+        result = await handle_knowledge_update(user_message)
+        # Trigger Libra in background for knowledge evaluation
+        _spawn_libra_background(
+            telegram_id=telegram_id,
+            task="knowledge_update",
+            domain=result.get("package", {}).get("domain", "general"),
+            content=result.get("package", {}).get("content", user_message),
         )
-        return json.dumps({"count": len(persons), "matches": persons}, ensure_ascii=False, default=str)
+        return result.get("message", "Cơ đã ghi nhận.")
 
-    elif name == "save_person":
-        memory.save_person(
-            owner_telegram_id=telegram_id,
-            name=inputs["name"],
-            birth_date=inputs.get("birth_date"),
-            birth_time=inputs.get("birth_time"),
-            notes=inputs.get("notes"),
-        )
-        return "Đã lưu hồ sơ vào bộ nhớ."
+    elif action == ActionType.LIFE_WRITINGS:
+        if not birth_date:
+            return "Cơ cần biết ngày sinh của bạn (DD/MM/YYYY) để phân tích. Bạn cho Cơ biết nhé!"
 
-    elif name == "save_life_writing":
-        memory.save_life_writing(
-            owner_telegram_id=telegram_id,
-            name=inputs["name"],
-            birth_date=inputs["birth_date"],
-            life_writing_md=inputs["life_writing_md"],
-        )
-        return f"Đã lưu luận cuộc đời cho {inputs['name']}."
+        # Track active analysis for inquiry handling
+        _active_analyses[telegram_id] = {
+            "action": "life_writings",
+            "start_time": asyncio.get_event_loop().time(),
+        }
 
-    elif name == "draw_hexagram":
-        result = divination.draw_hexagram()
-        return divination.format_hexagram(result)
+        try:
+            # Execute with progress tracking
+            results = await handle_life_writings(
+                name=name or "bạn",
+                birth_date=birth_date,
+                send_progress=lambda m: None,  # Handled via chat action
+                edit_progress=None,
+            )
 
-    elif name == "draw_tarot":
-        n = min(int(inputs.get("n", 1)), 10)
-        cards = divination.draw_tarot(n)
-        return divination.format_tarot(cards)
+            # Store PDF if generated
+            if results.get("pdf_bytes"):
+                _current_pdf[telegram_id] = results["pdf_bytes"]
 
-    elif name == "generate_pdf":
-        pdf_bytes = pdf_gen.generate_pdf(
-            subject_name=inputs["subject_name"],
-            birth_date=inputs["birth_date"],
-            narrative_md=inputs.get("narrative_md"),
-            sections=inputs.get("sections"),
-        )
-        _current_pdf[telegram_id] = pdf_bytes
-        return f"PDF đã tạo cho {inputs['subject_name']}. Đang gửi..."
+            # Generate synthesis via single LLM call
+            response = await _synthesize_response(
+                action=action,
+                results=results,
+                user_first_name=user_first_name,
+            )
 
-    elif name == "write_memory":
-        path = config.ROOT / inputs["path"]
-        return _write_memory_safe(path, inputs["content"])
+            return response
 
-    elif name == "read_file":
-        path = config.ROOT / inputs["path"]
-        content = _read_file_safe(path)
-        return content if content else f"File not found: {inputs['path']}"
+        finally:
+            # Clear active analysis
+            _active_analyses.pop(telegram_id, None)
 
+    elif action == ActionType.SHORTCOMINGS:
+        if not birth_date:
+            return "Cơ cần biết ngày sinh (DD/MM/YYYY) để xem vận hạn. Bạn cho Cơ biết nhé!"
+
+        # Parse period
+        period_info = params.get("period") or extract_period(user_message)
+        period = None
+        if period_info:
+            period = _period_info_to_dates(period_info)
+
+        if not period:
+            # Default to current month
+            today = date.today()
+            from calendar import monthrange
+            last_day = monthrange(today.year, today.month)[1]
+            period = (date(today.year, today.month, 1), date(today.year, today.month, last_day))
+
+        # Track active analysis
+        _active_analyses[telegram_id] = {
+            "action": "shortcomings",
+            "start_time": asyncio.get_event_loop().time(),
+        }
+
+        try:
+            results = await handle_shortcomings(
+                name=name or "bạn",
+                birth_date=birth_date,
+                period_start=period[0],
+                period_end=period[1],
+                specific_question=user_message if "?" in user_message else None,
+                send_progress=lambda m: None,
+                edit_progress=None,
+            )
+
+            response = await _synthesize_response(
+                action=action,
+                results=results,
+                user_first_name=user_first_name,
+            )
+
+            return response
+
+        finally:
+            _active_analyses.pop(telegram_id, None)
+
+    # Fallback to QA
+    return await handle_qa(user_message, {})
+
+
+def _is_how_long_inquiry(text: str) -> bool:
+    """Check if user is asking about wait time."""
+    text_lower = text.lower().strip()
+    inquiry_patterns = [
+        r'\blâu\s+(chưa|không|vậy|thế)',
+        r'\bxong\s+(chưa|không)',
+        r'\bmấy\s+(phút|giây|lâu)',
+        r'\bbao\s+lâu',
+        r'\bchờ\s+lâu',
+        r'\bsao\s+lâu',
+    ]
+    return any(__import__('re').search(p, text_lower) for p in inquiry_patterns)
+
+
+def _handle_how_long_inquiry(telegram_id: int) -> str:
+    """Generate inquiry response based on active analysis."""
+    analysis = _active_analyses.get(telegram_id)
+    if not analysis:
+        return "Cơ đang xử lý, bạn chờ Cơ thêm chút nhé!"
+
+    # Estimate remaining time based on stage
+    elapsed = asyncio.get_event_loop().time() - analysis.get("start_time", 0)
+    estimated_total = 8  # 8 seconds for life writings
+    remaining = max(0, estimated_total - elapsed)
+
+    if remaining < 2:
+        time_str = "vài giây"
+    elif remaining < 5:
+        time_str = f"khoảng {int(remaining)} giây"
     else:
-        return f"Unknown tool: {name}"
+        time_str = f"khoảng {int(remaining)} giây"
+
+    return get_inquiry_response(time_str)
 
 
-def _dispatch_seer_tool(name: str, inputs: dict, telegram_id: int) -> str:
-    if name == "search_knowledge":
-        return knowledge.search_knowledge(inputs["query"])
-
-    elif name == "get_person":
-        person = memory.get_person(telegram_id, inputs["name"])
-        if person:
-            return json.dumps(person, ensure_ascii=False, default=str)
-        return f"No record found for '{inputs['name']}'."
-
-    elif name == "read_file":
-        path = config.ROOT / inputs["path"]
-        return _read_file_safe(path)
-
-    else:
-        return f"Unknown Seer tool: {name}"
-
-
-def _dispatch_libra_tool(name: str, inputs: dict) -> str:
-    if name == "read_file":
-        path = config.ROOT / inputs["path"]
-        return _read_file_safe(path)
-
-    elif name == "write_memory":
-        path = config.ROOT / inputs["path"]
-        return _write_memory_safe(path, inputs["content"])
-
-    elif name == "search_knowledge":
-        return knowledge.search_knowledge(inputs["query"])
-
-    else:
-        return f"Unknown Libra tool: {name}"
-
-
-# ---------------------------------------------------------------------------
-# Seer agent (blocking — Commander waits for findings)
-# ---------------------------------------------------------------------------
-
-async def _run_seer(query: dict, telegram_id: int) -> str:
-    """Invoke Seer as a nested API call. Returns findings string to Commander."""
-    seer_prompt = _read_file_safe(config.ROOT / ".claude" / "agents" / "seer.md")
-    if not seer_prompt:
-        return "SEER_ERROR: seer.md not found."
-
-    brief = (
-        f"USER_REQUEST: {query.get('user_request', '')}\n"
-        f"INTERPRETATION: {query.get('interpretation', '')}\n"
-        f"SEARCH_DOMAINS: {', '.join(query.get('search_domains', []))}\n"
-        f"PRIORITY_KEYWORDS: {', '.join(query.get('priority_keywords', []))}\n"
-        f"WEB_AUTHORIZED: {str(query.get('web_authorized', False)).lower()}\n"
-    )
-    if query.get("knowledge_files"):
-        brief += f"KNOWLEDGE_FILES: {', '.join(query['knowledge_files'])}\n"
-
-    messages: list[dict] = [{"role": "user", "content": brief}]
-
-    while True:
-        response = _anthropic.messages.create(
-            model=SEER_MODEL,
-            system=seer_prompt,
-            messages=messages,
-            tools=SEER_TOOLS,
-            max_tokens=config.MAX_TOKENS,
-        )
-
-        if response.stop_reason == "end_turn":
-            parts = [b.text for b in response.content if hasattr(b, "text")]
-            return "\n".join(parts).strip() or "Seer returned no findings."
-
-        if response.stop_reason == "tool_use":
-            results = []
-            for block in response.content:
-                if block.type == "tool_use":
-                    result = _dispatch_seer_tool(block.name, block.input, telegram_id)
-                    results.append({
-                        "type": "tool_result",
-                        "tool_use_id": block.id,
-                        "content": result,
-                    })
-            messages.append({"role": "assistant", "content": response.content})
-            messages.append({"role": "user", "content": results})
-            continue
-
-        return "SEER_ERROR: Unexpected stop reason."
-
-
-# ---------------------------------------------------------------------------
-# Libra agent (fire-and-forget background task)
-# ---------------------------------------------------------------------------
-
-async def _run_libra(brief: dict) -> None:
-    """Run Libra as a background asyncio task. Never blocks Commander."""
+def _period_info_to_dates(period_info: Dict) -> Optional[tuple]:
+    """Convert period info dict to date tuple."""
     try:
-        libra_prompt = _read_file_safe(config.ROOT / ".claude" / "agents" / "libra.md")
-        if not libra_prompt:
-            logger.debug("Libra: libra.md not found, skipping.")
-            return
+        if period_info.get("type") == "month":
+            year = period_info.get("year") or date.today().year
+            month = period_info["month"]
+            last_day = monthrange(year, month)[1]
+            return (date(year, month, 1), date(year, month, last_day))
 
-        task = brief.get("task", "self_improvement_scan")
-        if task == "knowledge_update":
-            brief_text = (
-                f"TASK: knowledge_update\n"
-                f"DOMAIN: {brief.get('domain', '')}\n"
-                f"CONTENT: {brief.get('content', '')}\n"
-                f"SOURCE: {brief.get('source', 'user message')}\n"
-            )
-        else:
-            brief_text = (
-                f"TASK: self_improvement_scan\n"
-                f"CONVERSATION_SUMMARY: {brief.get('conversation_summary', '')}\n"
-                f"QUALITY_SCORE: {brief.get('quality_score', 75)}\n"
-                f"FRICTION_POINTS: {json.dumps(brief.get('friction_points', []))}\n"
-                f"USER_FEEDBACK: {brief.get('user_feedback', 'none')}\n"
-                f"FEEDBACK_PRIORITY: {brief.get('feedback_priority', 'routine')}\n"
-                f"MEMORY_ENTRY:\n{brief.get('memory_entry', '')}\n"
-            )
+        elif period_info.get("type") == "quarter":
+            year = period_info.get("year") or date.today().year
+            quarter = period_info["quarter"]
+            start_month = (quarter - 1) * 3 + 1
+            end_month = start_month + 2
+            last_day = monthrange(year, end_month)[1]
+            return (date(year, start_month, 1), date(year, end_month, last_day))
 
-        messages: list[dict] = [{"role": "user", "content": brief_text}]
+        elif period_info.get("type") == "year":
+            year = period_info["year"]
+            return (date(year, 1, 1), date(year, 12, 31))
 
-        while True:
-            response = _anthropic.messages.create(
-                model=LIBRA_MODEL,
-                system=libra_prompt,
-                messages=messages,
-                tools=LIBRA_TOOLS,
-                max_tokens=2048,
-            )
+    except (ValueError, KeyError):
+        pass
 
-            if response.stop_reason == "end_turn":
-                parts = [b.text for b in response.content if hasattr(b, "text")]
-                logger.info("Libra scan complete: %s", "\n".join(parts)[:200])
-                return
+    return None
 
-            if response.stop_reason == "tool_use":
-                results = []
-                for block in response.content:
-                    if block.type == "tool_use":
-                        result = _dispatch_libra_tool(block.name, block.input)
-                        results.append({
-                            "type": "tool_result",
-                            "tool_use_id": block.id,
-                            "content": result,
-                        })
-                messages.append({"role": "assistant", "content": response.content})
-                messages.append({"role": "user", "content": results})
-                continue
 
-            return
+# =============================================================================
+# Response Synthesis (Single LLM Call)
+# =============================================================================
+
+async def _synthesize_response(
+    action: ActionType,
+    results: Dict,
+    user_first_name: str | None = None,
+) -> str:
+    """
+    Synthesize action results into Cơ's natural Vietnamese response.
+
+    This is the ONLY LLM call in the action flow (except QA which may not need it).
+    Uses structured output format for reliability.
+    """
+    # Handle errors first
+    if "error" in results:
+        return f"Cơ xin lỗi: {results['error']}"
+
+    # Build synthesis prompt
+    if action == ActionType.LIFE_WRITINGS:
+        system_prompt = _build_life_writings_synthesis_prompt()
+        context = format_analysis_response(results)
+    elif action == ActionType.SHORTCOMINGS:
+        system_prompt = _build_shortcomings_synthesis_prompt()
+        context = format_shortcomings_response(results)
+    else:
+        return results.get("message", "Cơ đã hoàn thành phân tích.")
+
+    user_prompt = f"""Thông tin phân tích:
+
+{context}
+
+Hãy viết luận giải tự nhiên, ấm áp, dùng từ "Cơ" và "bạn"."""
+
+    try:
+        response = _anthropic.messages.create(
+            model=config.CLAUDE_MODEL,
+            system=system_prompt,
+            messages=[{"role": "user", "content": user_prompt}],
+            max_tokens=config.MAX_TOKENS,
+            temperature=0.7,
+        )
+
+        parts = [b.text for b in response.content if hasattr(b, "text")]
+        return "\n".join(parts).strip()
 
     except Exception as e:
-        logger.debug("Libra background error: %s", e)
+        logger.exception("Synthesis failed, returning structured response")
+        # Fallback to structured response
+        return context
 
 
-# ---------------------------------------------------------------------------
-# Commander system prompt builder
-# ---------------------------------------------------------------------------
+def _build_life_writings_synthesis_prompt() -> str:
+    """Build system prompt for life writings synthesis."""
+    return """Bạn là Cơ - chuyên gia thần số học, Tarot và Kinh Dịch.
 
-def _build_commander_system(user_first_name: str | None = None) -> str:
-    """Read commander.md from disk and prepend date/user preamble."""
-    commander_md = _read_file_safe(config.COMMANDER_MD)
+NHIỆM VỤ: Viết luận giải phân tích số mệnh tự nhiên, ấm áp.
 
-    today = date.today().strftime("%d/%m/%Y")
-    preamble = f"Hôm nay là {today}."
-    if user_first_name:
-        preamble += f" Người dùng tên là {user_first_name}."
-    preamble += "\n\n"
+QUY TẮC:
+1. Dùng từ "Cơ" khi nói về mình, "bạn" khi nói về người dùng
+2. Viết như đang trò chuyện, không như báo cáo
+3. Nhấn mạnh điểm mạnh, nhẹ nhàng gợi ý điểm cần chú ý
+4. Kết thúc bằng lời chúc hoặc khích lệ
+5. Không dùng emoji
+6. Không liệt kê máy móc các con số
 
-    if commander_md:
-        return preamble + commander_md
-
-    logger.warning("commander.md not found — using minimal fallback prompt")
-    return preamble + "Bạn là Co, chuyên gia về Kinh Dịch, Nhân Số Học và Tarot. Trả lời bằng tiếng Việt."
-
-
-def _inject_commander_memory(system_prompt: str) -> str:
-    """Proactively inject MEMORY.md into Commander's system prompt."""
-    memory_content = _read_file_safe(config.COMMANDER_MEMORY)
-    if not memory_content:
-        memory_content = "# Commander Memory\n[Fresh session — no prior context]\n"
-
-    block = (
-        "\n\n---\n"
-        "## INJECTED SESSION MEMORY\n"
-        "The following is your current MEMORY.md. Use it to restore session continuity.\n\n"
-        f"{memory_content}\n"
-        "---\n"
-    )
-    return system_prompt + block
+CẤU TRÚC:
+- Mở đầu: Giới thiệu chỉ số chính
+- Thân: Phân tích các mũi tên và 13 ngôi nhà
+- Kết: Lời khuyên và chúc phúc"""
 
 
-# ---------------------------------------------------------------------------
-# Public API
-# ---------------------------------------------------------------------------
+def _build_shortcomings_synthesis_prompt() -> str:
+    """Build system prompt for shortcomings synthesis."""
+    return """Bạn là Cơ - chuyên gia thần số học, Tarot và Kinh Dịch.
+
+NHIỆM VỤ: Viết luận giải về vận hạn và khó khăn một cách nhẹ nhàng, xây dựng.
+
+QUY TẮC:
+1. Dùng từ "Cơ" khi nói về mình, "bạn" khi nói về người dùng
+2. Không gieo rắc sợ hãi - mọi thách thức đều là cơ hội phát triển
+3. Đưa ra giải pháp cụ thể, không chỉ chỉ ra vấn đề
+4. Nhấn mạnh tính tạm thời của khó khăn
+5. Không dùng emoji
+
+CẤU TRÚC:
+- Mở đầu: Tổng quan chu kỳ hiện tại
+- Thân: Các thờ điểm cần lưu ý và giải pháp
+- Kết: Động viên và hướng tới tương lai tích cực"""
+
+
+# =============================================================================
+# Libra Background Tasks (Fire-and-Forget Only)
+# =============================================================================
+
+def _spawn_libra_background(
+    telegram_id: int,
+    task: str,
+    domain: str = "",
+    content: str = "",
+    conversation_summary: str = "",
+    quality_score: int = 75,
+) -> None:
+    """Spawn Libra as true background task - never blocks."""
+    try:
+        brief = {
+            "task": task,
+            "telegram_id": telegram_id,
+        }
+
+        if task == "knowledge_update":
+            brief["domain"] = domain
+            brief["content"] = content[:1000]  # Truncate for brevity
+            brief["source"] = "user message"
+        else:
+            brief["conversation_summary"] = conversation_summary
+            brief["quality_score"] = quality_score
+            brief["feedback_priority"] = "routine"
+
+        # Create task without awaiting
+        asyncio.create_task(_run_libra(brief))
+
+    except Exception as e:
+        logger.debug("Libra spawn failed: %s", e)
+
+
+async def _run_libra(brief: Dict) -> None:
+    """Run Libra - truly background, never blocks user response."""
+    try:
+        # Read libra.md for system prompt
+        libra_md = config.ROOT / ".claude" / "agents" / "libra.md"
+        system_prompt = ""
+        if libra_md.exists():
+            system_prompt = libra_md.read_text(encoding="utf-8")
+
+        brief_text = f"TASK: {brief.get('task')}\n"
+        for key, value in brief.items():
+            if key != "task":
+                brief_text += f"{key.upper()}: {value}\n"
+
+        # Libra operates autonomously - no response needed
+        _anthropic.messages.create(
+            model=config.CLAUDE_MODEL,
+            system=system_prompt or "You are Libra, the self-improvement agent.",
+            messages=[{"role": "user", "content": brief_text}],
+            max_tokens=2048,
+        )
+
+    except Exception as e:
+        logger.debug("Libra run error (non-critical): %s", e)
+
+
+# =============================================================================
+# Legacy Compatibility
+# =============================================================================
 
 async def run(
     telegram_id: int,
@@ -678,52 +421,16 @@ async def run(
     user_first_name: str | None = None,
 ) -> str:
     """
-    Run the Commander-led agent loop for one user message.
-    Returns the final text response.
-    Any generated PDF is stored via _current_pdf[telegram_id] for handlers to send.
+    Legacy-compatible entry point.
+
+    Maintains same signature as old orchestrator for handler compatibility.
+    Internally uses new single-call flow.
     """
-    system = _build_commander_system(user_first_name)
-    system = _inject_commander_memory(system)
-
-    history = memory.get_history(telegram_id)
-    messages = history + [{"role": "user", "content": user_message}]
-
-    libra_tasks: list[asyncio.Task] = []
-    retrieved_context_log: list[str] = []
-
-    while True:
-        response = _anthropic.messages.create(
-            model=COMMANDER_MODEL,
-            system=system,
-            messages=messages,
-            tools=COMMANDER_TOOLS,
-            max_tokens=config.MAX_TOKENS,
-        )
-
-        if response.stop_reason == "end_turn":
-            parts = [b.text for b in response.content if hasattr(b, "text")]
-            return "\n".join(parts).strip()
-
-        if response.stop_reason == "tool_use":
-            tool_results = []
-            for block in response.content:
-                if block.type == "tool_use":
-                    result = await _dispatch_commander_tool(
-                        block.name, block.input, telegram_id, libra_tasks,
-                        retrieved_context_log,
-                    )
-                    tool_results.append({
-                        "type": "tool_result",
-                        "tool_use_id": block.id,
-                        "content": result,
-                    })
-            messages.append({"role": "assistant", "content": response.content})
-            messages.append({"role": "user", "content": tool_results})
-            continue
-
-        # Unexpected stop reason
-        parts = [b.text for b in response.content if hasattr(b, "text")]
-        return "\n".join(parts).strip() or "Cơ gặp sự cố không mong muốn. Bạn vui lòng thử lại nhé."
+    return await route_and_execute(
+        telegram_id=telegram_id,
+        user_message=user_message,
+        user_first_name=user_first_name,
+    )
 
 
 def pop_pdf(telegram_id: int) -> bytes | None:

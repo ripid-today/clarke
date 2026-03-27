@@ -1,0 +1,353 @@
+"""
+Intent classification router for Co divination system.
+
+Provides fast, deterministic routing of user messages to appropriate actions.
+Uses keyword matching + LLM confidence scoring (single call, no agent spawning).
+"""
+
+import re
+from dataclasses import dataclass
+from enum import Enum
+from typing import Dict, List, Optional, Tuple
+
+
+class ActionType(Enum):
+    """The four core actions of the Co system."""
+    QA = "qa"                           # Q&A - read-only knowledge retrieval
+    KNOWLEDGE_UPDATE = "knowledge_update"  # Workflow 4 - knowledge curation
+    LIFE_WRITINGS = "life_writings"     # General numerology analysis
+    SHORTCOMINGS = "shortcomings"       # Time-bound analysis of obstacles
+
+
+@dataclass
+class IntentClassification:
+    """Result of intent classification."""
+    action: ActionType
+    confidence: float  # 0-100
+    extracted_params: Dict
+    requires_clarification: bool
+    clarification_question: Optional[str] = None
+
+
+# =============================================================================
+# Keyword Patterns for Fast Routing
+# =============================================================================
+
+# Knowledge update indicators (highest priority)
+KNOWLEDGE_UPDATE_PATTERNS = [
+    r'(?:cập\s*nhật|thêm|bổ\s*sung|sửa|điều\s*chỉnh)\s*(?:tri\s*thức|kiến\s*thức|thông\s*tin)',
+    r'tri\s*thức\s*mới',
+    r'(?:học|ghi\s*nhận)\s*thêm',
+    r'(?:sai|chưa\s*đúng)\s+về\s+(?:iching|numerology|tarot|chiêm\s*tinh)',
+    r'cần\s+cập\s+nhật\s+lại',
+]
+
+# Shortcomings analysis indicators (high priority - time-bound)
+SHORTCOMINGS_PATTERNS = [
+    r'(?:điểm\s*yếu|khuyết\s*điểm|thiếu\s+sót|hạn\s*chế|vấn\s*đề)',
+    r'(?:tại\s*sao|sao\s+tôi|vì\s*sao)\s+(?:lại\s+gặp|hay|không|mãi)',
+    r'(?:tháng|quý|năm)\s+này\s+(?:sao|thế\s*nào|ra\s*sao)',
+    r'(?:vận\s*hạn|vận\s*trình|vận\s*mệnh)\s+(?:gần\s*đây|thờ\s*gian\s+tới|sắp\s*tới)',
+    r'(?:khó\s*khăn|trở\s*ngại|trắc\s*trở|xui\s*xẻo)',
+    r'(?:giai\s*đoạn|thờ\s*kỳ|khoảng\s+thờ\s*gian)',
+    r'(?:từ\s+.+?\s+đến\s+.+?\s+(?:sao|thế\s*nào))',
+]
+
+# Life writings (general analysis) indicators
+LIFE_WRITINGS_PATTERNS = [
+    r'(?:xem|phân\s*tích|luận\s*giải|bói|đoán)\s+(?:cho|về)?\s*.*?(?:tôi|mình|bạn|ngườ\s+này)?',
+    r'(?:tính|tìm)\s+(?:số|chỉ\s+số|đường\s*đờ|sứ\s*mệnh)',
+    r'(?:ngày\s*sinh?|sinh\s+ngày)\s+\d{1,2}[/\-]',
+    r'(?:tên\s+là|tôi\s+tên|tên\s+tôi)',
+    r'(?:biểu\s*đồ|ma\s*trận|thần\s*số)',
+    r'(?:mũi\s*tên|mũi\s*tên\s+sức\s*mạnh)',
+    r'(?:13\s+ngôi\s+nhà|tarot\s+mandala)',
+    r'(?:vận\s*mệnh|tính\s*cách|sự\s*nghiệp|tình\s*duyên)',
+]
+
+# Q&A patterns (default, lowest priority)
+QA_PATTERNS = [
+    r'(?:là\s+gì|nghĩa\s+là\s+gì|ý\s+nghĩa|giải\s+thích)',
+    r'(?:cho\s+tôi\s+biết|tôi\s+muốn\s+biết|hỏi\s+về)',
+    r'(?:có\s+phải|đúng\s+không|có\s+đúng)',
+    r'^\s*(?:tại\s+sao|vì\s+sao|thế\s+nào|như\s+thế\s+nào)',
+]
+
+
+# =============================================================================
+# Parameter Extraction Patterns
+# =============================================================================
+
+DATE_PATTERN = re.compile(
+    r'(?:ngày\s+)?(\d{1,2})[\s/\-\.]+(\d{1,2})(?:[\s/\-\.]+(\d{4}))?',
+    re.IGNORECASE
+)
+
+NAME_PATTERN = re.compile(
+    r'(?:tên\s+(?:là|tôi|bạn|củ\s*a|củ\s*bạn)\s+)?'
+    r'([A-ZÀ-Ỹ][a-zà-ỹ]+(?:\s+[A-ZÀ-Ỹ][a-zà-ỹ]+)*)',
+    re.UNICODE
+)
+
+PERIOD_PATTERN = re.compile(
+    r'(?:tháng|quý|năm)\s+(\d{1,2}|\w+)\s*(?:/|\-)?\s*(\d{4})?',
+    re.IGNORECASE
+)
+
+
+def extract_date(text: str) -> Optional[Dict]:
+    """Extract birth date from text."""
+    match = DATE_PATTERN.search(text)
+    if match:
+        return {
+            "day": int(match.group(1)),
+            "month": int(match.group(2)),
+            "year": int(match.group(3)) if match.group(3) else None,
+        }
+    return None
+
+
+def extract_name(text: str) -> Optional[str]:
+    """Extract name from text."""
+    # Look for explicit name patterns first
+    explicit = re.search(
+        r'(?:tên\s+(?:là|tôi|bạn|củ\s*a|củ\s*bạn)\s+)'
+        r'([A-ZÀ-Ỹ][a-zà-ỹ]+(?:\s+[A-ZÀ-Ỹ][a-zà-ỹ]+)*)',
+        text,
+        re.UNICODE | re.IGNORECASE
+    )
+    if explicit:
+        return explicit.group(1).strip()
+
+    # Fall back to general Vietnamese name pattern
+    match = NAME_PATTERN.search(text)
+    if match:
+        return match.group(1).strip()
+
+    return None
+
+
+def extract_period(text: str) -> Optional[Dict]:
+    """Extract time period for shortcomings analysis."""
+    # Month pattern
+    month_match = re.search(
+        r'tháng\s+(\d{1,2})\s*(?:/|\-)?\s*(\d{4})?',
+        text,
+        re.IGNORECASE
+    )
+    if month_match:
+        return {
+            "type": "month",
+            "month": int(month_match.group(1)),
+            "year": int(month_match.group(2)) if month_match.group(2) else None,
+        }
+
+    # Quarter pattern
+    quarter_match = re.search(
+        r'quý\s+(\d)\s*(?:/|\-)?\s*(\d{4})?',
+        text,
+        re.IGNORECASE
+    )
+    if quarter_match:
+        return {
+            "type": "quarter",
+            "quarter": int(quarter_match.group(1)),
+            "year": int(quarter_match.group(2)) if quarter_match.group(2) else None,
+        }
+
+    # Year pattern
+    year_match = re.search(
+        r'năm\s+(\d{4})',
+        text,
+        re.IGNORECASE
+    )
+    if year_match:
+        return {
+            "type": "year",
+            "year": int(year_match.group(1)),
+        }
+
+    return None
+
+
+# =============================================================================
+# Confidence Scoring
+# =============================================================================
+
+def keyword_confidence_score(text: str, patterns: List[str]) -> int:
+    """Calculate confidence score based on keyword pattern matches."""
+    text_lower = text.lower()
+    score = 0
+
+    for pattern in patterns:
+        if re.search(pattern, text_lower):
+            score += 25  # Each pattern match adds 25 points
+
+    return min(score, 100)
+
+
+def classify_intent(text: str) -> IntentClassification:
+    """
+    Classify user intent using keyword matching.
+
+    Returns IntentClassification with confidence score.
+    Uses 95% Confidence Protocol for routing decisions.
+    """
+    text_lower = text.lower().strip()
+
+    # Extract parameters first
+    params = {}
+    date_info = extract_date(text)
+    if date_info:
+        params["birth_date"] = date_info
+
+    name = extract_name(text)
+    if name:
+        params["name"] = name
+
+    period = extract_period(text)
+    if period:
+        params["period"] = period
+
+    # Check knowledge update (highest priority)
+    ku_score = keyword_confidence_score(text, KNOWLEDGE_UPDATE_PATTERNS)
+    if ku_score >= 75:
+        return IntentClassification(
+            action=ActionType.KNOWLEDGE_UPDATE,
+            confidence=ku_score,
+            extracted_params=params,
+            requires_clarification=ku_score < 95,
+        )
+
+    # Check shortcomings (time-bound analysis)
+    sh_score = keyword_confidence_score(text, SHORTCOMINGS_PATTERNS)
+    if sh_score >= 50 and (params.get("period") or params.get("birth_date")):
+        # Boost confidence if we have both period and birth date
+        if params.get("period") and params.get("birth_date"):
+            sh_score = max(sh_score, 85)
+        return IntentClassification(
+            action=ActionType.SHORTCOMINGS,
+            confidence=sh_score,
+            extracted_params=params,
+            requires_clarification=sh_score < 95,
+        )
+
+    # Check life writings (general analysis)
+    lw_score = keyword_confidence_score(text, LIFE_WRITINGS_PATTERNS)
+    if lw_score >= 50 and params.get("birth_date"):
+        # Boost confidence if we have birth date
+        lw_score = max(lw_score, 80)
+        return IntentClassification(
+            action=ActionType.LIFE_WRITINGS,
+            confidence=lw_score,
+            extracted_params=params,
+            requires_clarification=lw_score < 95,
+        )
+
+    # Check Q&A (default)
+    qa_score = keyword_confidence_score(text, QA_PATTERNS)
+    if qa_score >= 25 or len(text.split()) < 10:
+        # Short messages default to Q&A
+        return IntentClassification(
+            action=ActionType.QA,
+            confidence=max(qa_score, 60),
+            extracted_params=params,
+            requires_clarification=qa_score < 70,
+        )
+
+    # Ambiguous case - need clarification
+    return IntentClassification(
+        action=ActionType.QA,  # Default to QA
+        confidence=50,
+        extracted_params=params,
+        requires_clarification=True,
+        clarification_question="Bạn muốn Cơ giúp gì? Cơ có thể trả lờ thắc mắc, phân tích số mệnh, hoặc xem vận hạn theo thờ gian.",
+    )
+
+
+def get_clarification_question(classification: IntentClassification) -> str:
+    """Generate appropriate clarification question based on missing info."""
+    params = classification.extracted_params
+
+    if classification.action == ActionType.LIFE_WRITINGS:
+        if not params.get("birth_date"):
+            return "Cơ cần biết ngày sinh của bạn (DD/MM/YYYY) để phân tích. Bạn cho Cơ biết nhé!"
+        if not params.get("name"):
+            return "Cơ nên gọi bạn là gì? Vui lòng cho Cơ biết tên nhé!"
+
+    if classification.action == ActionType.SHORTCOMINGS:
+        if not params.get("birth_date"):
+            return "Để xem vận hạn, Cơ cần ngày sinh của bạn (DD/MM/YYYY). Bạn cho Cơ biết nhé!"
+        if not params.get("period"):
+            return "Bạn muốn Cơ xem cho thờ gian nào? (ví dụ: tháng 3/2024, quý 2/2024)"
+
+    # Generic clarification
+    return "Bạn có thể nói rõ hơn được không? Cơ muốn chắc chắn hiểu đúng ý bạn."
+
+
+# =============================================================================
+# Quick Classification (for simple routing)
+# =============================================================================
+
+def quick_classify(text: str) -> Tuple[ActionType, float]:
+    """
+    Fast classification returning just action type and confidence.
+
+    Use this for routing decisions where full parameter extraction
+    isn't needed yet.
+    """
+    result = classify_intent(text)
+    return result.action, result.confidence
+
+
+def is_knowledge_update(text: str) -> bool:
+    """Quick check if this is a knowledge update request."""
+    text_lower = text.lower()
+    return any(
+        re.search(pattern, text_lower)
+        for pattern in KNOWLEDGE_UPDATE_PATTERNS
+    )
+
+
+def requires_birth_date(action: ActionType) -> bool:
+    """Check if an action requires birth date information."""
+    return action in (ActionType.LIFE_WRITINGS, ActionType.SHORTCOMINGS)
+
+
+# =============================================================================
+# Test
+# =============================================================================
+
+if __name__ == "__main__":
+    test_inputs = [
+        # Knowledge update
+        "Cập nhật tri thức: lá Chariot có ý nghĩa mới",
+        "Tri thức mới về số 11 trong thần số học",
+
+        # Shortcomings
+        "Tại sao tôi gặp khó khăn tháng này? Sinh 15/03/1990",
+        "Xem vận hạn quý 1/2024 cho Nguyễn Văn A sinh 15/03/1990",
+
+        # Life writings
+        "Phân tích cho tôi sinh ngày 15/03/1990 tên Nam",
+        "Tính đường đời cho bạn sinh 08/08/1985",
+
+        # Q&A
+        "Số 7 có ý nghĩa gì?",
+        "Lá Fool là gì?",
+
+        # Ambiguous
+        "Xem cho tôi",
+    ]
+
+    print("Intent Classification Tests:\n")
+    for text in test_inputs:
+        result = classify_intent(text)
+        status = "NEEDS_CLARIFICATION" if result.requires_clarification else "OK"
+        print(f"Input: '{text}'")
+        print(f"  -> Action: {result.action.value} (confidence: {result.confidence}%)")
+        print(f"  -> Params: {result.extracted_params}")
+        print(f"  -> Status: {status}")
+        if result.clarification_question:
+            print(f"  -> Question: {result.clarification_question}")
+        print()
