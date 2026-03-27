@@ -55,10 +55,12 @@ SHORTCOMINGS_PATTERNS = [
 
 # Life writings (general analysis) indicators
 LIFE_WRITINGS_PATTERNS = [
+    r'xem\s+bài\s+phân\s+tích',
+    r'phân\s+tích\s+(?:số\s+mệnh|cuộc\s+đờ|cho)',
     r'(?:xem|phân\s*tích|luận\s*giải|bói|đoán)\s+(?:cho|về)?\s*.*?(?:tôi|mình|bạn|ngườ\s+này)?',
     r'(?:tính|tìm)\s+(?:số|chỉ\s+số|đường\s*đờ|sứ\s*mệnh)',
     r'(?:ngày\s*sinh?|sinh\s+ngày)\s+\d{1,2}[/\-]',
-    r'(?:tên\s+là|tôi\s+tên|tên\s+tôi)',
+    r'(?:tên\s+là|tôi\s+tên|tên\s+tôi|cho)\s+[A-ZÀ-Ỹ]',
     r'(?:biểu\s*đồ|ma\s*trận|thần\s*số)',
     r'(?:mũi\s*tên|mũi\s*tên\s+sức\s*mạnh)',
     r'(?:13\s+ngôi\s+nhà|tarot\s+mandala)',
@@ -109,7 +111,16 @@ def extract_date(text: str) -> Optional[Dict]:
 
 def extract_name(text: str) -> Optional[str]:
     """Extract name from text."""
-    # Look for explicit name patterns first
+    # Pattern 1: "cho [Name]" (analysis for someone)
+    cho_pattern = re.search(
+        r'(?:cho|phân\s+tích\s+cho)\s+([A-ZÀ-Ỹ][a-zà-ỹ]+(?:\s+[A-ZÀ-Ỹ][a-zà-ỹ]+){1,4})',
+        text,
+        re.UNICODE | re.IGNORECASE
+    )
+    if cho_pattern:
+        return cho_pattern.group(1).strip()
+
+    # Pattern 2: "tên là/tôi tên/bạn tên"
     explicit = re.search(
         r'(?:tên\s+(?:là|tôi|bạn|củ\s*a|củ\s*bạn)\s+)'
         r'([A-ZÀ-Ỹ][a-zà-ỹ]+(?:\s+[A-ZÀ-Ỹ][a-zà-ỹ]+)*)',
@@ -119,10 +130,23 @@ def extract_name(text: str) -> Optional[str]:
     if explicit:
         return explicit.group(1).strip()
 
-    # Fall back to general Vietnamese name pattern
+    # Pattern 3: Name followed by comma and date
+    name_before_date = re.search(
+        r'([A-ZÀ-Ỹ][a-zà-ỹ]+(?:\s+[A-ZÀ-Ỹ][a-zà-ỹ]+){1,4})\s*,\s*\d{1,2}[/\-]',
+        text,
+        re.UNICODE | re.IGNORECASE
+    )
+    if name_before_date:
+        return name_before_date.group(1).strip()
+
+    # Fall back to general Vietnamese name pattern (skip common words)
     match = NAME_PATTERN.search(text)
     if match:
-        return match.group(1).strip()
+        name = match.group(1).strip()
+        # Skip common false positives
+        skip_words = ['Hãy', 'Tôi', 'Bạn', 'Cho', 'Xem', 'Phân', 'Tích']
+        if name not in skip_words:
+            return name
 
     return None
 
@@ -235,8 +259,13 @@ def classify_intent(text: str) -> IntentClassification:
     # Check life writings (general analysis)
     lw_score = keyword_confidence_score(text, LIFE_WRITINGS_PATTERNS)
     if lw_score >= 50 and params.get("birth_date"):
-        # Boost confidence if we have birth date
-        lw_score = max(lw_score, 80)
+        # Boost confidence based on available data
+        if params.get("birth_date") and params.get("name"):
+            # Have both name and birth date - can proceed
+            lw_score = max(lw_score, 95)
+        else:
+            # Only have birth date - good but could be better
+            lw_score = max(lw_score, 80)
         return IntentClassification(
             action=ActionType.LIFE_WRITINGS,
             confidence=lw_score,
