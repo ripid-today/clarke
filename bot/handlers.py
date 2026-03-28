@@ -17,50 +17,65 @@ logger = logging.getLogger(__name__)
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Handle /start command."""
+    logger.info("START handler called")
     user = update.effective_user
     if not user:
+        logger.warning("No user in update")
         return
 
+    logger.info("User: %s (%s)", user.first_name, user.id)
+
     # Ensure user exists in DB
-    memory.upsert_user(
-        telegram_id=user.id,
-        username=user.username,
-        first_name=user.first_name,
-    )
+    try:
+        memory.upsert_user(
+            telegram_id=user.id,
+            username=user.username,
+            first_name=user.first_name,
+        )
+    except Exception as e:
+        logger.error("Failed to upsert user: %s", e)
 
     greeting = (
-        f"Xin chào{' ' + user.first_name if user.first_name else ''}! 🌙\n\n"
-        "Tôi là **Co** — chuyên gia về Kinh Dịch, Nhân Số Học và Tarot.\n\n"
-        "Tôi có thể giúp bạn:\n"
-        "• Xem bói vận mệnh và phân tích cuộc đời\n"
-        "• Gieo quẻ Kinh Dịch\n"
-        "• Rút bài Tarot\n"
-        "• Tính số học Pythagorean\n"
-        "• Xuất báo cáo phân tích PDF\n\n"
-        "Bạn muốn bắt đầu từ đâu?"
+        f"Xin chao{' ' + user.first_name if user.first_name else ''}!\n\n"
+        "Toi la Co - chuyen gia ve Kinh Dich, Nhan So Hoc va Tarot.\n\n"
+        "Toi co the giup ban:\n"
+        "- Xem boi van menh\n"
+        "- Gieo que Kinh Dich\n"
+        "- Rut bai Tarot\n"
+        "- Tinh so hoc\n\n"
+        "Ban muon bat dau tu dau?"
     )
-    await update.message.reply_text(greeting, parse_mode="Markdown")
+    await update.message.reply_text(greeting)
 
 
 async def message(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Handle incoming text messages."""
+    logger.info("MESSAGE handler called")
     user = update.effective_user
     msg = update.message
     if not user or not msg or not msg.text:
+        logger.warning("Missing user, msg, or text")
         return
 
     telegram_id = user.id
     user_text = msg.text.strip()
+    logger.info("Message from %s: %s", telegram_id, user_text[:50])
 
     # Ensure user record exists
-    memory.upsert_user(
-        telegram_id=telegram_id,
-        username=user.username,
-        first_name=user.first_name,
-    )
+    try:
+        memory.upsert_user(
+            telegram_id=telegram_id,
+            username=user.username,
+            first_name=user.first_name,
+        )
+    except Exception as e:
+        logger.error("Failed to upsert user: %s", e)
 
     # Save user message to history
-    memory.save_message(telegram_id, "user", user_text)
+    try:
+        memory.save_message(telegram_id, "user", user_text)
+    except Exception as e:
+        logger.error("Failed to save message: %s", e)
 
     # Show typing indicator
     await context.bot.send_chat_action(
@@ -77,14 +92,17 @@ async def message(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         )
 
         # Save assistant response to history
-        memory.save_message(telegram_id, "assistant", response_text)
+        try:
+            memory.save_message(telegram_id, "assistant", response_text)
+        except Exception as e:
+            logger.error("Failed to save response: %s", e)
 
         # Check if a PDF was generated during this run
         pdf_bytes = orchestrator.pop_pdf(telegram_id)
 
         # Send text response (split if > 4096 chars)
         for chunk in _split_message(response_text):
-            await msg.reply_text(chunk, parse_mode="Markdown")
+            await msg.reply_text(chunk)
 
         # Send PDF if present
         if pdf_bytes:
@@ -96,15 +114,12 @@ async def message(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
             await msg.reply_document(
                 document=BytesIO(pdf_bytes),
                 filename=filename,
-                caption="📄 Báo cáo phân tích cuộc đời của bạn.",
+                caption="Bao cao phan tich cuoc doi cua ban.",
             )
 
     except Exception as e:
         logger.exception("Error processing message from user %s", telegram_id)
-        await msg.reply_text(
-            "Co đang bận xử lý, bạn vui lòng thử lại sau nhé 🙏",
-            parse_mode="Markdown",
-        )
+        await msg.reply_text("Co dang ban xu ly, ban vui long thu lai sau nhe.")
 
 
 async def error_handler(update: object, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -128,5 +143,3 @@ def _split_message(text: str, max_len: int = 4096) -> list[str]:
         chunks.append(text[:split_at])
         text = text[split_at:].lstrip("\n")
     return chunks
-
-
