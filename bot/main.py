@@ -16,6 +16,7 @@ logger = logging.getLogger(__name__)
 
 def main() -> None:
     logger.info("Starting Co bot (model: %s)", config.CLAUDE_MODEL)
+    logger.info("Mode: %s", "Webhook" if config.WEBHOOK_URL else "Polling")
 
     app = (
         ApplicationBuilder()
@@ -30,7 +31,10 @@ def main() -> None:
     app.add_error_handler(handlers.error_handler)
 
     if config.WEBHOOK_URL:
-        logger.info("Webhook mode — %s", config.WEBHOOK_URL)
+        logger.info("Webhook URL: %s", config.WEBHOOK_URL)
+        logger.info("Webhook path: %s", config.WEBHOOK_PATH)
+        logger.info("Port: %d", config.PORT)
+
         # Python 3.10+ no longer auto-creates an event loop outside async context.
         # PTB's run_webhook() needs one to already exist.
         loop = asyncio.new_event_loop()

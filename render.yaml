@@ -23,4 +23,6 @@ services:
       name: agent-memory
       mountPath: /opt/render/project/src/.claude/agent-memory
       sizeGB: 1
-    healthCheckPath: /health
+    # IMPORTANT: Set WEBHOOK_URL env var to enable webhook mode
+    # Format: https://your-service.onrender.com
+    # If WEBHOOK_URL is not set, bot uses polling mode
