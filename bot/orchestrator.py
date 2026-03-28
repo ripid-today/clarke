@@ -30,10 +30,10 @@ from actions.router import (
     extract_name,
     extract_period,
 )
-from actions.action_qa import handle_qa, format_update_response
+from actions.action_qa import handle_qa
 from actions.action_life_writings import handle_life_writings, format_analysis_response
 from actions.action_shortcomings import handle_shortcomings, format_shortcomings_response
-from actions.action_knowledge_update import handle_knowledge_update
+from actions.action_knowledge_update import handle_knowledge_update, format_update_response
 
 from bot.tools.validators import parse_birth_date, parse_time_period
 
