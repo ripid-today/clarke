@@ -30,15 +30,16 @@ def main() -> None:
     )
     app.add_error_handler(handlers.error_handler)
 
+    # Python 3.10+ no longer auto-creates an event loop outside async context.
+    # PTB needs one to already exist for both webhook and polling modes.
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
+
     if config.WEBHOOK_URL:
         logger.info("Webhook URL: %s", config.WEBHOOK_URL)
         logger.info("Webhook path: %s", config.WEBHOOK_PATH)
         logger.info("Port: %d", config.PORT)
 
-        # Python 3.10+ no longer auto-creates an event loop outside async context.
-        # PTB's run_webhook() needs one to already exist.
-        loop = asyncio.new_event_loop()
-        asyncio.set_event_loop(loop)
         app.run_webhook(
             listen="0.0.0.0",
             port=config.PORT,
