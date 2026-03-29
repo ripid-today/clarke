@@ -27,6 +27,7 @@ class IntentClassification:
     extracted_params: Dict
     requires_clarification: bool
     clarification_question: Optional[str] = None
+    is_off_topic: bool = False  # True for messages outside divination scope
 
 
 # =============================================================================
@@ -56,11 +57,12 @@ SHORTCOMINGS_PATTERNS = [
 # Life writings (general analysis) indicators
 LIFE_WRITINGS_PATTERNS = [
     r'xem\s+bài\s+phân\s+tích',
-    r'phân\s+tích\s+(?:số\s+mệnh|cuộc\s+đờ|cho)',
-    r'(?:xem|phân\s*tích|luận\s*giải|bói|đoán)\s+(?:cho|về)?\s*.*?(?:tôi|mình|bạn|ngườ\s+này)?',
+    r'phân\s+tích\s+(?:số\s+mệnh|cuộc\s+đờ|cho|củ\s*a)',
+    r'(?:xem|phân\s*tích|luận\s*giải|bói|đoán)\s+(?:cho|củ\s*a|về)?\s*.*?(?:tôi|mình|bạn|ngườ\s+này)?',
     r'(?:tính|tìm)\s+(?:số|chỉ\s+số|đường\s*đờ|sứ\s*mệnh)',
     r'(?:ngày\s*sinh?|sinh\s+ngày)\s+\d{1,2}[/\-]',
     r'(?:tên\s+là|tôi\s+tên|tên\s+tôi|cho)\s+[A-ZÀ-Ỹ]',
+    r'(?:củ\s*a|phân\s*tích\s+củ\s*a)\s+[A-ZÀ-Ỹ]',  # Pattern for "củA [Name]"
     r'(?:biểu\s*đồ|ma\s*trận|thần\s*số)',
     r'(?:mũi\s*tên|mũi\s*tên\s+sức\s*mạnh)',
     r'(?:13\s+ngôi\s+nhà|tarot\s+mandala)',
@@ -73,6 +75,20 @@ QA_PATTERNS = [
     r'(?:cho\s+tôi\s+biết|tôi\s+muốn\s+biết|hỏi\s+về)',
     r'(?:có\s+phải|đúng\s+không|có\s+đúng)',
     r'^\s*(?:tại\s+sao|vì\s+sao|thế\s+nào|như\s+thế\s+nào)',
+]
+
+# Escape patterns - user wants to cancel/abandon current flow
+ESCAPE_PATTERNS = [
+    r'\bthôi\b',
+    r'\bbỏ\s+đi\b',
+    r'\bquên\s+đi\b',
+    r'\bkhông\s+(?:nữa|cần|muốn)',
+    r'\blàm\s+cái\s+khác\b',
+    r'\bhỏi\s+cái\s+khác\b',
+    r'\bquay\s+lại\b',
+    r'\bbắt\s+đầu\s+lại\b',
+    r'\breset\b',
+    r'\bhủy\b',
 ]
 
 
@@ -97,16 +113,44 @@ PERIOD_PATTERN = re.compile(
 )
 
 
-def extract_date(text: str) -> Optional[Dict]:
-    """Extract birth date from text."""
+def extract_date(text: str, require_year: bool = True) -> Optional[Dict]:
+    """Extract birth date from text.
+
+    Args:
+        text: Input text to search
+        require_year: If True, year must be present and valid
+
+    Returns:
+        Dict with day, month, year if valid, None otherwise
+    """
     match = DATE_PATTERN.search(text)
-    if match:
-        return {
-            "day": int(match.group(1)),
-            "month": int(match.group(2)),
-            "year": int(match.group(3)) if match.group(3) else None,
-        }
-    return None
+    if not match:
+        return None
+
+    day = int(match.group(1))
+    month = int(match.group(2))
+    year = int(match.group(3)) if match.group(3) else None
+
+    # Validate year is present if required
+    if require_year and year is None:
+        return None
+
+    # Default year for validation (if not required)
+    check_year = year or 2024
+
+    # Validate date is actually valid
+    try:
+        from datetime import date
+        date(check_year, month, day)
+    except ValueError:
+        # Invalid date (e.g., 31/02, 29/02 on non-leap year)
+        return None
+
+    return {
+        "day": day,
+        "month": month,
+        "year": year,
+    }
 
 
 def extract_name(text: str) -> Optional[str]:
@@ -120,7 +164,25 @@ def extract_name(text: str) -> Optional[str]:
     if cho_pattern:
         return cho_pattern.group(1).strip()
 
-    # Pattern 2: "tên là/tôi tên/bạn tên"
+    # Pattern 2: "củA [Name]" (e.g., "phân tích củA Nguyễn Hồng Nguyên")
+    cua_pattern = re.search(
+        r'(?:củ\s*a|củ\s*a\s+phân\s*tích|phân\s*tích\s+củ\s*a)\s+([A-ZÀ-Ỹ][a-zà-ỹ]+(?:\s+[A-ZÀ-Ỹ][a-zà-ỹ]+){1,4})',
+        text,
+        re.UNICODE | re.IGNORECASE
+    )
+    if cua_pattern:
+        return cua_pattern.group(1).strip()
+
+    # Pattern 3: "tôi là/mình là/tên tôi là [Name]"
+    toi_la_pattern = re.search(
+        r'(?:tôi\s+là|mình\s+là|tên\s+tôi\s+là|tên\s+mình\s+là)\s+([A-ZÀ-Ỹ][a-zà-ỹ]+(?:\s+[A-ZÀ-Ỹ][a-zà-ỹ]+){0,4})',
+        text,
+        re.UNICODE | re.IGNORECASE
+    )
+    if toi_la_pattern:
+        return toi_la_pattern.group(1).strip()
+
+    # Pattern 4: "tên là/tôi tên/bạn tên"
     explicit = re.search(
         r'(?:tên\s+(?:là|tôi|bạn|củ\s*a|củ\s*bạn)\s+)'
         r'([A-ZÀ-Ỹ][a-zà-ỹ]+(?:\s+[A-ZÀ-Ỹ][a-zà-ỹ]+)*)',
@@ -194,6 +256,28 @@ def extract_period(text: str) -> Optional[Dict]:
     return None
 
 
+def is_escape_message(text: str) -> bool:
+    """
+    Check if user wants to cancel/abandon current flow.
+
+    Escape signals indicate the user wants to:
+    - Cancel current operation
+    - Start fresh with a new request
+    - Abandon the pending clarification
+
+    Args:
+        text: User message to check
+
+    Returns:
+        True if message is an escape signal, False otherwise
+    """
+    text_lower = text.lower().strip()
+    return any(
+        re.search(pattern, text_lower)
+        for pattern in ESCAPE_PATTERNS
+    )
+
+
 # =============================================================================
 # Confidence Scoring
 # =============================================================================
@@ -240,7 +324,7 @@ def classify_intent(text: str) -> IntentClassification:
             action=ActionType.KNOWLEDGE_UPDATE,
             confidence=ku_score,
             extracted_params=params,
-            requires_clarification=ku_score < 95,
+            requires_clarification=ku_score < 80,
         )
 
     # Check shortcomings (time-bound analysis)
@@ -248,12 +332,12 @@ def classify_intent(text: str) -> IntentClassification:
     if sh_score >= 50 and (params.get("period") or params.get("birth_date")):
         # Boost confidence if we have both period and birth date
         if params.get("period") and params.get("birth_date"):
-            sh_score = max(sh_score, 85)
+            sh_score = max(sh_score, 90)
         return IntentClassification(
             action=ActionType.SHORTCOMINGS,
             confidence=sh_score,
             extracted_params=params,
-            requires_clarification=sh_score < 95,
+            requires_clarification=sh_score < 80,
         )
 
     # Check life writings (general analysis)
@@ -261,21 +345,39 @@ def classify_intent(text: str) -> IntentClassification:
     if lw_score >= 50 and params.get("birth_date"):
         # Boost confidence based on available data
         if params.get("birth_date") and params.get("name"):
-            # Have both name and birth date - can proceed
-            lw_score = max(lw_score, 95)
+            # Have both name and birth date - high confidence
+            lw_score = max(lw_score, 90)
         else:
-            # Only have birth date - good but could be better
-            lw_score = max(lw_score, 80)
+            # Only have birth date - moderate confidence
+            lw_score = max(lw_score, 75)
         return IntentClassification(
             action=ActionType.LIFE_WRITINGS,
             confidence=lw_score,
             extracted_params=params,
-            requires_clarification=lw_score < 95,
+            requires_clarification=lw_score < 80,
         )
 
     # Check Q&A (default)
     qa_score = keyword_confidence_score(text, QA_PATTERNS)
-    if qa_score >= 25 or len(text.split()) < 10:
+
+    # Calculate all scores to detect off-topic messages
+    max_score = max(ku_score, sh_score, lw_score, qa_score)
+
+    # Off-topic detection: very low confidence, no params, not a short message
+    is_short_message = len(text.split()) < 10
+    has_any_param = bool(params.get("name") or params.get("birth_date") or params.get("period"))
+
+    if max_score < 25 and not is_short_message and not has_any_param:
+        # Truly off-topic - no patterns match, not short, no useful params
+        return IntentClassification(
+            action=ActionType.QA,  # Default to QA
+            confidence=30,
+            extracted_params=params,
+            requires_clarification=False,  # Don't ask clarifying question
+            is_off_topic=True,  # Signal for special handling
+        )
+
+    if qa_score >= 25 or is_short_message:
         # Short messages default to Q&A
         return IntentClassification(
             action=ActionType.QA,

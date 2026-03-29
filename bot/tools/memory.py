@@ -204,6 +204,66 @@ def get_recent_conversation(telegram_id: int, limit: int = 10) -> list[dict]:
 
 
 # ---------------------------------------------------------------------------
+# User State (conversation context management)
+# ---------------------------------------------------------------------------
+
+def get_user_state(telegram_id: int) -> dict | None:
+    """Get the current state for a user (pending action, collected params, etc.)."""
+    result = (
+        get_client()
+        .table("user_states")
+        .select("*")
+        .eq("telegram_id", telegram_id)
+        .single()
+        .execute()
+    )
+    return result.data if result.data else None
+
+
+def set_user_state(
+    telegram_id: int,
+    pending_action: str | None = None,
+    missing_param: str | None = None,
+    collected_params: dict | None = None,
+    clarification_question: str | None = None,
+    clarification_count: int | None = None,
+) -> None:
+    """
+    Update user state with pending action and context tracking.
+
+    Args:
+        telegram_id: User's Telegram ID
+        pending_action: The action waiting for completion (e.g., 'life_writings')
+        missing_param: Which specific param is needed ('name', 'birth_date', 'period')
+        collected_params: Dict of params already collected
+        clarification_question: The exact question asked to user
+        clarification_count: Number of clarification attempts so far
+    """
+    data: dict = {"telegram_id": telegram_id}
+
+    if pending_action is not None:
+        data["pending_action"] = pending_action
+    if missing_param is not None:
+        data["missing_param"] = missing_param
+    if collected_params is not None:
+        data["collected_params"] = collected_params
+    if clarification_question is not None:
+        data["clarification_question"] = clarification_question
+    if clarification_count is not None:
+        data["clarification_count"] = clarification_count
+
+    # Always update the timestamp
+    data["last_clarification_at"] = "now()"
+
+    get_client().table("user_states").upsert(data, on_conflict="telegram_id").execute()
+
+
+def clear_user_state(telegram_id: int) -> None:
+    """Clear user state after completing an action."""
+    get_client().table("user_states").delete().eq("telegram_id", telegram_id).execute()
+
+
+# ---------------------------------------------------------------------------
 # Training pairs (fine-tuning data pipeline — Vistral-7B-Chat target)
 # ---------------------------------------------------------------------------
 
