@@ -209,15 +209,19 @@ def get_recent_conversation(telegram_id: int, limit: int = 10) -> list[dict]:
 
 def get_user_state(telegram_id: int) -> dict | None:
     """Get the current state for a user (pending action, collected params, etc.)."""
-    result = (
-        get_client()
-        .table("user_states")
-        .select("*")
-        .eq("telegram_id", telegram_id)
-        .single()
-        .execute()
-    )
-    return result.data if result.data else None
+    try:
+        result = (
+            get_client()
+            .table("user_states")
+            .select("*")
+            .eq("telegram_id", telegram_id)
+            .maybe_single()
+            .execute()
+        )
+        return result.data if result.data else None
+    except Exception:
+        # If any error (including PGRST116), return None
+        return None
 
 
 def set_user_state(
