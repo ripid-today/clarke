@@ -21,14 +21,14 @@ async def handle_qa(user_input: str, context: Dict) -> str:
     Returns:
         Vietnamese response with answer from knowledge base
     """
-    # Search knowledge base
-    results = search_knowledge(user_input, limit=3)
+    # Search knowledge base (returns formatted string)
+    result = search_knowledge(user_input)
 
-    if not results:
+    if not result or result == "Không tìm thấy thông tin liên quan trong kho kiến thức.":
         return _handle_no_results(user_input)
 
-    # Synthesize answer from retrieved knowledge
-    return _synthesize_answer(user_input, results)
+    # Return the knowledge directly (already formatted)
+    return result
 
 
 def _handle_no_results(user_input: str) -> str:
@@ -123,8 +123,8 @@ async def handle_quick_answer(topic: str, domain: str = "general") -> str:
         return quick_answers[key]
 
     # Fall back to knowledge search
-    results = search_knowledge(f"{topic} {domain}", limit=1)
-    if results:
-        return results[0].get("content", _handle_no_results(topic))
+    result = search_knowledge(f"{topic} {domain}")
+    if result and result != "Không tìm thấy thông tin liên quan trong kho kiến thức.":
+        return result
 
     return _handle_no_results(topic)

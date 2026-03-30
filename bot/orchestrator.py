@@ -52,6 +52,15 @@ _active_analyses: dict[int, Dict] = {}
 
 
 # =============================================================================
+# Async Helpers
+# =============================================================================
+
+async def _noop_progress(message: str) -> None:
+    """No-op progress callback for when progress messages are not needed."""
+    return None
+
+
+# =============================================================================
 # Context-Aware Request Detection
 # =============================================================================
 
@@ -377,7 +386,7 @@ async def route_and_execute(
             results = await handle_life_writings(
                 name=name or "bạn",
                 birth_date=birth_date,
-                send_progress=lambda m: None,  # Handled via chat action
+                send_progress=_noop_progress,  # Handled via chat action
                 edit_progress=None,
             )
 
@@ -441,7 +450,7 @@ async def route_and_execute(
                 period_start=period[0],
                 period_end=period[1],
                 specific_question=user_message if "?" in user_message else None,
-                send_progress=lambda m: None,
+                send_progress=_noop_progress,
                 edit_progress=None,
             )
 

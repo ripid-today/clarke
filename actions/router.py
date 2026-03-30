@@ -156,8 +156,10 @@ def extract_date(text: str, require_year: bool = True) -> Optional[Dict]:
 def extract_name(text: str) -> Optional[str]:
     """Extract name from text."""
     # Pattern 1: "cho [Name]" (analysis for someone)
+    # Uses lookahead to stop at "sinh", "ngày", or date patterns
     cho_pattern = re.search(
-        r'(?:cho|phân\s+tích\s+cho)\s+([A-ZÀ-Ỹ][a-zà-ỹ]+(?:\s+[A-ZÀ-Ỹ][a-zà-ỹ]+){1,4})',
+        r'(?:cho|phân\s+tích\s+cho)\s+([A-ZÀ-Ỹ][a-zà-ỹ]+(?:\s+[A-ZÀ-Ỹ][a-zà-ỹ]+){0,4})'
+        r'(?=\s*(?:sinh|ngày|\d{1,2}[/\-\s]\d{1,2}|$))',
         text,
         re.UNICODE | re.IGNORECASE
     )
@@ -165,8 +167,10 @@ def extract_name(text: str) -> Optional[str]:
         return cho_pattern.group(1).strip()
 
     # Pattern 2: "củA [Name]" (e.g., "phân tích củA Nguyễn Hồng Nguyên")
+    # Uses lookahead to stop at "sinh", "ngày", or date patterns
     cua_pattern = re.search(
-        r'(?:củ\s*a|củ\s*a\s+phân\s*tích|phân\s*tích\s+củ\s*a)\s+([A-ZÀ-Ỹ][a-zà-ỹ]+(?:\s+[A-ZÀ-Ỹ][a-zà-ỹ]+){1,4})',
+        r'(?:củ\s*a|củ\s*a\s+phân\s*tích|phân\s*tích\s+củ\s*a)\s+([A-ZÀ-Ỹ][a-zà-ỹ]+(?:\s+[A-ZÀ-Ỹ][a-zà-ỹ]+){0,4})'
+        r'(?=\s*(?:sinh|ngày|\d{1,2}[/\-\s]\d{1,2}|$))',
         text,
         re.UNICODE | re.IGNORECASE
     )
@@ -174,8 +178,10 @@ def extract_name(text: str) -> Optional[str]:
         return cua_pattern.group(1).strip()
 
     # Pattern 3: "tôi là/mình là/tên tôi là [Name]"
+    # Uses lookahead to stop at date indicators
     toi_la_pattern = re.search(
-        r'(?:tôi\s+là|mình\s+là|tên\s+tôi\s+là|tên\s+mình\s+là)\s+([A-ZÀ-Ỹ][a-zà-ỹ]+(?:\s+[A-ZÀ-Ỹ][a-zà-ỹ]+){0,4})',
+        r'(?:tôi\s+là|mình\s+là|tên\s+tôi\s+là|tên\s+mình\s+là)\s+([A-ZÀ-Ỹ][a-zà-ỹ]+(?:\s+[A-ZÀ-Ỹ][a-zà-ỹ]+){0,4})'
+        r'(?=\s*(?:sinh|ngày|\d{1,2}[/\-\s]\d{1,2}|$))',
         text,
         re.UNICODE | re.IGNORECASE
     )
@@ -183,16 +189,18 @@ def extract_name(text: str) -> Optional[str]:
         return toi_la_pattern.group(1).strip()
 
     # Pattern 4: "tên là/tôi tên/bạn tên"
+    # Uses lookahead to stop at date indicators
     explicit = re.search(
         r'(?:tên\s+(?:là|tôi|bạn|củ\s*a|củ\s*bạn)\s+)'
-        r'([A-ZÀ-Ỹ][a-zà-ỹ]+(?:\s+[A-ZÀ-Ỹ][a-zà-ỹ]+)*)',
+        r'([A-ZÀ-Ỹ][a-zà-ỹ]+(?:\s+[A-ZÀ-Ỹ][a-zà-ỹ]+){0,4})'
+        r'(?=\s*(?:sinh|ngày|\d{1,2}[/\-\s]\d{1,2}|$))',
         text,
         re.UNICODE | re.IGNORECASE
     )
     if explicit:
         return explicit.group(1).strip()
 
-    # Pattern 3: Name followed by comma and date
+    # Pattern 5: Name followed by comma and date
     name_before_date = re.search(
         r'([A-ZÀ-Ỹ][a-zà-ỹ]+(?:\s+[A-ZÀ-Ỹ][a-zà-ỹ]+){1,4})\s*,\s*\d{1,2}[/\-]',
         text,
@@ -202,11 +210,18 @@ def extract_name(text: str) -> Optional[str]:
         return name_before_date.group(1).strip()
 
     # Fall back to general Vietnamese name pattern (skip common words)
-    match = NAME_PATTERN.search(text)
+    # Stop at date indicators
+    fallback_pattern = re.compile(
+        r'(?:tên\s+(?:là|tôi|bạn|củ\s*a|củ\s*bạn)\s+)?'
+        r'([A-ZÀ-Ỹ][a-zà-ỹ]+(?:\s+[A-ZÀ-Ỹ][a-zà-ỹ]+){0,4})'
+        r'(?=\s*(?:sinh|ngày|\d{1,2}[/\-\s]\d{1,2}|$))',
+        re.UNICODE
+    )
+    match = fallback_pattern.search(text)
     if match:
         name = match.group(1).strip()
         # Skip common false positives
-        skip_words = ['Hãy', 'Tôi', 'Bạn', 'Cho', 'Xem', 'Phân', 'Tích']
+        skip_words = ['Hãy', 'Tôi', 'Bạn', 'Cho', 'Xem', 'Phân', 'Tích', 'Sinh', 'Ngày']
         if name not in skip_words:
             return name
 
@@ -345,8 +360,9 @@ def classify_intent(text: str) -> IntentClassification:
     if lw_score >= 50 and params.get("birth_date"):
         # Boost confidence based on available data
         if params.get("birth_date") and params.get("name"):
-            # Have both name and birth date - high confidence
-            lw_score = max(lw_score, 90)
+            # Have both name and birth date - very high confidence (>=95)
+            # This triggers is_complete_new_request() to clear pending state
+            lw_score = max(lw_score, 95)
         else:
             # Only have birth date - moderate confidence
             lw_score = max(lw_score, 75)
