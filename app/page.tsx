@@ -175,7 +175,7 @@ export default function GraphPage() {
       }
 
       const net = new Network(
-        containerRef.current,
+        containerRef.current!,
         { nodes, edges },
         {
           physics: {
