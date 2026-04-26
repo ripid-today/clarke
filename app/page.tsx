@@ -329,7 +329,7 @@ export default function GraphPage() {
                 );
               })}
 
-          {drawerNode?.content && (
+          {!!drawerNode?.content && (
             <div style={{ marginBottom: '14px' }}>
               <div
                 style={{
