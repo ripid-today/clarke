@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800">
+  <rect width="800" height="800" rx="120" fill="#09090b"/>
+  <path fill="#fff" d="
+    M350 150 H450 V250 H350 Z
+    M250 250 H350 V350 H250 Z
+    M450 250 H550 V350 H450 Z
+    M150 350 H650 V450 H150 Z
+    M150 450 H250 V550 H150 Z
+    M550 450 H650 V550 H550 Z
+    M150 550 H250 V650 H150 Z
+    M550 550 H650 V650 H550 Z
+  "/>
+</svg>
