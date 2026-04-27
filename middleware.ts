@@ -19,7 +19,10 @@ export function middleware(request: NextRequest) {
     pathname === '/login' ||
     pathname === '/api/login' ||
     pathname.startsWith('/_next') ||
-    pathname.startsWith('/favicon')
+    pathname.startsWith('/favicon') ||
+    pathname === '/icon.svg' ||
+    pathname === '/icon.png' ||
+    pathname === '/apple-icon.png'
   ) {
     return NextResponse.next();
   }
