@@ -79,7 +79,7 @@ export default function GraphPage() {
   const [drawerNode, setDrawerNode] = useState<NodeData | null>(null);
 
   useEffect(() => {
-    fetch('/api/graph')
+    fetch('/api/graph?v=2', { cache: 'no-store' })
       .then((res) => res.json())
       .then((payload) => setData(payload))
       .catch((err) => console.error('Failed to load graph:', err));

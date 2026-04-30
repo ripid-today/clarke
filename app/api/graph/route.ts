@@ -46,7 +46,16 @@ export async function GET() {
       rel_type: r.get('rel_type'),
     }));
 
-    return NextResponse.json({ concepts, topics, edges });
+    return NextResponse.json(
+      { concepts, topics, edges },
+      {
+        headers: {
+          'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+          'Pragma': 'no-cache',
+          'Expires': '0',
+        },
+      }
+    );
   } catch (err) {
     console.error('Graph API error:', err);
     return NextResponse.json(
