@@ -1,0 +1,11 @@
+# Virtual Environment
+.venv/
+__pycache__/
+#.py[cod]
+
+# Secrets and Configs
+.env
+
+# Data and temporary files
+raw_data/
+*.log
